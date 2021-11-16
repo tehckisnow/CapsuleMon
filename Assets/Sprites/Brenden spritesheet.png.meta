@@ -1,0 +1,1085 @@
+fileFormatVersion: 2
+guid: 9138443e80ceb9840ba200614011da7b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1524235119635774723
+    second: Brenden spritesheet_0
+  - first:
+      213: -2826642156735877978
+    second: Brenden spritesheet_1
+  - first:
+      213: 2993755852033824892
+    second: Brenden spritesheet_2
+  - first:
+      213: -616429331172359820
+    second: Brenden spritesheet_3
+  - first:
+      213: -5223970090799798677
+    second: Brenden spritesheet_4
+  - first:
+      213: 6451862490932501922
+    second: Brenden spritesheet_5
+  - first:
+      213: -3426729578335960348
+    second: Brenden spritesheet_6
+  - first:
+      213: -1184500995083644486
+    second: Brenden spritesheet_7
+  - first:
+      213: 688590618201421645
+    second: Brenden spritesheet_8
+  - first:
+      213: 9050197550869895962
+    second: Brenden spritesheet_9
+  - first:
+      213: 2760454255801519375
+    second: Brenden spritesheet_10
+  - first:
+      213: -1415961380844069594
+    second: Brenden spritesheet_11
+  - first:
+      213: 5679179530019294345
+    second: Brenden spritesheet_12
+  - first:
+      213: 1523788492335670968
+    second: Brenden spritesheet_13
+  - first:
+      213: -481685498510608938
+    second: Brenden spritesheet_14
+  - first:
+      213: -1681359863156953216
+    second: Brenden spritesheet_15
+  - first:
+      213: -4913736647376912119
+    second: Brenden spritesheet_16
+  - first:
+      213: -2475036027360983130
+    second: Brenden spritesheet_17
+  - first:
+      213: 7945459357220743619
+    second: Brenden spritesheet_18
+  - first:
+      213: 4477853586767688823
+    second: Brenden spritesheet_19
+  - first:
+      213: 7171038373410391029
+    second: Brenden spritesheet_20
+  - first:
+      213: -830671727239637700
+    second: Brenden spritesheet_21
+  - first:
+      213: 1364669899554613842
+    second: Brenden spritesheet_22
+  - first:
+      213: -6208826393195098650
+    second: Brenden spritesheet_23
+  - first:
+      213: -6069434904450918387
+    second: Brenden spritesheet_24
+  - first:
+      213: 295234864203892299
+    second: Brenden spritesheet_25
+  - first:
+      213: 6325000910506422057
+    second: Brenden spritesheet_26
+  - first:
+      213: 9046973994903761256
+    second: Brenden spritesheet_27
+  - first:
+      213: 4874423697092276548
+    second: Brenden spritesheet_28
+  - first:
+      213: 5936099850140542068
+    second: Brenden spritesheet_29
+  - first:
+      213: -2084766136276422426
+    second: Brenden spritesheet_30
+  - first:
+      213: 8432882510823937841
+    second: Brenden spritesheet_31
+  - first:
+      213: 4778339571661971595
+    second: Brenden spritesheet_32
+  - first:
+      213: 2490177631542552555
+    second: Brenden spritesheet_33
+  - first:
+      213: 3348093469770759280
+    second: Brenden spritesheet_34
+  - first:
+      213: 782766351015143564
+    second: Brenden spritesheet_35
+  - first:
+      213: 6127329350961274698
+    second: Brenden spritesheet_36
+  - first:
+      213: 1947914059989949660
+    second: Brenden spritesheet_37
+  - first:
+      213: -6129292229959388817
+    second: Brenden spritesheet_38
+  - first:
+      213: -5892901402559257396
+    second: Brenden spritesheet_39
+  - first:
+      213: -8975665420671619551
+    second: Brenden spritesheet_40
+  - first:
+      213: -3117843324118891005
+    second: Brenden spritesheet_41
+  - first:
+      213: -6087121191194928668
+    second: Brenden spritesheet_42
+  - first:
+      213: -6016295822688537117
+    second: Brenden spritesheet_43
+  - first:
+      213: -4216202383115181912
+    second: Brenden spritesheet_44
+  - first:
+      213: -7800185793538773851
+    second: Brenden spritesheet_45
+  - first:
+      213: -3158568558948815477
+    second: Brenden spritesheet_46
+  - first:
+      213: 4237759024082459981
+    second: Brenden spritesheet_47
+  - first:
+      213: -2985821604305134466
+    second: Brenden spritesheet_48
+  - first:
+      213: -1634055829826722196
+    second: Brenden spritesheet_49
+  - first:
+      213: 5948593799231011319
+    second: Brenden spritesheet_50
+  - first:
+      213: 5818171595780291365
+    second: Brenden spritesheet_51
+  - first:
+      213: -8726634500287490645
+    second: Brenden spritesheet_52
+  - first:
+      213: 1858250878351671797
+    second: Brenden spritesheet_53
+  - first:
+      213: -8398002176925603090
+    second: Brenden spritesheet_54
+  - first:
+      213: -7334250101639218348
+    second: Brenden spritesheet_55
+  - first:
+      213: -1015033513500552316
+    second: Brenden spritesheet_56
+  - first:
+      213: -4605414120640295348
+    second: Brenden spritesheet_57
+  - first:
+      213: -2619184320926743984
+    second: Brenden spritesheet_58
+  - first:
+      213: 1499487593782135601
+    second: Brenden spritesheet_59
+  - first:
+      213: -4396850350127995589
+    second: Brenden spritesheet_60
+  - first:
+      213: 592818042502809181
+    second: Brenden spritesheet_61
+  - first:
+      213: -2178170044272290318
+    second: Brenden spritesheet_62
+  - first:
+      213: -2949302492453781766
+    second: Brenden spritesheet_63
+  - first:
+      213: -7379791108784478405
+    second: Brenden spritesheet_64
+  - first:
+      213: 1434439398051297767
+    second: Brenden spritesheet_65
+  - first:
+      213: -6170262525902860174
+    second: Brenden spritesheet_66
+  - first:
+      213: -4697936285749898201
+    second: Brenden spritesheet_67
+  - first:
+      213: 5874365378688541487
+    second: Brenden spritesheet_68
+  - first:
+      213: 7312464366598417160
+    second: Brenden spritesheet_69
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Brenden spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 263
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df24fe30c34d8dae0800000000000000
+      internalID: -1524235119635774723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 263
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ac2d944fefb5c8d0800000000000000
+      internalID: -2826642156735877978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 263
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7819b8f515fb8920800000000000000
+      internalID: 2993755852033824892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 263
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 471075e0ac00277f0800000000000000
+      internalID: -616429331172359820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 263
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b66ec9451eab087b0800000000000000
+      internalID: -5223970090799798677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 263
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2add2b780ce998950800000000000000
+      internalID: 6451862490932501922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 231
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e206f5aa9fc170d0800000000000000
+      internalID: -3426729578335960348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 231
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab151f7ee9ecf8fe0800000000000000
+      internalID: -1184500995083644486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 231
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d47ff89d48d5e8900800000000000000
+      internalID: 688590618201421645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 231
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1bd5b6f8b2c89d70800000000000000
+      internalID: 9050197550869895962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 231
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0dc3c7258a1f4620800000000000000
+      internalID: 2760454255801519375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 231
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62d1e1f40ae795ce0800000000000000
+      internalID: -1415961380844069594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 199
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98c487661bf70de40800000000000000
+      internalID: 5679179530019294345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 199
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b6ee767f85952510800000000000000
+      internalID: 1523788492335670968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 199
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d571d75795b059f0800000000000000
+      internalID: -481685498510608938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 199
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08f2ee8dc1c9aa8e0800000000000000
+      internalID: -1681359863156953216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 199
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 901c745ad86eecbb0800000000000000
+      internalID: -4913736647376912119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 199
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a7cadea8d7e6add0800000000000000
+      internalID: -2475036027360983130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 167
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c922744031f34e60800000000000000
+      internalID: 7945459357220743619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 167
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7743f7bcc18842e30800000000000000
+      internalID: 4477853586767688823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 167
+        width: 23
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f342d52865a48360800000000000000
+      internalID: 7171038373410391029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 135
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25aee961b0840f210800000000000000
+      internalID: 1364669899554613842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 135
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ed49898a41d5d9a0800000000000000
+      internalID: -6208826393195098650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_24
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 135
+        width: 23
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0898d49c1905cba0800000000000000
+      internalID: -6069434904450918387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 103
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92fe1ca11dae6c750800000000000000
+      internalID: 6325000910506422057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_27
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 103
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8617f6a5aee4d8d70800000000000000
+      internalID: 9046973994903761256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_28
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 103
+        width: 23
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4417ee5d68e65a340800000000000000
+      internalID: 4874423697092276548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 39
+        width: 48
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e0fa7f9e3c6113e0800000000000000
+      internalID: -2084766136276422426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_36
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 48
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4f1fd9a495a80550800000000000000
+      internalID: 6127329350961274698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_39
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 64
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc4ed047565383ea0800000000000000
+      internalID: -5892901402559257396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_42
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 48
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e9d21e0783368ba0800000000000000
+      internalID: -6087121191194928668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_45
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 0
+        width: 65
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aca212195c20c390800000000000000
+      internalID: -7800185793538773851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_49
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 7
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c66a50061eaa259e0800000000000000
+      internalID: -1634055829826722196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_51
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 7
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52b70c88d3c4eb050800000000000000
+      internalID: 5818171595780291365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brenden spritesheet_53
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 7
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f185b31455d9c910800000000000000
+      internalID: 1858250878351671797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: Firemander
+  m_EditorClassIdentifier: 
+  name: Firemander
+  description: A flame salamander mon.
+  frontSprite: {fileID: 21300000, guid: 3abb5cdf296302047aedb498f0eadb49, type: 3}
+  backSprite: {fileID: 21300000, guid: 9da14c03fdff44c42a5bb1bf98d3c00e, type: 3}
+  type1: 2
+  type2: 0
+  maxHp: 39
+  attack: 52
+  defense: 43
+  spAttack: 60
+  spDefense: 50
+  speed: 65
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: f56dd14dca920d346bf2a99fedb7d856, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 54531e6990e6c4d4396f4c49a4c1940c, type: 2}
+    level: 4
+  - moveBase: {fileID: 11400000, guid: 936f9ab22dd2d20439aacfefe2e56a5d, type: 2}
+    level: 7
