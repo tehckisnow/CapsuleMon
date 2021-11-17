@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask collisionsLayer;
     [SerializeField] LayerMask grassLayer;
     
+    public event Action OnEncountered;
+
     private bool isMoving;
     private Vector2 input;
 
@@ -22,7 +25,7 @@ public class PlayerController : MonoBehaviour
         transform.position = pos;
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
         if(!isMoving)
         {
@@ -82,9 +85,10 @@ public class PlayerController : MonoBehaviour
     {
         if(Physics2D.OverlapCircle(transform.position, 0.2f, grassLayer) != null)
         {
-            if(Random.Range(1, 101) <= 10)
+            if(UnityEngine.Random.Range(1, 101) <= 10)
             {
-                Debug.Log("Encountered Mon!");
+                animator.SetBool("isMoving", false);
+                OnEncountered();
             }
         }
     }
