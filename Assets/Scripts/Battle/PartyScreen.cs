@@ -8,6 +8,7 @@ public class PartyScreen : MonoBehaviour
     [SerializeField] TextMeshProUGUI messageText;
 
     PartyMemberUI[] memberSlots;
+    List<Mon> mons;
 
     public void Init()
     {
@@ -16,6 +17,7 @@ public class PartyScreen : MonoBehaviour
 
     public void SetPartyData(List<Mon> mons)
     {
+        this.mons = mons;
         for(int i = 0; i < memberSlots.Length; i++)
         {
             if(i < mons.Count)
@@ -28,5 +30,25 @@ public class PartyScreen : MonoBehaviour
             }
         }
         messageText.text = "Choose a mon";
+    }
+
+    public void UpdateMemberSelection(int selectedMember)
+    {
+        for(int i = 0; i < mons.Count; i++)
+        {
+            if(i == selectedMember)
+            {
+                memberSlots[i].SetSelected(true);
+            }
+            else
+            {
+                memberSlots[i].SetSelected(false);
+            }
+        }
+    }
+
+    public void SetMessageText(string message)
+    {
+        messageText.text = message;
     }
 }

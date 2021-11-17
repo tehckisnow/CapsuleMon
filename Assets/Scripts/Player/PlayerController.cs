@@ -6,12 +6,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 5;
+    [SerializeField] float runModifier = 2;
     [SerializeField] LayerMask collisionsLayer;
     [SerializeField] LayerMask grassLayer;
     
     public event Action OnEncountered;
 
     private bool isMoving;
+    private bool isRunning;
     private Vector2 input;
 
     private Animator animator;
@@ -29,6 +31,18 @@ public class PlayerController : MonoBehaviour
     {
         if(!isMoving)
         {
+            //running
+            if(Input.GetButton("Fire3"))
+            {
+                animator.SetBool("isRunning", true);
+                isRunning = true;
+            }
+            else
+            {
+                animator.SetBool("isRunning", false);
+                isRunning = false;
+            }
+
             input.x = Input.GetAxisRaw("Horizontal");
             input.y = Input.GetAxisRaw("Vertical");
 
@@ -60,9 +74,14 @@ public class PlayerController : MonoBehaviour
     {
         isMoving = true;
 
+        float run = 1f;
+        if(isRunning)
+        {
+            run = runModifier;
+        }
         while((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * run * Time.deltaTime);
             yield return null;
         }
         transform.position = targetPos;
