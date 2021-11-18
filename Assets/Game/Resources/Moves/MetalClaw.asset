@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 120c6bd4b257fc045b6463651cb4654f, type: 3}
-  m_Name: Ember
+  m_Name: MetalClaw
   m_EditorClassIdentifier: 
-  name: Ember
-  description: Deals damage and has a 10% chance of causing burn.
-  type: 2
-  power: 40
-  accuracy: 100
-  pp: 25
-  category: 1
+  name: Metal claw
+  description: Does damage and has a 10% chance of raising the user's attack stat
+    by one stage.
+  type: 1
+  power: 50
+  accuracy: 95
+  pp: 35
+  category: 0
   effects:
     boosts: []
     status: 0

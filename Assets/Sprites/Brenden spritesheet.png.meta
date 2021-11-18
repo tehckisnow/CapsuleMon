@@ -420,7 +420,7 @@ TextureImporter:
       name: Brenden spritesheet_4
       rect:
         serializedVersion: 2
-        x: 65
+        x: 64
         y: 263
         width: 16
         height: 32
@@ -546,7 +546,7 @@ TextureImporter:
       name: Brenden spritesheet_10
       rect:
         serializedVersion: 2
-        x: 65
+        x: 64
         y: 231
         width: 16
         height: 32
@@ -567,7 +567,7 @@ TextureImporter:
       name: Brenden spritesheet_11
       rect:
         serializedVersion: 2
-        x: 81
+        x: 80
         y: 231
         width: 16
         height: 32
@@ -924,10 +924,10 @@ TextureImporter:
       name: Brenden spritesheet_36
       rect:
         serializedVersion: 2
-        x: 112
-        y: 0
-        width: 48
-        height: 71
+        x: 224
+        y: 215
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -945,10 +945,10 @@ TextureImporter:
       name: Brenden spritesheet_39
       rect:
         serializedVersion: 2
-        x: 160
-        y: 0
-        width: 64
-        height: 71
+        x: 224
+        y: 151
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -967,9 +967,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 224
-        y: 0
-        width: 48
-        height: 71
+        y: 87
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -987,10 +987,10 @@ TextureImporter:
       name: Brenden spritesheet_45
       rect:
         serializedVersion: 2
-        x: 272
-        y: 0
-        width: 65
-        height: 71
+        x: 224
+        y: 23
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

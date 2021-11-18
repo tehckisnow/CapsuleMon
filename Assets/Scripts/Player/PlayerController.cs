@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float moveSpeed = 5;
     [SerializeField] float runModifier = 2;
     [SerializeField] LayerMask collisionsLayer;
+    [SerializeField] LayerMask walkableLayer;
     [SerializeField] LayerMask grassLayer;
     
     public event Action OnEncountered;
@@ -21,10 +22,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        
-        //just a remind about the .8 y offset
-        Vector3 pos = new Vector3(0.5f, 0.8f, 0f);
-        transform.position = pos;
     }
 
     public void HandleUpdate()
@@ -61,7 +58,10 @@ public class PlayerController : MonoBehaviour
                 targetPos.x += input.x;
                 targetPos.y += input.y;
 
-                if(IsWalkable(targetPos))
+                //use testPos to apply vertical offset to test closer to ground
+                float verticalOffset = -0.7f;
+                var testPos = new Vector3(targetPos.x, targetPos.y + verticalOffset, 0f);
+                if(IsWalkable(testPos))
                 {
                     StartCoroutine(Move(targetPos));
                 }
@@ -94,6 +94,10 @@ public class PlayerController : MonoBehaviour
     private bool IsWalkable(Vector3 targetPos)
     {
         if(Physics2D.OverlapCircle(targetPos, 0.2f, collisionsLayer) != null)
+        {
+            return false;
+        }
+        if(Physics2D.OverlapCircle(targetPos, 0.2f, walkableLayer) == null)
         {
             return false;
         }

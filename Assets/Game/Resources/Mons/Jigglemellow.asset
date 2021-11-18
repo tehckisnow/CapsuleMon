@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Jigglemellow
   m_EditorClassIdentifier: 
   name: Jigglemellow
-  description: 
+  description: This is an abomination against God!
   frontSprite: {fileID: 21300000, guid: a889d00ebf867c547a8284949d14cb80, type: 3}
   backSprite: {fileID: 21300000, guid: f9b10276eee6b5c42950bfc539b71101, type: 3}
   type1: 1
@@ -22,12 +22,12 @@ MonoBehaviour:
   attack: 45
   defense: 20
   spAttack: 45
-  spDefense: 20
+  spDefense: 25
   speed: 20
   learnableMoves:
-  - moveBase: {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
-    level: 1
-  - moveBase: {fileID: 11400000, guid: 54531e6990e6c4d4396f4c49a4c1940c, type: 2}
-    level: 1
   - moveBase: {fileID: 11400000, guid: e3a11c091c26cf446baeb0293ee856b2, type: 2}
-    level: 10
+    level: 1
+  - moveBase: {fileID: 11400000, guid: b23d128bb75075141a4e17792ef72608, type: 2}
+    level: 4
+  - moveBase: {fileID: 11400000, guid: 44b249d01f3b82f45af3f79f7912cabd, type: 2}
+    level: 9

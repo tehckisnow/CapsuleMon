@@ -13,21 +13,25 @@ MonoBehaviour:
   m_Name: Pickenchew
   m_EditorClassIdentifier: 
   name: Pickenchew
-  description: 
+  description: An electric rat known for chewing power cables.
   frontSprite: {fileID: 21300000, guid: d949a8e7f470fcc41868260c64eb53e1, type: 3}
   backSprite: {fileID: 21300000, guid: 3d01c38abf4fe0a42ae2359e8b64a443, type: 3}
   type1: 4
   type2: 0
   maxHp: 35
   attack: 55
-  defense: 40
+  defense: 30
   spAttack: 50
-  spDefense: 50
+  spDefense: 40
   speed: 90
   learnableMoves:
-  - moveBase: {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+  - moveBase: {fileID: 11400000, guid: a565dd5eb40cb6d4282ee4ecf34231a4, type: 2}
     level: 1
   - moveBase: {fileID: 11400000, guid: 54531e6990e6c4d4396f4c49a4c1940c, type: 2}
     level: 1
+  - moveBase: {fileID: 11400000, guid: 93f77ff631ba6a34e89ca40258736959, type: 2}
+    level: 6
   - moveBase: {fileID: 11400000, guid: 823c6a2071be1f54ba3b77064eb465ae, type: 2}
-    level: 10
+    level: 8
+  - moveBase: {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
+    level: 11

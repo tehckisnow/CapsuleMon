@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 120c6bd4b257fc045b6463651cb4654f, type: 3}
-  m_Name: Ember
+  m_Name: Confusion
   m_EditorClassIdentifier: 
-  name: Ember
-  description: Deals damage and has a 10% chance of causing burn.
-  type: 2
-  power: 40
+  name: Confusion
+  description: 'A Psychic-type attack. Has a one-in-ten chance of leaving the target
+    confused. '
+  type: 11
+  power: 50
   accuracy: 100
   pp: 25
   category: 1
   effects:
     boosts: []
     status: 0
-    volatileStatus: 0
+    volatileStatus: 6
   target: 0

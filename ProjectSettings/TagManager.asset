@@ -15,7 +15,7 @@ TagManager:
   - 
   - Collisions
   - TallGrass
-  - 
+  - walkableCollider
   - 
   - 
   - 
