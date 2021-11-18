@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, BattleOver}
+public enum BattleAction { Move, SwitchMon, UseItem, Run }
 
 public class BattleSystem : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class BattleSystem : MonoBehaviour
     public event Action<bool> OnBattleOver;
 
     BattleState state;
+    BattleState? prevState;
     private int currentAction;
     private int currentMove;
     private int currentMember;
@@ -40,19 +42,7 @@ public class BattleSystem : MonoBehaviour
 
         yield return dialogBox.TypeDialog($"A wild {enemyUnit.Mon.Base.Name} appeared!");
 
-        ChooseFirstTurn();
-    }
-
-    private void ChooseFirstTurn()
-    {
-        if(playerUnit.Mon.Speed >= enemyUnit.Mon.Speed)
-        {
-            ActionSelection();
-        }
-        else
-        {
-            StartCoroutine(EnemyMove());
-        }
+        ActionSelection();
     }
 
     private void BattleOver(bool won)
@@ -84,34 +74,71 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableMoveSelector(true);
     }
 
-    IEnumerator PlayerMove()
+    IEnumerator RunTurns(BattleAction playerAction)
     {
-        state = BattleState.PerformMove;
-
-        var move = playerUnit.Mon.Moves[currentMove];
-        yield return RunMove(playerUnit, enemyUnit, move);
-
-        //if the battle state was not changed by RunMove, then go to next step
-        if(state == BattleState.PerformMove)
+        state = BattleState.RunningTurn;
+        if(playerAction == BattleAction.Move)
         {
-            StartCoroutine(EnemyMove());
+            playerUnit.Mon.CurrentMove = playerUnit.Mon.Moves[currentMove];
+            enemyUnit.Mon.CurrentMove = enemyUnit.Mon.GetRandomMove();
+
+            //Check who goes first
+            int playerMovePriority = playerUnit.Mon.CurrentMove.Base.Priority;
+            int enemyMovePriority = enemyUnit.Mon.CurrentMove.Base.Priority;
+
+            bool playerGoesFirst = true;
+            if(enemyMovePriority > playerMovePriority)
+            {
+                playerGoesFirst = false;
+            }
+            else if(enemyMovePriority == playerMovePriority)
+            {
+                playerGoesFirst = playerUnit.Mon.Speed >= enemyUnit.Mon.Speed;
+            }
+
+            var firstUnit = (playerGoesFirst) ? playerUnit : enemyUnit;
+            var secondUnit = (playerGoesFirst) ? enemyUnit : playerUnit;
+
+            var secondMon = secondUnit.Mon;
+
+            //first turn
+            yield return RunMove(firstUnit, secondUnit, firstUnit.Mon.CurrentMove);
+            yield return RunAfterTurn(firstUnit);
+            if(state == BattleState.BattleOver) yield break;
+
+            if(secondMon.HP > 0)
+            {
+                //second turn
+                yield return RunMove(secondUnit, firstUnit, secondUnit.Mon.CurrentMove);
+                yield return RunAfterTurn(secondUnit);
+                if(state == BattleState.BattleOver) yield break;
+            }
+        }
+        else
+        {
+            if(playerAction == BattleAction.SwitchMon)
+            {
+                var selectedMon = playerParty.Mons[currentMember];
+                state = BattleState.Busy;
+                yield return SwitchMon(selectedMon);
+            }
+
+            //enemy turn
+            var enemyMove = enemyUnit.Mon.GetRandomMove();
+            yield return RunMove(enemyUnit, playerUnit, enemyMove);
+            yield return RunAfterTurn(enemyUnit);
+            if(state == BattleState.BattleOver)
+            {
+                yield break;
+            }
+
         }
 
-    }
-
-    IEnumerator EnemyMove()
-    {
-        state = BattleState.PerformMove;
-
-        var move = enemyUnit.Mon.GetRandomMove();
-        yield return RunMove(enemyUnit, playerUnit, move);
-
-        //if the battle state was not changed by RunMove, then go to next step
-        if(state == BattleState.PerformMove)
+        if(state != BattleState.BattleOver)
         {
             ActionSelection();
         }
-    }
+    } 
 
     IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
     {
@@ -127,54 +154,61 @@ public class BattleSystem : MonoBehaviour
         move.PP--;
         yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Base.Name} used {move.Base.Name}");
         
-        sourceUnit.PlayAttackAnimation();
-        yield return new WaitForSeconds(1f);
-        targetUnit.PlayHitAnimation();
-
-        if(move.Base.Category == MoveCategory.Status)
+        //check if move hits
+        if(CheckIfMoveHits(move, sourceUnit.Mon, targetUnit.Mon))
         {
-            yield return RunMoveEffects(move, sourceUnit.Mon, targetUnit.Mon);
+            sourceUnit.PlayAttackAnimation();
+            yield return new WaitForSeconds(1f);
+            targetUnit.PlayHitAnimation();
+
+            if(move.Base.Category == MoveCategory.Status)
+            {
+                yield return RunMoveEffects(move.Base.Effects, sourceUnit.Mon, targetUnit.Mon, move.Base.Target);
+            }
+            else
+            {
+                var damageDetails = targetUnit.Mon.TakeDamage(move, sourceUnit.Mon);
+                yield return targetUnit.Hud.UpdateHP();
+                yield return ShowDamageDetails(damageDetails);
+            }
+
+            if(move.Base.SecondaryEffects != null && move.Base.SecondaryEffects.Count > 0 && targetUnit.Mon.HP > 0)
+            {
+                foreach(var secondary in move.Base.SecondaryEffects)
+                {
+                    var rnd = UnityEngine.Random.Range(1, 101);
+                    if(rnd <= secondary.Chance)
+                    {
+                        yield return RunMoveEffects(secondary, sourceUnit.Mon, targetUnit.Mon, secondary.Target); }
+                }
+            }
+
+            if(targetUnit.Mon.HP <= 0)
+            {
+                yield return dialogBox.TypeDialog($"{targetUnit.Mon.Base.Name} fainted");
+                targetUnit.PlayFaintAnimation();
+
+                yield return new WaitForSeconds(2f);
+                
+                CheckForBattleOver(targetUnit);
+            }
         }
         else
         {
-            var damageDetails = targetUnit.Mon.TakeDamage(move, sourceUnit.Mon);
-            yield return targetUnit.Hud.UpdateHP();
-            yield return ShowDamageDetails(damageDetails);
+            sourceUnit.PlayAttackAnimation();
+            yield return new WaitForSeconds(1f);
+            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Base.Name}'s attack missed");
         }
 
-        if(targetUnit.Mon.HP <= 0)
-        {
-            yield return dialogBox.TypeDialog($"{targetUnit.Mon.Base.Name} fainted");
-            targetUnit.PlayFaintAnimation();
 
-            yield return new WaitForSeconds(2f);
-            
-            CheckForBattleOver(targetUnit);
-        }
-
-        //statuses like burn or psn will hurt the mon after the turn
-        sourceUnit.Mon.OnAfterTurn();
-        yield return ShowStatusChanges(sourceUnit.Mon);
-        yield return sourceUnit.Hud.UpdateHP();
-        if(sourceUnit.Mon.HP <= 0)
-        {
-            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Base.Name} fainted");
-            sourceUnit.PlayFaintAnimation();
-
-            yield return new WaitForSeconds(2f);
-            
-            CheckForBattleOver(sourceUnit);
-        }
     }
 
-    IEnumerator RunMoveEffects(Move move, Mon source, Mon target)
+    IEnumerator RunMoveEffects(MoveEffects effects, Mon source, Mon target, MoveTarget moveTarget)
     {
-        var effects = move.Base.Effects;
-
         // Stat Boosting
         if(effects.Boosts != null)
         {
-            if(move.Base.Target == MoveTarget.Self)
+            if(moveTarget == MoveTarget.Self)
             {
                 source.ApplyBoosts(effects.Boosts);
             }
@@ -198,6 +232,66 @@ public class BattleSystem : MonoBehaviour
 
         yield return ShowStatusChanges(source);
         yield return ShowStatusChanges(target);
+    }
+
+    IEnumerator RunAfterTurn(BattleUnit sourceUnit)
+    {
+        if(state == BattleState.BattleOver)
+        {
+            yield break;
+        }
+
+        //wait until this lambda function is true
+        yield return new WaitUntil(() => state == BattleState.RunningTurn);
+
+        //statuses like burn or psn will hurt the mon after the turn
+        sourceUnit.Mon.OnAfterTurn();
+        yield return ShowStatusChanges(sourceUnit.Mon);
+        yield return sourceUnit.Hud.UpdateHP();
+        if(sourceUnit.Mon.HP <= 0)
+        {
+            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Base.Name} fainted");
+            sourceUnit.PlayFaintAnimation();
+
+            yield return new WaitForSeconds(2f);
+            
+            CheckForBattleOver(sourceUnit);
+        }
+    }
+
+    private bool CheckIfMoveHits(Move move, Mon source, Mon target)
+    {
+        if(move.Base.AlwaysHits)
+        {
+            return true;
+        }
+
+        float moveAccuracy = move.Base.Accuracy;
+
+        int accuracy = source.StatBoosts[Stat.Accuracy];
+        int evasion = target.StatBoosts[Stat.Evasion];
+
+        var boostValues = new float[] { 1f, 4f / 3f, 5f / 3f, 2f, 7f / 3f, 8f / 3f, 3f };
+
+        if(accuracy > 0)
+        {
+            moveAccuracy *= boostValues[accuracy];
+        }
+        else
+        {
+            moveAccuracy /= boostValues[-accuracy];
+        }
+
+        if(evasion > 0)
+        {
+            moveAccuracy /= boostValues[evasion];
+        }
+        else
+        {
+            moveAccuracy *= boostValues[-evasion];
+        }
+
+        return UnityEngine.Random.Range(1, 101) <= moveAccuracy;
     }
 
     IEnumerator ShowStatusChanges(Mon mon)
@@ -300,6 +394,7 @@ public class BattleSystem : MonoBehaviour
             else if(currentAction == 2)
             {
                 //Mon
+                prevState = state;
                 OpenPartyScreen();
             }
             else if(currentAction == 3)
@@ -335,9 +430,15 @@ public class BattleSystem : MonoBehaviour
 
         if(Input.GetButtonDown("Submit"))
         {
+            var move = playerUnit.Mon.Moves[currentMove];
+            if(move.PP == 0)
+            {
+                return;
+            }
+
             dialogBox.EnableMoveSelector(false);
             dialogBox.EnableDialogText(true);
-            StartCoroutine(PlayerMove());
+            StartCoroutine(RunTurns(BattleAction.Move));
         }
         else if(Input.GetButtonDown("Cancel"))
         {
@@ -385,8 +486,17 @@ public class BattleSystem : MonoBehaviour
             }
 
             partyScreen.gameObject.SetActive(false);
-            state = BattleState.Busy;
-            StartCoroutine(SwitchMon(selectedMember));
+
+            if(prevState == BattleState.ActionSelection)
+            {
+                prevState = null;
+                StartCoroutine(RunTurns(BattleAction.SwitchMon));
+            }
+            else
+            {
+                state = BattleState.Busy;
+                StartCoroutine(SwitchMon(selectedMember));
+            }
         }
         else if(Input.GetButtonDown("Cancel"))
         {
@@ -397,10 +507,8 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SwitchMon(Mon newMon)
     {
-        bool currentMonFainted = true;
         if(playerUnit.Mon.HP > 0)
         {
-            currentMonFainted = false;
             yield return dialogBox.TypeDialog($"Come back {playerUnit.Mon.Base.Name}");
             playerUnit.PlayFaintAnimation();
             yield return new WaitForSeconds(2f);
@@ -410,13 +518,6 @@ public class BattleSystem : MonoBehaviour
         dialogBox.SetMoveNames(newMon.Moves);
         yield return dialogBox.TypeDialog($"Go {newMon.Base.Name}!");
 
-        if(currentMonFainted)
-        {
-            ChooseFirstTurn();
-        }
-        else
-        {
-            StartCoroutine(EnemyMove());
-        }
+        state = BattleState.RunningTurn;
     }
 }

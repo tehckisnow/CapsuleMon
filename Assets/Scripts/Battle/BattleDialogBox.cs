@@ -8,6 +8,7 @@ public class BattleDialogBox : MonoBehaviour
     [SerializeField] int lettersPerSecond = 30;
     [SerializeField] Color highlightedColor;
     Color unhighlightedColor;
+    Color outOfPPColor = Color.red;
 
     [SerializeField] TextMeshProUGUI dialogText;
     [SerializeField] GameObject actionSelector;
@@ -97,6 +98,15 @@ public class BattleDialogBox : MonoBehaviour
 
         ppText.text = $"PP {move.PP}/{move.Base.PP}";
         typeText.text = move.Base.Type.ToString();
+
+        if(move.PP == 0)
+        {
+            ppText.color = outOfPPColor;
+        }
+        else
+        {
+            ppText.color = unhighlightedColor;
+        }
     }
 
     public void SetMoveNames(List<Move> moves)

@@ -10,27 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 120c6bd4b257fc045b6463651cb4654f, type: 3}
-  m_Name: Bubble
+  m_Name: QuickAttack
   m_EditorClassIdentifier: 
-  name: Bubble
-  description: A Water-type attack. Has a one-in-three chance of reducing the target's
-    Speed.
-  type: 3
-  power: 20
+  name: Quick attack
+  description: 
+  type: 1
+  power: 40
   accuracy: 100
   alwaysHits: 0
   pp: 30
-  category: 1
+  priority: 1
+  category: 0
   effects:
     boosts: []
     status: 0
     volatileStatus: 0
-  secondaryEffects:
-  - boosts:
-    - stat: 4
-      boost: -1
-    status: 0
-    volatileStatus: 0
-    chance: 33
-    target: 0
+  secondaryEffects: []
   target: 0

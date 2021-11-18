@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,8 @@ public class Mon
     public int HP { get; set; }
 
     public List<Move> Moves { get; set; }
+
+    public Move CurrentMove { get; set; }
 
     public Dictionary<Stat, int> Stats { get; private set; }
     
@@ -67,7 +70,10 @@ public class Mon
             {Stat.Defense, 0},
             {Stat.SpAttack, 0},
             {Stat.SpDefense, 0},
-            {Stat.Speed, 0}
+            {Stat.Speed, 0},
+            
+            {Stat.Accuracy, 0},
+            {Stat.Evasion, 0}
         };
     }
 
@@ -225,8 +231,11 @@ public class Mon
 
     public Move GetRandomMove()
     {
-        int r = Random.Range(0, Moves.Count);
-        return Moves[r];
+        //! will null ref error if there are no moves with PP left
+        var movesWithPP = Moves.Where(x => x.PP > 0).ToList();
+
+        int r = Random.Range(0, movesWithPP.Count);
+        return movesWithPP[r];
     }
 
     public bool OnBeforeMove()
