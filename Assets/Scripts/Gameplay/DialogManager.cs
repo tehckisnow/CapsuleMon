@@ -21,12 +21,14 @@ public class DialogManager : MonoBehaviour
     }
 
     Dialog dialog;
+    Action onDialogFinished;
+
     int currentLine = 0;
     bool isTyping;
 
     public bool IsShowing { get; private set; }
 
-    public IEnumerator ShowDialog(Dialog dialog)
+    public IEnumerator ShowDialog(Dialog dialog, Action onFinished = null)
     {
         yield return new WaitForEndOfFrame();
         //the above line is to prevent the z key from mis-triggering from before
@@ -35,6 +37,8 @@ public class DialogManager : MonoBehaviour
 
         IsShowing = true;
         this.dialog = dialog;
+        onDialogFinished = onFinished;
+
         dialogBox.SetActive(true);
         StartCoroutine(TypeDialog(dialog.Lines[0]));
     }
@@ -53,6 +57,7 @@ public class DialogManager : MonoBehaviour
                 currentLine = 0;
                 IsShowing = false;
                 dialogBox.SetActive(false);
+                onDialogFinished?.Invoke();
                 OnCloseDialog?.Invoke();
             }
         }

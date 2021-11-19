@@ -17,8 +17,8 @@ TagManager:
   - TallGrass
   - walkableCollider
   - Interactable
-  - 
-  - 
+  - Player
+  - FOVLayer
   - 
   - 
   - 

@@ -9,38 +9,34 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float runModifier = 2;
     
     public event Action OnEncountered;
+    public event Action<Collider2D> OnEnterTrainersView;
 
     private bool isMoving;
     private bool isRunning;
     private Vector2 input;
 
     private Animator animator;
-    //private CharacterAnimator animator2;
     private Character character;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        //animator2 = GetComponent<CharacterAnimator>();
         character = GetComponent<Character>();
     }
 
     public void HandleUpdate()
     {
-        //if(!isMoving)
         if(!character.IsMoving)
         {
             //running
             if(Input.GetButton("Fire3"))
             {
                 animator.SetBool("isRunning", true);
-                //isRunning = true;
                 character.IsRunning = true;
             }
             else
             {
                 animator.SetBool("isRunning", false);
-                //isRunning = false;
                 character.IsRunning = false;
             }
 
@@ -55,27 +51,9 @@ public class PlayerController : MonoBehaviour
 
             if(input != Vector2.zero)
             {
-                StartCoroutine(character.Move(input, CheckForEncounters));
-
-                // animator.SetFloat("moveX", input.x);
-                // animator.SetFloat("moveY", input.y);
-
-                // var targetPos = transform.position;
-                // targetPos.x += input.x;
-                // targetPos.y += input.y;
-
-                // //use testPos to apply vertical offset to test closer to ground
-                // float verticalOffset = -0.7f;
-                // var testPos = new Vector3(targetPos.x, targetPos.y + verticalOffset, 0f);
-                // if(IsWalkable(testPos))
-                // {
-                //     StartCoroutine(Move(targetPos));
-                // }
-
-
+                StartCoroutine(character.Move(input, OnMoveOver));
             }
         }
-        //animator.SetBool("isMoving", isMoving);
 
         character.HandleUpdate();
 
@@ -94,43 +72,15 @@ public class PlayerController : MonoBehaviour
         var collider = Physics2D.OverlapCircle(interactPos, 0.3f, GameLayers.Instance.InteractablesLayer);
         if(collider != null)
         {
-            collider.GetComponent<Interactable>()?.Interact();
+            collider.GetComponent<Interactable>()?.Interact(transform);
         }
     }
 
-    // IEnumerator Move(Vector3 targetPos)
-    // {
-    //     isMoving = true;
-
-    //     float run = 1f;
-    //     if(isRunning)
-    //     {
-    //         run = runModifier;
-    //     }
-    //     while((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
-    //     {
-    //         transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * run * Time.deltaTime);
-    //         yield return null;
-    //     }
-    //     transform.position = targetPos;
-
-    //     isMoving = false;
-
-    //     CheckForEncounters();
-    // }
-
-    // private bool IsWalkable(Vector3 targetPos)
-    // {
-    //     if(Physics2D.OverlapCircle(targetPos, 0.2f, collisionsLayer | interactablesLayer) != null)
-    //     {
-    //         return false;
-    //     }
-    //     if(Physics2D.OverlapCircle(targetPos, 0.2f, walkableLayer) == null)
-    //     {
-    //         return false;
-    //     }
-    //     return true;
-    // }
+    private void OnMoveOver()
+    {
+        CheckForEncounters();
+        CheckIfInTrainersView();
+    }
 
     private void CheckForEncounters()
     {
@@ -141,6 +91,16 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isMoving", false);
                 OnEncountered();
             }
+        }
+    }
+
+    private void CheckIfInTrainersView()
+    {
+        var collider = Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.Instance.FOVLayer);
+        if(collider != null)
+        {
+            animator.SetBool("isMoving", false);
+            OnEnterTrainersView?.Invoke(collider);
         }
     }
 }
