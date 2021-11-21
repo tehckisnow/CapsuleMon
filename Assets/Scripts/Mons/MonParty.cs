@@ -22,4 +22,17 @@ public class MonParty : MonoBehaviour
     {
         return mons.Where(x => x.HP > 0).FirstOrDefault();
     }
+
+    public void AddMon(Mon newMon)
+    {
+        if(mons.Count < 6)
+        {
+            mons.Add(newMon);
+        }
+        else
+        {
+            //TODO: add to the PC once that's implemented
+
+        }
+    }
 }

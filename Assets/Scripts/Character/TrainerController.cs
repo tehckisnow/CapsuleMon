@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrainerController : MonoBehaviour
+public class TrainerController : MonoBehaviour, Interactable
 {
+    [SerializeField] string name;
+    [SerializeField] Sprite sprite;
     [SerializeField] Dialog dialog;
+    [SerializeField] Dialog dialogAfterBattle;
     [SerializeField] GameObject exclamation;
     [SerializeField] GameObject fovPivot;
     
+    // State
+    private bool battleLost = false;
+
     Character character;
 
     private void Awake()
@@ -18,6 +24,22 @@ public class TrainerController : MonoBehaviour
     private void Start()
     {
         SetFovRotation(character.Facing);
+    }
+
+    public void Interact(Transform initiator)
+    {
+        character.LookTowards(initiator.position);
+        if(!battleLost)
+        {
+            StartCoroutine(DialogManager.Instance.ShowDialog(dialog, () => 
+            {
+                GameController.Instance.StartTrainerBattle(this);
+            }));
+        }
+        else
+        {
+            StartCoroutine(DialogManager.Instance.ShowDialog(dialogAfterBattle));
+        }
     }
 
     private void Update()
@@ -41,8 +63,14 @@ public class TrainerController : MonoBehaviour
 
         //show dialog
         StartCoroutine(DialogManager.Instance.ShowDialog(dialog, () => {
-            Debug.Log("starting battle");
+            GameController.Instance.StartTrainerBattle(this);
         }));
+    }
+
+    public void BattleLost()
+    {
+        battleLost = true;
+        fovPivot.gameObject.SetActive(false);
     }
 
     public void SetFovRotation(Facing dir)
@@ -55,6 +83,14 @@ public class TrainerController : MonoBehaviour
         else if(dir == Facing.Left)
             angle = 270f;
     
-        fovPivot.transform.eulerAngles = new Vector3(0f, 0f, angle);
+        fovPivot.transform.localEulerAngles = new Vector3(0f, 0f, angle);
+    }
+
+    public string Name {
+        get => name;
+    }
+
+    public Sprite Sprite {
+        get => sprite;
     }
 }

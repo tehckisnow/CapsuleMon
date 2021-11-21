@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] string name;
+    [SerializeField] Sprite sprite;
     [SerializeField] float moveSpeed = 5;
     [SerializeField] float runModifier = 2;
     
@@ -102,5 +104,13 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isMoving", false);
             OnEnterTrainersView?.Invoke(collider);
         }
+    }
+
+    public string Name {
+        get => name;
+    }
+
+    public Sprite Sprite {
+        get => sprite;
     }
 }

@@ -9,12 +9,22 @@ public class Mon
     [SerializeField] MonBase _base;
     [SerializeField] int level;
 
+    public Mon(MonBase pBase, int plevel)
+    {
+        _base = pBase;
+        level = plevel;
+
+        Init();
+    }
+
     public MonBase Base {
         get { return _base; }
     }
     public int Level {
         get { return level; }
     }
+
+    public string Name { get; set; }
 
     public int HP { get; set; }
 
@@ -32,7 +42,7 @@ public class Mon
     public Condition VolatileStatus { get; private set; }
     public int VolatileStatusTime { get; set; }
     
-    public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
+    public Queue<string> StatusChanges { get; private set; }
 
     public bool HpChanged { get; set; }
     public event System.Action OnStatusChanged;
@@ -57,6 +67,8 @@ public class Mon
         CalculateStats();
         HP = MaxHp;
 
+        Name = Base.Name;
+        StatusChanges = new Queue<string>();
         ResetStatBoost();
         Status = null;
         VolatileStatus = null;

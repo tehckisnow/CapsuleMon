@@ -12,8 +12,11 @@ public class GameController : MonoBehaviour
 
     GameState state;
 
+    public static GameController Instance {get; private set; }
+
     private void Awake()
     {
+        Instance = this;
         ConditionsDB.Init();
     }
 
@@ -53,11 +56,34 @@ public class GameController : MonoBehaviour
 
         var playerParty = playerController.GetComponent<MonParty>();
         var wildMon = FindObjectOfType<MapArea>().GetComponent<MapArea>().GetRandomWildMon();
-        battleSystem.StartBattle(playerParty, wildMon);
+        var wildMonCopy = new Mon(wildMon.Base, wildMon.Level);
+
+        battleSystem.StartBattle(playerParty, wildMonCopy);
+    }
+
+    TrainerController trainer;
+
+    public void StartTrainerBattle(TrainerController trainer)
+    {
+        state = GameState.Battle;
+        battleSystem.gameObject.SetActive(true);
+        worldCamera.gameObject.SetActive(false);
+
+        this.trainer = trainer;
+        var playerParty = playerController.GetComponent<MonParty>();
+        var trainerParty = trainer.GetComponent<MonParty>();
+
+        battleSystem.StartTrainerBattle(playerParty, trainerParty);
     }
 
     private void EndBattle(bool won)
     {
+        if(trainer != null && won == true)
+        {
+            trainer.BattleLost();
+            trainer = null;
+        }
+
         state = GameState.FreeRoam;
         battleSystem.gameObject.SetActive(false);
         worldCamera.gameObject.SetActive(true);

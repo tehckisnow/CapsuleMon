@@ -26,7 +26,7 @@ public class ConditionsDB
                 OnAfterTurn = (Mon mon) => 
                 {
                     mon.UpdateHP(mon.MaxHp / 8);
-                    mon.StatusChanges.Enqueue($"{mon.Base.Name} is hurt due to poison");
+                    mon.StatusChanges.Enqueue($"{mon.Name} is hurt due to poison");
                 }
             }
         },
@@ -39,7 +39,7 @@ public class ConditionsDB
                 OnAfterTurn = (Mon mon) => 
                 {
                     mon.UpdateHP(mon.MaxHp / 16);
-                    mon.StatusChanges.Enqueue($"{mon.Base.Name} is hurt due to burn");
+                    mon.StatusChanges.Enqueue($"{mon.Name} is hurt due to burn");
                 }
             }
         },
@@ -53,7 +53,7 @@ public class ConditionsDB
                 {
                     if(Random.Range(1, 5) == 1)
                     {
-                        mon.StatusChanges.Enqueue($"{mon.Base.Name} is paralyzed and cannot move");
+                        mon.StatusChanges.Enqueue($"{mon.Name} is paralyzed and cannot move");
                         return false;
                     }
                     return true;
@@ -71,7 +71,7 @@ public class ConditionsDB
                     if(Random.Range(1, 5) == 1)
                     {
                         mon.CureStatus();
-                        mon.StatusChanges.Enqueue($"{mon.Base.Name} is no longer frozen");
+                        mon.StatusChanges.Enqueue($"{mon.Name} is no longer frozen");
                         return true;
                     }
                     return false;
@@ -95,12 +95,12 @@ public class ConditionsDB
                     if(mon.StatusTime <= 0)
                     {
                         mon.CureStatus();
-                        mon.StatusChanges.Enqueue($"{mon.Base.Name} woke up!");
+                        mon.StatusChanges.Enqueue($"{mon.Name} woke up!");
                         return true;
                     }
 
                     mon.StatusTime--;
-                    mon.StatusChanges.Enqueue($"{mon.Base.Name} is fast asleep");
+                    mon.StatusChanges.Enqueue($"{mon.Name} is fast asleep");
                     return false;
                 }
             }
@@ -123,7 +123,7 @@ public class ConditionsDB
                     if(mon.VolatileStatusTime <= 0)
                     {
                         mon.CureVolatileStatus();
-                        mon.StatusChanges.Enqueue($"{mon.Base.Name} has snapped out of confusion!");
+                        mon.StatusChanges.Enqueue($"{mon.Name} has snapped out of confusion!");
                         return true;
                     }
 
@@ -136,7 +136,7 @@ public class ConditionsDB
                     }
 
                     //hurt by confusion
-                    mon.StatusChanges.Enqueue($"{mon.Base.Name} is confused");
+                    mon.StatusChanges.Enqueue($"{mon.Name} is confused");
                     mon.UpdateHP(mon.MaxHp / 8);
                     mon.StatusChanges.Enqueue($"It hurt itself in its confusion");
                     return false;
@@ -144,6 +144,26 @@ public class ConditionsDB
             }
         }
     };
+
+    public static float GetStatusBonus(Condition condition)
+    {
+        if(condition == null)
+        {
+            return 1f;
+        }
+        else if(condition.Id == ConditionID.slp || condition.Id == ConditionID.frz)
+        {
+            return 2f;
+        }
+        else if(condition.Id == ConditionID.par || condition.Id == ConditionID.psn || condition.Id == ConditionID.brn)
+        {
+            return 1.5f;
+        }
+        else
+        {
+            return 1f;
+        }
+    }
 
 }
 

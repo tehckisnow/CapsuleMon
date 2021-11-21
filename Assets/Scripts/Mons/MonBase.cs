@@ -22,6 +22,8 @@ public class MonBase : ScriptableObject
     [SerializeField] int spDefense;
     [SerializeField] int speed;
 
+    [SerializeField] int catchRate = 255;
+
     [SerializeField] List<LearnableMove> learnableMoves;
 
     public string Name
@@ -83,6 +85,8 @@ public class MonBase : ScriptableObject
     {
         get { return speed; }
     }
+
+    public int CatchRate => catchRate;
 
     public List<LearnableMove> LearnableMoves
     {

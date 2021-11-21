@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, BattleOver}
 public enum BattleAction { Move, SwitchMon, UseItem, Run }
 
 public class BattleSystem : MonoBehaviour
@@ -12,6 +14,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleUnit enemyUnit;
     [SerializeField] BattleDialogBox dialogBox;
     [SerializeField] PartyScreen partyScreen;
+    [SerializeField] Image playerImage;
+    [SerializeField] Image trainerImage;
+    [SerializeField] GameObject capsuleSprite;
 
     public event Action<bool> OnBattleOver;
 
@@ -20,28 +25,86 @@ public class BattleSystem : MonoBehaviour
     private int currentAction;
     private int currentMove;
     private int currentMember;
+    private bool aboutToUseChoice = true;
 
     MonParty playerParty;
+    MonParty trainerParty;
     Mon wildMon;
+
+    private bool isTrainerBattle = false;
+    PlayerController player;
+    TrainerController trainer;
+
+    private int escapeAttempts;
 
     public void StartBattle(MonParty playerParty, Mon wildMon)
     {
         this.playerParty = playerParty;
         this.wildMon = wildMon;
+
+        isTrainerBattle = false;
+        player = playerParty.GetComponent<PlayerController>();
+
+        StartCoroutine(SetupBattle());
+    }
+
+    public void StartTrainerBattle(MonParty playerParty, MonParty trainerParty)
+    {
+        this.playerParty = playerParty;
+        this.trainerParty = trainerParty;
+        
+        isTrainerBattle = true;
+        player = playerParty.GetComponent<PlayerController>();
+        trainer = trainerParty.GetComponent<TrainerController>();
+        
         StartCoroutine(SetupBattle());
     }
 
     public IEnumerator SetupBattle()
     {
-        playerUnit.Setup(playerParty.GetHealthyMon());
-        enemyUnit.Setup(wildMon);
+        playerUnit.Clear();
+        enemyUnit.Clear();
 
+        if(!isTrainerBattle)
+        {
+            //wild mon battle
+            playerUnit.Setup(playerParty.GetHealthyMon());
+            enemyUnit.Setup(wildMon);
+            
+            dialogBox.SetMoveNames(playerUnit.Mon.Moves);
+            yield return dialogBox.TypeDialog($"A wild {enemyUnit.Mon.Name} appeared!");
+        }
+        else
+        {
+            //trainer battle
+            playerUnit.gameObject.SetActive(false);
+            enemyUnit.gameObject.SetActive(false);
+
+            playerImage.gameObject.SetActive(true);
+            trainerImage.gameObject.SetActive(true);
+            playerImage.sprite = player.Sprite;
+            trainerImage.sprite = trainer.Sprite;
+
+            yield return dialogBox.TypeDialog($"{trainer.Name} wants to battle");
+
+            //send out first mon of trainer
+            trainerImage.gameObject.SetActive(false);
+            enemyUnit.gameObject.SetActive(true);
+            var enemyMon = trainerParty.GetHealthyMon();
+            enemyUnit.Setup(enemyMon);
+            yield return dialogBox.TypeDialog($"{trainer.Name} sent out {enemyMon.Name}");
+
+            //send out first mon of player
+            playerImage.gameObject.SetActive(false);
+            playerUnit.gameObject.SetActive(true);
+            var playerMon = playerParty.GetHealthyMon();
+            playerUnit.Setup(playerMon);
+            yield return dialogBox.TypeDialog($"Go {playerMon.Name}");
+            dialogBox.SetMoveNames(playerUnit.Mon.Moves);
+        }
+
+        escapeAttempts = 0;
         partyScreen.Init();
-
-        dialogBox.SetMoveNames(playerUnit.Mon.Moves);
-
-        yield return dialogBox.TypeDialog($"A wild {enemyUnit.Mon.Base.Name} appeared!");
-
         ActionSelection();
     }
 
@@ -72,6 +135,15 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableDialogText(false);
         dialogBox.EnableMoveSelector(true);
+    }
+
+    //state when enemy trainer's mon fainted and they are about to switch
+    IEnumerator AboutToUse(Mon newMon)
+    {
+        state = BattleState.Busy;
+        yield return dialogBox.TypeDialog($"{trainer.Name} is about to use {newMon.Name}. Do you want to switch mon?");
+        state = BattleState.AboutToUse;
+        dialogBox.EnableChoiceBox(true);
     }
 
     IEnumerator RunTurns(BattleAction playerAction)
@@ -122,6 +194,15 @@ public class BattleSystem : MonoBehaviour
                 state = BattleState.Busy;
                 yield return SwitchMon(selectedMon);
             }
+            else if(playerAction == BattleAction.UseItem)
+            {
+                dialogBox.EnableActionSelector(false);
+                yield return ThrowCapsule();
+            }
+            else if(playerAction == BattleAction.Run)
+            {
+                yield return TryToEscape();
+            }
 
             //enemy turn
             var enemyMove = enemyUnit.Mon.GetRandomMove();
@@ -152,7 +233,7 @@ public class BattleSystem : MonoBehaviour
         yield return ShowStatusChanges(sourceUnit.Mon);
 
         move.PP--;
-        yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Base.Name} used {move.Base.Name}");
+        yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Name} used {move.Base.Name}");
         
         //check if move hits
         if(CheckIfMoveHits(move, sourceUnit.Mon, targetUnit.Mon))
@@ -185,7 +266,7 @@ public class BattleSystem : MonoBehaviour
 
             if(targetUnit.Mon.HP <= 0)
             {
-                yield return dialogBox.TypeDialog($"{targetUnit.Mon.Base.Name} fainted");
+                yield return dialogBox.TypeDialog($"{targetUnit.Mon.Name} fainted");
                 targetUnit.PlayFaintAnimation();
 
                 yield return new WaitForSeconds(2f);
@@ -197,7 +278,7 @@ public class BattleSystem : MonoBehaviour
         {
             sourceUnit.PlayAttackAnimation();
             yield return new WaitForSeconds(1f);
-            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Base.Name}'s attack missed");
+            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Name}'s attack missed");
         }
 
 
@@ -250,12 +331,13 @@ public class BattleSystem : MonoBehaviour
         yield return sourceUnit.Hud.UpdateHP();
         if(sourceUnit.Mon.HP <= 0)
         {
-            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Base.Name} fainted");
+            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Name} fainted");
             sourceUnit.PlayFaintAnimation();
 
             yield return new WaitForSeconds(2f);
             
             CheckForBattleOver(sourceUnit);
+            yield return new WaitUntil(() => state == BattleState.RunningTurn);
         }
     }
 
@@ -319,7 +401,22 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            BattleOver(true);
+            if(!isTrainerBattle)
+            {
+                BattleOver(true);
+            }
+            else
+            {
+                var nextMon = trainerParty.GetHealthyMon();
+                if(nextMon != null)
+                {
+                    StartCoroutine(AboutToUse(nextMon));
+                }
+                else
+                {
+                    BattleOver(true);
+                }
+            }
         }
     }
 
@@ -353,6 +450,10 @@ public class BattleSystem : MonoBehaviour
         else if(state == BattleState.PartyScreen)
         {
             HandlePartySelection();
+        }
+        else if(state == BattleState.AboutToUse)
+        {
+            HandleAboutToUse();
         }
     }
 
@@ -389,7 +490,7 @@ public class BattleSystem : MonoBehaviour
             else if(currentAction == 1)
             {
                 //bag
-
+                StartCoroutine(RunTurns(BattleAction.UseItem));
             }
             else if(currentAction == 2)
             {
@@ -400,7 +501,7 @@ public class BattleSystem : MonoBehaviour
             else if(currentAction == 3)
             {
                 //Run
-
+                StartCoroutine(RunTurns(BattleAction.Run));
             }
         }
     }
@@ -500,8 +601,52 @@ public class BattleSystem : MonoBehaviour
         }
         else if(Input.GetButtonDown("Cancel"))
         {
+            if(playerUnit.Mon.HP <= 0)
+            {
+                partyScreen.SetMessageText("You have to choose mon to continue");
+                return;
+            }
+
             partyScreen.gameObject.SetActive(false);
-            ActionSelection();
+            if(prevState == BattleState.AboutToUse)
+            {
+                prevState = null;
+                StartCoroutine(SendNextTrainerMon());
+            }
+            else
+            {
+                ActionSelection();
+            }
+        }
+    }
+
+    private void HandleAboutToUse()
+    {
+        if(Input.GetButtonDown("Up") || Input.GetButtonDown("Down"))
+        {
+            aboutToUseChoice = !aboutToUseChoice;
+        }
+        dialogBox.UpdateChoiceBox(aboutToUseChoice);
+
+        if(Input.GetButtonDown("Submit"))
+        {
+            dialogBox.EnableChoiceBox(false);
+            if(aboutToUseChoice == true)
+            {
+                //yes option
+                prevState = BattleState.AboutToUse;
+                OpenPartyScreen();
+            }
+            else
+            {
+                //no option
+                StartCoroutine(SendNextTrainerMon());
+            }
+        }
+        else if(Input.GetButtonDown("Cancel"))
+        {
+            dialogBox.EnableChoiceBox(false);
+            StartCoroutine(SendNextTrainerMon());
         }
     }
 
@@ -509,15 +654,167 @@ public class BattleSystem : MonoBehaviour
     {
         if(playerUnit.Mon.HP > 0)
         {
-            yield return dialogBox.TypeDialog($"Come back {playerUnit.Mon.Base.Name}");
+            yield return dialogBox.TypeDialog($"Come back {playerUnit.Mon.Name}");
             playerUnit.PlayFaintAnimation();
             yield return new WaitForSeconds(2f);
         }
 
         playerUnit.Setup(newMon);
         dialogBox.SetMoveNames(newMon.Moves);
-        yield return dialogBox.TypeDialog($"Go {newMon.Base.Name}!");
+        yield return dialogBox.TypeDialog($"Go {newMon.Name}!");
+
+        if(prevState == null)
+        {
+            state = BattleState.RunningTurn;
+        }
+        else if(prevState == BattleState.AboutToUse)
+        {
+            prevState = null;
+            StartCoroutine(SendNextTrainerMon());
+        }
+    }
+
+    IEnumerator SendNextTrainerMon()
+    {
+        state = BattleState.Busy;
+
+        var nextMon = trainerParty.GetHealthyMon();
+        enemyUnit.Setup(nextMon);
+        yield return dialogBox.TypeDialog($"{trainer.Name} sent out {nextMon.Name}");
 
         state = BattleState.RunningTurn;
+    }
+
+    IEnumerator ThrowCapsule()
+    {
+        state = BattleState.Busy;
+
+        if(isTrainerBattle)
+        {
+            yield return dialogBox.TypeDialog($"You can't steal another trainer's mons!");
+            state = BattleState.RunningTurn;
+            yield break;
+        }
+
+        yield return dialogBox.TypeDialog($"{player.Name} tossed a capsule!");
+
+        var capsuleObj = Instantiate(capsuleSprite, playerUnit.transform.position - new Vector3(2, 0), Quaternion.identity);
+        var capsule = capsuleObj.GetComponent<SpriteRenderer>();
+
+        // Animations
+        yield return capsule.transform.DOJump(enemyUnit.transform.position + new Vector3(0, 2), 2f, 1, 1f).WaitForCompletion();
+        yield return enemyUnit.PlayCaptureAnimation();
+        yield return capsule.transform.DOMoveY(enemyUnit.transform.position.y - 1.3f, 0.5f).WaitForCompletion();
+
+        int shakeCount = TryToCatchMon(enemyUnit.Mon);
+
+        for(int i = 0; i < Mathf.Min(shakeCount, 3); ++i)
+        {
+            yield return new WaitForSeconds(0.5f);
+            yield return capsule.transform.DOPunchRotation(new Vector3(0, 0, 10f), 0.8f).WaitForCompletion();
+        }
+
+        if(shakeCount == 4)
+        {
+            // Mon was caught
+            yield return dialogBox.TypeDialog($"{enemyUnit.Mon.Name} was caught!");
+            
+            //yield return capsule.DOFade(0, 1.5f).WaitForCompletion();
+            //!SpriteFader.FadeSprite(capsule, 0.01f);
+            //yield return new WaitForSeconds(0.5f);
+
+            playerParty.AddMon(enemyUnit.Mon);
+            yield return dialogBox.TypeDialog($"{enemyUnit.Mon.Name} has been added to your party");
+
+            Destroy(capsule);
+            BattleOver(true);
+        }
+        else
+        {
+            // Mon broke out
+            yield return new WaitForSeconds(1f);
+            
+            //capsule.DOFade(0, 0.2f);
+            //!SpriteFader.FadeSprite(capsule, 0.01f);
+            
+            yield return enemyUnit.PlayBreakoutAnimation();
+            
+            if(shakeCount < 2)
+            {
+                yield return dialogBox.TypeDialog($"{enemyUnit.Mon.Name} broke free!");
+            }
+            else
+            {
+                yield return dialogBox.TypeDialog($"Almost caught it!");
+            }
+
+            Destroy(capsule);
+            state = BattleState.RunningTurn;
+        }
+    }
+
+    private int TryToCatchMon(Mon mon)
+    {
+        float a = (3 * mon.MaxHp - 2 * mon.HP) * mon.Base.CatchRate * ConditionsDB.GetStatusBonus(mon.Status) / (3 * mon.MaxHp);
+
+        if(a >= 255)
+        {
+            return  4;
+        }
+        
+        float b = 1048560 / Mathf.Sqrt(Mathf.Sqrt(16711680 / a));
+
+        int shakeCount = 0;
+        while(shakeCount < 4)
+        {
+            if(UnityEngine.Random.Range(0, 65535) >= b)
+            {
+                break;
+            }
+            else
+            {
+                ++shakeCount;
+            }
+        }
+
+        return shakeCount;
+    }
+
+    IEnumerator TryToEscape()
+    {
+        state = BattleState.Busy;
+        if(isTrainerBattle)
+        {
+            yield return dialogBox.TypeDialog($"You can't run from trainer battles!");
+            state = BattleState.RunningTurn;
+            yield break;
+        }
+
+        ++escapeAttempts;
+
+        int playerSpeed = playerUnit.Mon.Speed;
+        int enemySpeed = enemyUnit.Mon.Speed;
+
+        if(enemySpeed < playerSpeed)
+        {
+            yield return dialogBox.TypeDialog($"Ran away safely!");
+            BattleOver(true);
+        }
+        else
+        {
+            float f = (playerSpeed * 128) / enemySpeed + 30 * escapeAttempts;
+            f = f % 256;
+
+            if(UnityEngine.Random.Range(0, 256) < f)
+            {
+                yield return dialogBox.TypeDialog($"Ran away safely!");
+                BattleOver(true);
+            }
+            else
+            {
+                yield return dialogBox.TypeDialog($"Can't escape!");
+                state = BattleState.RunningTurn;
+            }
+        }
     }
 }
