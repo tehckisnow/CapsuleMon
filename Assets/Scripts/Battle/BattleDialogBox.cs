@@ -6,7 +6,8 @@ using TMPro;
 public class BattleDialogBox : MonoBehaviour
 {
     [SerializeField] int lettersPerSecond = 30;
-    [SerializeField] Color highlightedColor;
+
+    Color highlightedColor;
     Color unhighlightedColor;
     Color outOfPPColor = Color.red;
 
@@ -27,6 +28,7 @@ public class BattleDialogBox : MonoBehaviour
 
     void Start()
     {
+        highlightedColor = GlobalSettings.i.HighlightedColor;
         unhighlightedColor = actionTexts[0].color;
     }
 

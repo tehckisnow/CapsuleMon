@@ -26,6 +26,8 @@ public class Mon
 
     public string Name { get; set; }
 
+    public int Exp { get; set; }
+
     public int HP { get; set; }
 
     public List<Move> Moves { get; set; }
@@ -57,12 +59,14 @@ public class Mon
             {
                 Moves.Add(new Move(move.Base));
 
-                if(Moves.Count >= 4)
+                if(Moves.Count >= MonBase.MaxNumberOfMoves)
                 {
                     break;
                 }
             }
         }
+
+        Exp = Base.GetExpForLevel(Level);
 
         CalculateStats();
         HP = MaxHp;
@@ -107,6 +111,48 @@ public class Mon
         return statVal;
     }
 
+    public Mon(MonSaveData saveData)
+    {
+        _base = MonDB.GetMonByName(saveData.name);
+        level = saveData.level;
+        Name = saveData.nickname;
+        HP = saveData.hp;
+        Exp = saveData.exp;
+
+        if(saveData.statusId != null)
+        {
+            Status = ConditionsDB.Conditions[saveData.statusId.Value];
+        }
+        else
+        {
+            Status = null;
+        }
+
+        //moves
+        Moves = saveData.moves.Select(s => new Move(s)).ToList();
+
+        CalculateStats();
+        StatusChanges = new Queue<string>();
+        ResetStatBoost();
+        VolatileStatus = null;
+
+    }
+
+    public MonSaveData GetSaveData()
+    {
+        var saveData = new MonSaveData()
+        {
+            nickname = Name,
+            name = Base.Name,
+            level = Level,
+            hp = HP,
+            exp = Exp,
+            statusId = Status?.Id,
+            moves = Moves.Select(m => m.GetSaveData()).ToList()
+        };
+        return saveData;
+    }
+
     private void CalculateStats()
     {
         Stats = new Dictionary<Stat, int>();
@@ -136,6 +182,36 @@ public class Mon
             {
                 StatusChanges.Enqueue($"{Base.Name}'s {stat} fell!");
             }
+        }
+    }
+
+    public bool CheckForLevelUp()
+    {
+        if(Exp > Base.GetExpForLevel(level + 1))
+        {
+            ++level;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public LearnableMove GetLearnableMoveAtCurrentLevel()
+    {
+        return Base.LearnableMoves.Where(x => x.Level == level).FirstOrDefault();
+    }
+
+    public void LearnMove(LearnableMove moveToLearn)
+    {
+        if(Moves.Count > MonBase.MaxNumberOfMoves)
+        {
+            return;
+        }
+        else
+        {
+            Moves.Add(new Move(moveToLearn.Base));
         }
     }
 
@@ -291,4 +367,16 @@ public class DamageDetails
     public bool Fainted { get; set; }
     public float Critical { get; set; }
     public float TypeEffectiveness { get; set; }
+}
+
+[System.Serializable]
+public class MonSaveData
+{
+    public string nickname;
+    public string name;
+    public int level;
+    public int hp;
+    public int exp;
+    public ConditionID? statusId;
+    public List<MoveSaveData> moves;
 }

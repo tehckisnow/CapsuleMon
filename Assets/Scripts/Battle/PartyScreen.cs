@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -9,6 +10,12 @@ public class PartyScreen : MonoBehaviour
 
     PartyMemberUI[] memberSlots;
     List<Mon> mons;
+
+    private int selection = 0;
+    public Mon SelectedMember => mons[selection];
+
+    //Party screen can be called from different states like ActionSelection, RunningTurn, AboutToUse
+    public BattleState? CalledFrom {get; set; }
 
     public void Init()
     {
@@ -30,6 +37,9 @@ public class PartyScreen : MonoBehaviour
                 memberSlots[i].gameObject.SetActive(false);
             }
         }
+
+        UpdateMemberSelection(selection);
+
         messageText.text = "Choose a mon";
     }
 
@@ -51,5 +61,43 @@ public class PartyScreen : MonoBehaviour
     public void SetMessageText(string message)
     {
         messageText.text = message;
+    }
+
+    public void HandleUpdate(Action onSelected, Action onBack)
+    {
+        var prevSelection = selection;
+
+        if(Input.GetButtonDown("Down"))
+        {
+            selection += 2;
+        }
+        else if(Input.GetButtonDown("Up"))
+        {
+            selection -= 2;
+        }
+        else if(Input.GetButtonDown("Right"))
+        {
+            ++selection;
+        }
+        else if(Input.GetButtonDown("Left"))
+        {
+            --selection;
+        }
+
+        selection = Mathf.Clamp(selection, 0, mons.Count - 1);
+
+        if(selection != prevSelection)
+        {
+            UpdateMemberSelection(selection);
+        }
+
+        if(Input.GetButtonDown("Submit"))
+        {
+            onSelected?.Invoke();
+        }
+        else if(Input.GetButtonDown("Cancel"))
+        {
+            onBack?.Invoke();
+        }
     }
 }

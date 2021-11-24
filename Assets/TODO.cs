@@ -14,5 +14,7 @@ public class TODO : MonoBehaviour
     trainer will walk diagonally to reach the player (is check for trainerbattle happenning too early?)
 
     SpriteFader is broken (used in BattleSystem.ThrowCapsule())
+
+    Saving system in PlayerController is not setting player facing in character for some reason
     */
 }

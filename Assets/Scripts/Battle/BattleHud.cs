@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class BattleHud : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class BattleHud : MonoBehaviour
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] HPBar hpBar;
     [SerializeField] TextMeshProUGUI statusText;
+    [SerializeField] GameObject expBar;
 
     [SerializeField] Color psnColor;
     [SerializeField] Color brnColor;
@@ -24,8 +26,9 @@ public class BattleHud : MonoBehaviour
         _mon = mon;
 
         nameText.text = mon.Base.Name;
-        levelText.text = "Lvl " + mon.Level;
+        SetLevel();
         hpBar.SetHP((float) mon.HP / mon.MaxHp);
+        SetExp();
 
         statusColors = new Dictionary<ConditionID, Color>()
         {
@@ -51,6 +54,45 @@ public class BattleHud : MonoBehaviour
             statusText.text = _mon.Status.Id.ToString().ToUpper();
             statusText.color = statusColors[_mon.Status.Id];
         }
+    }
+
+    public void SetLevel()
+    {
+        levelText.text = "Lvl " + _mon.Level;
+    }
+
+    public void SetExp()
+    {
+        if(expBar == null)
+        {
+            return;
+        }
+
+        float normalizedExp = GetNormalizedExp();
+        expBar.transform.localScale = new Vector3(normalizedExp, 1, 1);
+    }
+
+    public IEnumerator SetExpSmooth(bool reset = false)
+    {
+        if(expBar == null)
+        {
+            yield break;
+        }
+
+        if(reset)
+            expBar.transform.localScale = new Vector3(0, 1, 1);
+
+        float normalizedExp = GetNormalizedExp();
+        yield return expBar.transform.DOScaleX(normalizedExp, 1.5f).WaitForCompletion();
+    }
+
+    private float GetNormalizedExp()
+    {
+        int currentLevelExp = _mon.Base.GetExpForLevel(_mon.Level);
+        int nextLevelExp = _mon.Base.GetExpForLevel(_mon.Level + 1);
+
+        float normalizedExp = (float)(_mon.Exp - currentLevelExp) / (nextLevelExp - currentLevelExp);
+        return Mathf.Clamp01(normalizedExp);
     }
 
     public IEnumerator UpdateHP()

@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
+[System.Serializable]
+public class MyGameObjectEvent : UnityEvent<GameObject>
+{
+}
 
 public class NPCController : MonoBehaviour, Interactable
 {
   [SerializeField] Dialog dialog;
   [SerializeField] List<Vector2> movementPattern;
   [SerializeField] float timeBetweenPattern;
+  [SerializeField] MyGameObjectEvent action;
 
   NPCState state;
   float idleTimer;
@@ -25,11 +32,19 @@ public class NPCController : MonoBehaviour, Interactable
     {
       state = NPCState.Dialog;
       character.LookTowards(initiator.position);
-      StartCoroutine(DialogManager.Instance.ShowDialog(dialog, () => {
+
+      StartCoroutine(WaitForDialogAndDoAction(action, initiator.gameObject));
+    }
+  }
+
+  IEnumerator WaitForDialogAndDoAction(MyGameObjectEvent unityEvent, GameObject initiatorObj)
+  {
+    yield return DialogManager.Instance.ShowDialog(dialog, () => {
         idleTimer = 0f;
         state = NPCState.Idle;
-      }));
-    }
+      });
+    yield return new WaitUntil(() => FindObjectOfType<GameController>().state != GameState.Dialog);
+    unityEvent?.Invoke(initiatorObj);
   }
 
   private void Update()

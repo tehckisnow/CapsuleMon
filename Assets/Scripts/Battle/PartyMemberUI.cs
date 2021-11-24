@@ -9,13 +9,11 @@ public class PartyMemberUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] HPBar hpBar;
 
-    [SerializeField] Color highlightedColor;
-
     private Color normalColor;
 
     private Mon _mon;
 
-    private void Start()
+    private void Awake()
     {
         normalColor = nameText.color;
     }
@@ -33,11 +31,11 @@ public class PartyMemberUI : MonoBehaviour
     {
         if(selected)
         {
-            nameText.color = highlightedColor;
+            nameText.color = GlobalSettings.i.HighlightedColor;
         }
         else
         {
-            nameText.color = normalColor;
+            nameText.color = GlobalSettings.i.UnhighlightedColor; //! normalColor isn't working for some reason
         }
     }
 }

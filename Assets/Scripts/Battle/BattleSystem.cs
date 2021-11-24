@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, MoveToForget, BattleOver}
 public enum BattleAction { Move, SwitchMon, UseItem, Run }
 
 public class BattleSystem : MonoBehaviour
@@ -17,14 +18,14 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Image playerImage;
     [SerializeField] Image trainerImage;
     [SerializeField] GameObject capsuleSprite;
+    [SerializeField] MoveSelectionUI moveSelectionUI;
 
     public event Action<bool> OnBattleOver;
 
     BattleState state;
-    BattleState? prevState;
+    
     private int currentAction;
     private int currentMove;
-    private int currentMember;
     private bool aboutToUseChoice = true;
 
     MonParty playerParty;
@@ -36,6 +37,7 @@ public class BattleSystem : MonoBehaviour
     TrainerController trainer;
 
     private int escapeAttempts;
+    private MoveBase moveToLearn;
 
     public void StartBattle(MonParty playerParty, Mon wildMon)
     {
@@ -124,6 +126,7 @@ public class BattleSystem : MonoBehaviour
 
     private void OpenPartyScreen()
     {
+        partyScreen.CalledFrom = state;
         state = BattleState.PartyScreen;
         partyScreen.SetPartyData(playerParty.Mons);
         partyScreen.gameObject.SetActive(true);
@@ -144,6 +147,17 @@ public class BattleSystem : MonoBehaviour
         yield return dialogBox.TypeDialog($"{trainer.Name} is about to use {newMon.Name}. Do you want to switch mon?");
         state = BattleState.AboutToUse;
         dialogBox.EnableChoiceBox(true);
+    }
+
+    IEnumerator ChooseMoveToForget(Mon mon, MoveBase newMove)
+    {
+        state = BattleState.Busy;
+        yield return dialogBox.TypeDialog($"Choose a move you want to forget");
+        moveSelectionUI.gameObject.SetActive(true);
+        moveSelectionUI.SetMoveData(mon.Moves.Select(x => x.Base).ToList(), newMove);
+        moveToLearn = newMove;
+
+        state = BattleState.MoveToForget;
     }
 
     IEnumerator RunTurns(BattleAction playerAction)
@@ -190,7 +204,7 @@ public class BattleSystem : MonoBehaviour
         {
             if(playerAction == BattleAction.SwitchMon)
             {
-                var selectedMon = playerParty.Mons[currentMember];
+                var selectedMon = partyScreen.SelectedMember;
                 state = BattleState.Busy;
                 yield return SwitchMon(selectedMon);
             }
@@ -266,12 +280,7 @@ public class BattleSystem : MonoBehaviour
 
             if(targetUnit.Mon.HP <= 0)
             {
-                yield return dialogBox.TypeDialog($"{targetUnit.Mon.Name} fainted");
-                targetUnit.PlayFaintAnimation();
-
-                yield return new WaitForSeconds(2f);
-                
-                CheckForBattleOver(targetUnit);
+                yield return HandleMonFainted(targetUnit);
             }
         }
         else
@@ -331,12 +340,7 @@ public class BattleSystem : MonoBehaviour
         yield return sourceUnit.Hud.UpdateHP();
         if(sourceUnit.Mon.HP <= 0)
         {
-            yield return dialogBox.TypeDialog($"{sourceUnit.Mon.Name} fainted");
-            sourceUnit.PlayFaintAnimation();
-
-            yield return new WaitForSeconds(2f);
-            
-            CheckForBattleOver(sourceUnit);
+            yield return HandleMonFainted(sourceUnit);
             yield return new WaitUntil(() => state == BattleState.RunningTurn);
         }
     }
@@ -383,6 +387,60 @@ public class BattleSystem : MonoBehaviour
             var message = mon.StatusChanges.Dequeue();
             yield return dialogBox.TypeDialog(message);
         }
+    }
+
+    IEnumerator HandleMonFainted(BattleUnit faintedUnit)
+    {
+        yield return dialogBox.TypeDialog($"{faintedUnit.Mon.Name} fainted");
+        faintedUnit.PlayFaintAnimation();
+        yield return new WaitForSeconds(2f);
+        
+        if(!faintedUnit.IsPlayerUnit)
+        {
+            //exp gain
+            int expYield = faintedUnit.Mon.Base.ExpYield;
+            int enemyLevel = faintedUnit.Mon.Level;
+            float trainerBonus = (isTrainerBattle) ? 1.5f : 1f;
+
+            int expGain = Mathf.FloorToInt((expYield * enemyLevel * trainerBonus) / 7);
+            playerUnit.Mon.Exp += expGain;
+            yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} gained {expGain} exp");
+            yield return playerUnit.Hud.SetExpSmooth();
+            
+            //check level up
+            while(playerUnit.Mon.CheckForLevelUp())
+            {
+                playerUnit.Hud.SetLevel();
+                yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} grew to level {playerUnit.Mon.Level}");
+                
+                //try to learn a new move
+
+                var newMove = playerUnit.Mon.GetLearnableMoveAtCurrentLevel();
+                if(newMove != null)
+                {
+                    if(playerUnit.Mon.Moves.Count < MonBase.MaxNumberOfMoves)
+                    {
+                        playerUnit.Mon.LearnMove(newMove);
+                        yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} learned {newMove.Base.Name}");
+                        dialogBox.SetMoveNames(playerUnit.Mon.Moves);
+                    }
+                    else
+                    {
+                        yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} is trying to learn {newMove.Base.Name}");
+                        yield return dialogBox.TypeDialog($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
+                        yield return ChooseMoveToForget(playerUnit.Mon, newMove.Base);
+                        yield return new WaitUntil(() => state != BattleState.MoveToForget);
+                        yield return new WaitForSeconds(2f);
+                    }
+                }
+
+                yield return playerUnit.Hud.SetExpSmooth(true);
+            }
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        CheckForBattleOver(faintedUnit);
     }
 
     private void CheckForBattleOver(BattleUnit faintedUnit)
@@ -455,6 +513,30 @@ public class BattleSystem : MonoBehaviour
         {
             HandleAboutToUse();
         }
+        else if(state == BattleState.MoveToForget)
+        {
+            Action<int> onMoveSelected = (moveIndex) =>
+            {
+                moveSelectionUI.gameObject.SetActive(false);
+                if(moveIndex == MonBase.MaxNumberOfMoves)
+                {
+                    //don't learn the new move
+                    StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Mon.Name} did not learn {moveToLearn.Name}"));
+                }
+                else
+                {
+                    //forget the selected move and learn new move
+                    var selectedMove = playerUnit.Mon.Moves[moveIndex].Base;
+                    StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Mon.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}"));
+                    
+                    playerUnit.Mon.Moves[moveIndex] = new Move(moveToLearn);
+                }
+                moveToLearn = null;
+                state = BattleState.RunningTurn;
+            };
+
+            moveSelectionUI.HandleMoveSelection(onMoveSelected);
+        }
     }
 
     private void HandleActionSelection()
@@ -495,7 +577,6 @@ public class BattleSystem : MonoBehaviour
             else if(currentAction == 2)
             {
                 //Mon
-                prevState = state;
                 OpenPartyScreen();
             }
             else if(currentAction == 3)
@@ -551,30 +632,9 @@ public class BattleSystem : MonoBehaviour
 
     private void HandlePartySelection()
     {
-        if(Input.GetButtonDown("Down"))
+        Action onSelected = () =>
         {
-            currentMember += 2;
-        }
-        else if(Input.GetButtonDown("Up"))
-        {
-            currentMember -= 2;
-        }
-        else if(Input.GetButtonDown("Right"))
-        {
-            ++currentMember;
-        }
-        else if(Input.GetButtonDown("Left"))
-        {
-            --currentMember;
-        }
-
-        currentMember = Mathf.Clamp(currentMember, 0, playerParty.Mons.Count - 1);
-
-        partyScreen.UpdateMemberSelection(currentMember);
-
-        if(Input.GetButtonDown("Submit"))
-        {
-            var selectedMember = playerParty.Mons[currentMember];
+            var selectedMember = partyScreen.SelectedMember;
             if(selectedMember.HP <= 0)
             {
                 partyScreen.SetMessageText("You can't sent out a fainted mon");
@@ -588,18 +648,21 @@ public class BattleSystem : MonoBehaviour
 
             partyScreen.gameObject.SetActive(false);
 
-            if(prevState == BattleState.ActionSelection)
+            if(partyScreen.CalledFrom == BattleState.ActionSelection)
             {
-                prevState = null;
                 StartCoroutine(RunTurns(BattleAction.SwitchMon));
             }
             else
             {
                 state = BattleState.Busy;
-                StartCoroutine(SwitchMon(selectedMember));
+                bool isTrainerAboutToUse = partyScreen.CalledFrom == BattleState.AboutToUse;
+                StartCoroutine(SwitchMon(selectedMember, isTrainerAboutToUse));
             }
-        }
-        else if(Input.GetButtonDown("Cancel"))
+
+            partyScreen.CalledFrom = null;
+        };
+
+        Action onBack = () =>
         {
             if(playerUnit.Mon.HP <= 0)
             {
@@ -608,16 +671,19 @@ public class BattleSystem : MonoBehaviour
             }
 
             partyScreen.gameObject.SetActive(false);
-            if(prevState == BattleState.AboutToUse)
+            if(partyScreen.CalledFrom == BattleState.AboutToUse)
             {
-                prevState = null;
                 StartCoroutine(SendNextTrainerMon());
             }
             else
             {
                 ActionSelection();
             }
-        }
+
+            partyScreen.CalledFrom = null;
+        };
+
+        partyScreen.HandleUpdate(onSelected, onBack);
     }
 
     private void HandleAboutToUse()
@@ -634,7 +700,6 @@ public class BattleSystem : MonoBehaviour
             if(aboutToUseChoice == true)
             {
                 //yes option
-                prevState = BattleState.AboutToUse;
                 OpenPartyScreen();
             }
             else
@@ -650,7 +715,7 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    IEnumerator SwitchMon(Mon newMon)
+    IEnumerator SwitchMon(Mon newMon, bool isTrainerAboutToUse = false)
     {
         if(playerUnit.Mon.HP > 0)
         {
@@ -663,14 +728,13 @@ public class BattleSystem : MonoBehaviour
         dialogBox.SetMoveNames(newMon.Moves);
         yield return dialogBox.TypeDialog($"Go {newMon.Name}!");
 
-        if(prevState == null)
+        if(isTrainerAboutToUse)
+        {
+            StartCoroutine(SendNextTrainerMon());
+        }
+        else
         {
             state = BattleState.RunningTurn;
-        }
-        else if(prevState == BattleState.AboutToUse)
-        {
-            prevState = null;
-            StartCoroutine(SendNextTrainerMon());
         }
     }
 

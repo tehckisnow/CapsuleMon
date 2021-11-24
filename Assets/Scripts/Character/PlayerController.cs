@@ -1,17 +1,15 @@
-﻿using System;
+﻿using System.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ISavable
 {
     [SerializeField] string name;
     [SerializeField] Sprite sprite;
     [SerializeField] float moveSpeed = 5;
     [SerializeField] float runModifier = 2;
-    
-    public event Action OnEncountered;
-    public event Action<Collider2D> OnEnterTrainersView;
 
     private bool isMoving;
     private bool isRunning;
@@ -80,30 +78,48 @@ public class PlayerController : MonoBehaviour
 
     private void OnMoveOver()
     {
-        CheckForEncounters();
-        CheckIfInTrainersView();
-    }
-
-    private void CheckForEncounters()
-    {
-        if(Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.Instance.GrassLayer) != null)
+        var colliders = Physics2D.OverlapCircleAll(transform.position - new Vector3(0, character.OffsetY), 0.2f, GameLayers.Instance.TriggerableLayers);
+        
+        foreach(var collider in colliders)
         {
-            if(UnityEngine.Random.Range(1, 101) <= 10)
+            var triggerable = collider.GetComponent<IPlayerTriggerable>();
+            if(triggerable != null)
             {
-                animator.SetBool("isMoving", false);
-                OnEncountered();
+                triggerable.OnPlayerTriggered(this);
+                break;
             }
         }
     }
 
-    private void CheckIfInTrainersView()
+    public object CaptureState()
     {
-        var collider = Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.Instance.FOVLayer);
-        if(collider != null)
+        var facing = FacingClass.GetXY(character.Facing);
+
+        var saveData = new PlayerSaveData()
         {
-            animator.SetBool("isMoving", false);
-            OnEnterTrainersView?.Invoke(collider);
-        }
+            position = new float[] {transform.position.x, transform.position.y, facing.x, facing.y},
+            mons = GetComponent<MonParty>().Mons.Select(p => p.GetSaveData()).ToList()
+        };
+
+        Debug.Log("exp: " + saveData.mons[0].exp + " HP: " + saveData.mons[0].hp);
+        return saveData;
+    }
+
+    public void RestoreState(object state)
+    {
+        var saveData = (PlayerSaveData)state;
+        Debug.Log("exp: " + saveData.mons[0].exp + " HP: " + saveData.mons[0].hp);
+
+        // Restore position
+        var pos = saveData.position;
+        transform.position = new Vector3(pos[0], pos[1]);
+        Facing facing = FacingClass.GetFacing(pos[2], pos[3]);
+        //Debug.Log("setting to: " + facing.ToString());
+        character.Facing = facing;
+        //Debug.Log(character.Facing.ToString()); //!WTF?  is something else overriding this state later?
+
+        // Restore party
+        GetComponent<MonParty>().Mons = saveData.mons.Select(s => new Mon(s)).ToList();
     }
 
     public string Name {
@@ -113,4 +129,13 @@ public class PlayerController : MonoBehaviour
     public Sprite Sprite {
         get => sprite;
     }
+
+    public Character Character => character;
+}
+
+[Serializable]
+public class PlayerSaveData
+{
+    public float[] position;
+    public List<MonSaveData> mons;
 }

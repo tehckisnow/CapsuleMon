@@ -10,9 +10,13 @@ public class Character : MonoBehaviour
     [SerializeField] Facing facing = Facing.Down;
     public Facing Facing {
         get { return facing; }
+        set {}
     }
+    [SerializeField] Transform originTransform;
 
-    public bool IsMoving { get; private set; }
+    public float OffsetY {get; private set; } = 0.3f;
+
+    public bool IsMoving { get; set; }
     public bool IsRunning {get; set; }
 
     private Animator animator;
@@ -20,6 +24,7 @@ public class Character : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        SetPositionAndSnapToTile(transform.position);
     }
 
     private void Update()
@@ -27,6 +32,14 @@ public class Character : MonoBehaviour
         var dir = FacingClass.GetXY(facing);
         animator.SetFloat("moveX", dir.x);
         animator.SetFloat("moveY", dir.y);
+    }
+
+    public void SetPositionAndSnapToTile(Vector2 pos)
+    {
+        pos.x = Mathf.Floor(pos.x) + 0.5f;
+        pos.y = Mathf.Floor(pos.y) + 0.5f + OffsetY;
+
+        transform.position = pos;
     }
     
     public IEnumerator Move(Vector2 moveVec, Action OnMoveOver = null)
@@ -81,7 +94,18 @@ public class Character : MonoBehaviour
         var diff = targetPos - transform.position;
         var dir = diff.normalized;
         
-        var boxSize = new Vector2(1f, 1f);
+        var origin = new Vector2(0,0);
+        if(originTransform == null)
+        {
+            origin = transform.position + dir;
+        }
+        else
+        {
+            origin.x = originTransform.position.x + dir.x;
+            origin.y = originTransform.position.y + dir.y;
+        }
+
+        var boxSize = new Vector2(.2f, .2f);
         gizmoBox = boxSize;
         gizmoDir = dir;
 
@@ -93,7 +117,8 @@ public class Character : MonoBehaviour
         List<RaycastHit2D> results = new List<RaycastHit2D>();
         int hit = Physics2D.BoxCast
         (
-            transform.position + dir,
+            //transform.position + dir,
+            origin,
             boxSize,
             0f,
             dir,

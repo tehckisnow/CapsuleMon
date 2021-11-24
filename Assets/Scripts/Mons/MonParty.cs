@@ -8,6 +8,7 @@ public class MonParty : MonoBehaviour
     [SerializeField] List<Mon> mons;
     public List<Mon> Mons {
         get { return mons; }
+        set { mons = value; }
     }
 
     private void Start()

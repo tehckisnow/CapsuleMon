@@ -1,39 +1,46 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameState { FreeRoam, Battle, Dialog, Cutscene }
+public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused }
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
     [SerializeField] BattleSystem battleSystem;
     [SerializeField] Camera worldCamera;
+    [SerializeField] SelectStarter selectStarter;
+    [SerializeField] PartyScreen partyScreen;
+    [SerializeField] InventoryUI inventoryUI;
 
-    GameState state;
+    public GameState state;
+
+    public GameState stateBeforePause;
+
+    public SceneDetails CurrentScene { get; private set; }
+    public SceneDetails PrevScene { get; private set; }
+
+    private MenuController menuController;
 
     public static GameController Instance {get; private set; }
 
     private void Awake()
     {
         Instance = this;
+
+        menuController = GetComponent<MenuController>();
+
+        MonDB.Init();
+        MoveDB.Init();
         ConditionsDB.Init();
     }
 
     private void Start()
     {
-        playerController.OnEncountered += StartBattle;
         battleSystem.OnBattleOver += EndBattle;
 
-        playerController.OnEnterTrainersView += (Collider2D trainerCollider) =>
-        {
-            var trainer = trainerCollider.GetComponentInParent<TrainerController>();
-            if(trainer != null)
-            {
-                state = GameState.Cutscene;
-                StartCoroutine(trainer.TriggerTrainerBattle(playerController));
-            }
-        };
+        partyScreen.Init();
 
         DialogManager.Instance.OnShowDialog += () =>
         {
@@ -46,16 +53,36 @@ public class GameController : MonoBehaviour
                 state = GameState.FreeRoam;
             }
         };
+
+        menuController.onBack += () =>
+        {
+            state = GameState.FreeRoam;
+        };
+
+        menuController.onMenuSelected += OnMenuSelected;
     }
 
-    private void StartBattle()
+    public void PauseGame(bool pause)
+    {
+        if(pause)
+        {
+            stateBeforePause = state;
+            state = GameState.Paused;
+        }
+        else
+        {
+            state = stateBeforePause;
+        }
+    }
+
+    public void StartBattle()
     {
         state = GameState.Battle;
         battleSystem.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
 
         var playerParty = playerController.GetComponent<MonParty>();
-        var wildMon = FindObjectOfType<MapArea>().GetComponent<MapArea>().GetRandomWildMon();
+        var wildMon = CurrentScene.GetComponent<MapArea>().GetRandomWildMon();
         var wildMonCopy = new Mon(wildMon.Base, wildMon.Level);
 
         battleSystem.StartBattle(playerParty, wildMonCopy);
@@ -76,6 +103,20 @@ public class GameController : MonoBehaviour
         battleSystem.StartTrainerBattle(playerParty, trainerParty);
     }
 
+    public void StarterSelectMenu()
+    {
+        selectStarter.gameObject.SetActive(true);
+        selectStarter.Init();
+        state = GameState.StarterSelectMenu;
+        //DialogManager.Instance.gameObject.SetActive(false);
+    }
+
+    public void OnEnterTrainersView(TrainerController trainer)
+    {
+        state = GameState.Cutscene;
+        StartCoroutine(trainer.TriggerTrainerBattle(playerController));
+    }
+
     private void EndBattle(bool won)
     {
         if(trainer != null && won == true)
@@ -94,6 +135,12 @@ public class GameController : MonoBehaviour
         if(state == GameState.FreeRoam)
         {
             playerController.HandleUpdate();
+
+            if(Input.GetButtonDown("Cancel"))
+            {
+                menuController.OpenMenu();
+                state = GameState.Menu;
+            }
         }
         else if(state == GameState.Battle)
         {
@@ -103,5 +150,75 @@ public class GameController : MonoBehaviour
         {
             DialogManager.Instance.HandleUpdate();
         }
+        else if(state == GameState.StarterSelectMenu)
+        {
+            selectStarter.HandleSelectStarter();
+        }
+        else if(state == GameState.Menu)
+        {
+            menuController.HandleUpdate();
+        }
+        else if(state == GameState.PartyScreen)
+        {
+            Action onSelected = () =>
+            {
+                //TODO: goto summary screen
+
+            };
+
+            Action onBack = () =>
+            {
+                partyScreen.gameObject.SetActive(false);
+                state = GameState.FreeRoam;
+            };
+
+            partyScreen.HandleUpdate(onSelected, onBack);
+        }
+        else if(state == GameState.Bag)
+        {
+            Action onBack = () =>
+            {
+                inventoryUI.gameObject.SetActive(false);
+                state = GameState.FreeRoam;
+            };
+
+            inventoryUI.HandleUpdate(onBack);
+        }
+    }
+
+    public void SetCurrentScene(SceneDetails currScene)
+    {
+        PrevScene = CurrentScene;
+        CurrentScene = currScene;
+    }
+
+    private void OnMenuSelected(int selectedItem)
+    {
+        if(selectedItem == 0)
+        {
+            //mon
+            partyScreen.gameObject.SetActive(true);
+            partyScreen.SetPartyData(playerController.GetComponent<MonParty>().Mons);
+            state = GameState.PartyScreen;
+        }
+        else if(selectedItem == 1)
+        {
+            //bag
+            inventoryUI.gameObject.SetActive(true);
+            state = GameState.Bag;
+        }
+        else if(selectedItem == 2)
+        {
+            //save
+            SavingSystem.i.Save("saveSlot1");
+            state = GameState.FreeRoam;
+        }
+        else if(selectedItem == 3)
+        {
+            //load
+            SavingSystem.i.Load("saveSlot1");
+            state = GameState.FreeRoam;
+        }
+
     }
 }
