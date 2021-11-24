@@ -2,13 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class MonParty : MonoBehaviour
 {
     [SerializeField] List<Mon> mons;
     public List<Mon> Mons {
         get { return mons; }
-        set { mons = value; }
+        set 
+        { 
+            mons = value; 
+            OnUpdated?.Invoke();
+        }
+    }
+
+    public event Action OnUpdated;
+
+    public static MonParty GetPlayerParty()
+    {
+        return FindObjectOfType<PlayerController>().GetComponent<MonParty>();
     }
 
     private void Start()
@@ -29,6 +41,7 @@ public class MonParty : MonoBehaviour
         if(mons.Count < 6)
         {
             mons.Add(newMon);
+            OnUpdated?.Invoke();
         }
         else
         {

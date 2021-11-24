@@ -28,6 +28,21 @@ public class DialogManager : MonoBehaviour
 
     public bool IsShowing { get; private set; }
 
+    //show only a single line instead of a dialog
+    public IEnumerator ShowDialogText(string text, bool waitForInput = true)
+    {
+        IsShowing = true;
+        dialogBox.SetActive(true);
+
+        yield return TypeDialog(text);
+        if(waitForInput)
+        {
+            yield return new WaitUntil(() => Input.GetButtonDown("Submit"));
+        }
+        dialogBox.SetActive(false);
+        IsShowing = false;
+    }
+
     public IEnumerator ShowDialog(Dialog dialog, Action onFinished = null)
     {
         yield return new WaitForEndOfFrame();

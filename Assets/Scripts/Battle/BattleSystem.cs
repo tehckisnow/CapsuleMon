@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, MoveToForget, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, Bag, PartyScreen, AboutToUse, MoveToForget, BattleOver}
 public enum BattleAction { Move, SwitchMon, UseItem, Run }
 
 public class BattleSystem : MonoBehaviour
@@ -19,6 +19,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Image trainerImage;
     [SerializeField] GameObject capsuleSprite;
     [SerializeField] MoveSelectionUI moveSelectionUI;
+    [SerializeField] InventoryUI inventoryUI;
 
     public event Action<bool> OnBattleOver;
 
@@ -124,11 +125,16 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableActionSelector(true);
     }
 
+    private void OpenBag()
+    {
+        state = BattleState.Bag;
+        inventoryUI.gameObject.SetActive(true);
+    }
+
     private void OpenPartyScreen()
     {
         partyScreen.CalledFrom = state;
         state = BattleState.PartyScreen;
-        partyScreen.SetPartyData(playerParty.Mons);
         partyScreen.gameObject.SetActive(true);
     }
 
@@ -210,8 +216,8 @@ public class BattleSystem : MonoBehaviour
             }
             else if(playerAction == BattleAction.UseItem)
             {
+                //this is handled from the item screen, so do nothing and skip to enemy move
                 dialogBox.EnableActionSelector(false);
-                yield return ThrowCapsule();
             }
             else if(playerAction == BattleAction.Run)
             {
@@ -241,7 +247,7 @@ public class BattleSystem : MonoBehaviour
         if(!canRunMove)
         {
             yield return ShowStatusChanges(sourceUnit.Mon);
-            yield return sourceUnit.Hud.UpdateHP();
+            yield return sourceUnit.Hud.WaitForHPUpdate();
             yield break;
         }
         yield return ShowStatusChanges(sourceUnit.Mon);
@@ -263,7 +269,7 @@ public class BattleSystem : MonoBehaviour
             else
             {
                 var damageDetails = targetUnit.Mon.TakeDamage(move, sourceUnit.Mon);
-                yield return targetUnit.Hud.UpdateHP();
+                yield return targetUnit.Hud.WaitForHPUpdate();
                 yield return ShowDamageDetails(damageDetails);
             }
 
@@ -337,7 +343,7 @@ public class BattleSystem : MonoBehaviour
         //statuses like burn or psn will hurt the mon after the turn
         sourceUnit.Mon.OnAfterTurn();
         yield return ShowStatusChanges(sourceUnit.Mon);
-        yield return sourceUnit.Hud.UpdateHP();
+        yield return sourceUnit.Hud.WaitForHPUpdate();
         if(sourceUnit.Mon.HP <= 0)
         {
             yield return HandleMonFainted(sourceUnit);
@@ -509,6 +515,23 @@ public class BattleSystem : MonoBehaviour
         {
             HandlePartySelection();
         }
+        else if(state == BattleState.Bag)
+        {
+            Action onBack = () =>
+            {
+                inventoryUI.gameObject.SetActive(false);
+                state = BattleState.ActionSelection;
+            };
+
+            Action onItemUsed = () =>
+            {
+                state = BattleState.Busy;
+                inventoryUI.gameObject.SetActive(false);
+                StartCoroutine(RunTurns(BattleAction.UseItem));
+            };
+
+            inventoryUI.HandleUpdate(onBack, onItemUsed);
+        }
         else if(state == BattleState.AboutToUse)
         {
             HandleAboutToUse();
@@ -572,7 +595,7 @@ public class BattleSystem : MonoBehaviour
             else if(currentAction == 1)
             {
                 //bag
-                StartCoroutine(RunTurns(BattleAction.UseItem));
+                OpenBag();
             }
             else if(currentAction == 2)
             {

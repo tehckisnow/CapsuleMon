@@ -18,13 +18,20 @@ public class PartyMemberUI : MonoBehaviour
         normalColor = nameText.color;
     }
 
-    public void SetData(Mon mon)
+    public void Init(Mon mon)
     {
         _mon = mon;
+        UpdateData();
 
-        nameText.text = mon.Base.Name;
-        levelText.text = "Lvl " + mon.Level;
-        hpBar.SetHP((float) mon.HP / mon.MaxHp);
+        _mon.OnHPChanged += UpdateData;
+    }
+
+    private void UpdateData()
+    {
+        nameText.text = _mon.Base.Name;
+        levelText.text = "Lvl " + _mon.Level;
+        Debug.Log($"{_mon.Name}: {_mon.HP}/{_mon.MaxHp}");
+        hpBar.SetHP((float)_mon.HP / (float)_mon.MaxHp);
     }
 
     public void SetSelected(bool selected)
