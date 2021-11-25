@@ -21,7 +21,7 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] PartyScreen partyScreen;
 
-    private Action onItemUsed;
+    private Action<ItemBase> onItemUsed;
 
     private int selectedItem = 0;
     private int selectedCategory = 0;
@@ -65,7 +65,7 @@ public class InventoryUI : MonoBehaviour
         UpdateItemSelection();
     }
 
-    public void HandleUpdate(Action onBack, Action onItemUsed = null)
+    public void HandleUpdate(Action onBack, Action<ItemBase> onItemUsed = null)
     {
         this.onItemUsed = onItemUsed;
 
@@ -121,13 +121,13 @@ public class InventoryUI : MonoBehaviour
 
             if(Input.GetButtonDown("Submit"))
             {
-                //OpenPartyScreen();
 
                 //Input.GetButtonDown("Submit") of OpenPartyScreen() is being immediately triggered
                 //so the below delay is to prevent that
                 Action partyScreenAction = () =>
                 {
-                    OpenPartyScreen();
+                    //OpenPartyScreen();
+                    ItemSelected();
                 };
                 StartCoroutine(Delay(partyScreenAction, 0.1f));
             }
@@ -159,15 +159,31 @@ public class InventoryUI : MonoBehaviour
         doThis?.Invoke();
     }
 
+    // uses a capsule if a capsule was selected, opens party screen otherwise
+    private void ItemSelected()
+    {
+        if(selectedCategory == (int)ItemCategory.Capsules)
+        {
+            StartCoroutine(UseItem());
+        }
+        else
+        {
+            OpenPartyScreen();
+        }
+    }
+
     IEnumerator UseItem()
     {
         state = InventoryUIState.Busy;
 
-        var usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember);
+        var usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember, selectedCategory);
         if(usedItem != null)
         {
-            yield return DialogManager.Instance.ShowDialogText($"The player used {usedItem.Name}");
-            onItemUsed?.Invoke();
+            if(!(usedItem is CapsuleItem))
+            {
+                yield return DialogManager.Instance.ShowDialogText($"The player used {usedItem.Name}");
+            }
+            onItemUsed?.Invoke(usedItem);
         }
         else
         {
@@ -181,6 +197,12 @@ public class InventoryUI : MonoBehaviour
     {
         var slots = inventory.GetSlotsByCategory(selectedCategory);
 
+        //if last item in inventory is used and then removed, number of item slots will change but selectedItem will not,
+        //resulting in an out of range exception.  clamping this here prevents that.
+        selectedItem = Mathf.Clamp(selectedItem, 0, slots.Count - 1);
+        //also, clamp selectedItem -before- the following for loop to prevent a strange edge case error where using the last item
+        //will cause the selection to disappear
+
         for(int i = 0; i < slotUIList.Count; i++)
         {
             if(i == selectedItem)
@@ -192,10 +214,6 @@ public class InventoryUI : MonoBehaviour
                 slotUIList[i].NameText.color = GlobalSettings.i.UnhighlightedColor;
             }
         }
-
-        //if last item in inventory is used and then removed, number of item slots will change but selectedItem will not,
-        //resulting in an out of range exception.  clamping this here prevents that.
-        selectedItem = Mathf.Clamp(selectedItem, 0, slots.Count - 1);
 
         if(slots.Count > 0)
         {

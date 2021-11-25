@@ -115,6 +115,8 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.BattleOver;
         playerParty.Mons.ForEach(p => p.OnBattleOver());
+        playerUnit.Hud.ClearData();
+        enemyUnit.Hud.ClearData();
         OnBattleOver(won);
     }
 
@@ -523,11 +525,9 @@ public class BattleSystem : MonoBehaviour
                 state = BattleState.ActionSelection;
             };
 
-            Action onItemUsed = () =>
+            Action<ItemBase> onItemUsed = (ItemBase usedItem) =>
             {
-                state = BattleState.Busy;
-                inventoryUI.gameObject.SetActive(false);
-                StartCoroutine(RunTurns(BattleAction.UseItem));
+                StartCoroutine(OnItemUsed(usedItem));
             };
 
             inventoryUI.HandleUpdate(onBack, onItemUsed);
@@ -772,7 +772,20 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.RunningTurn;
     }
 
-    IEnumerator ThrowCapsule()
+    IEnumerator OnItemUsed(ItemBase usedItem)
+    {
+        state = BattleState.Busy;
+        inventoryUI.gameObject.SetActive(false);
+
+        if(usedItem is CapsuleItem)
+        {
+            yield return ThrowCapsule((CapsuleItem)usedItem);
+        }
+
+        StartCoroutine(RunTurns(BattleAction.UseItem));
+    }
+
+    IEnumerator ThrowCapsule(CapsuleItem capsuleItem)
     {
         state = BattleState.Busy;
 
@@ -783,17 +796,18 @@ public class BattleSystem : MonoBehaviour
             yield break;
         }
 
-        yield return dialogBox.TypeDialog($"{player.Name} tossed a capsule!");
+        yield return dialogBox.TypeDialog($"{player.Name} tossed a {capsuleItem.Name.ToUpper()}!");
 
         var capsuleObj = Instantiate(capsuleSprite, playerUnit.transform.position - new Vector3(2, 0), Quaternion.identity);
         var capsule = capsuleObj.GetComponent<SpriteRenderer>();
+        capsule.sprite = capsuleItem.Icon;
 
         // Animations
         yield return capsule.transform.DOJump(enemyUnit.transform.position + new Vector3(0, 2), 2f, 1, 1f).WaitForCompletion();
         yield return enemyUnit.PlayCaptureAnimation();
         yield return capsule.transform.DOMoveY(enemyUnit.transform.position.y - 1.3f, 0.5f).WaitForCompletion();
 
-        int shakeCount = TryToCatchMon(enemyUnit.Mon);
+        int shakeCount = TryToCatchMon(enemyUnit.Mon, capsuleItem);
 
         for(int i = 0; i < Mathf.Min(shakeCount, 3); ++i)
         {
@@ -840,9 +854,9 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    private int TryToCatchMon(Mon mon)
+    private int TryToCatchMon(Mon mon, CapsuleItem capsuleItem)
     {
-        float a = (3 * mon.MaxHp - 2 * mon.HP) * mon.Base.CatchRate * ConditionsDB.GetStatusBonus(mon.Status) / (3 * mon.MaxHp);
+        float a = (3 * mon.MaxHp - 2 * mon.HP) * mon.Base.CatchRate * capsuleItem.CatchRateModifier * ConditionsDB.GetStatusBonus(mon.Status) / (3 * mon.MaxHp);
 
         if(a >= 255)
         {

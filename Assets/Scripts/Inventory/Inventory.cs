@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ItemCategory { Items, Capsules, Tms }
+
 public class Inventory : MonoBehaviour
 {
     [SerializeField] List<ItemSlot> slots;
@@ -37,25 +39,29 @@ public class Inventory : MonoBehaviour
         return FindObjectOfType<PlayerController>().GetComponent<Inventory>();
     }
 
-    public ItemBase UseItem(int itemIndex, Mon selectedMon)
+    public ItemBase UseItem(int itemIndex, Mon selectedMon, int selectedCategory)
     {
-        var item = slots[itemIndex].Item;
+        var currentSlots = GetSlotsByCategory(selectedCategory);
+
+        var item = currentSlots[itemIndex].Item;
         bool itemUsed = item.Use(selectedMon);
         if(itemUsed)
         {
-            RemoveItem(item);
+            RemoveItem(item, selectedCategory);
             return item;
         }
         return null;
     }
 
-    public void RemoveItem(ItemBase item)
+    public void RemoveItem(ItemBase item, int category)
     {
-        var itemSlot = slots.First(slots => slots.Item == item);
+        var currentSlots = GetSlotsByCategory(category);
+
+        var itemSlot = currentSlots.First(slots => slots.Item == item);
         itemSlot.Count--;
         if(itemSlot.Count == 0)
         {
-            slots.Remove(itemSlot);
+            currentSlots.Remove(itemSlot);
         }
 
         OnUpdated?.Invoke();

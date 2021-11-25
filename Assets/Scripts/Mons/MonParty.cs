@@ -23,7 +23,7 @@ public class MonParty : MonoBehaviour
         return FindObjectOfType<PlayerController>().GetComponent<MonParty>();
     }
 
-    private void Start()
+    private void Awake()
     {
         foreach(var mon in mons)
         {

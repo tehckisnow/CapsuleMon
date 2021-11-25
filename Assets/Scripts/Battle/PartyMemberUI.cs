@@ -30,7 +30,6 @@ public class PartyMemberUI : MonoBehaviour
     {
         nameText.text = _mon.Base.Name;
         levelText.text = "Lvl " + _mon.Level;
-        Debug.Log($"{_mon.Name}: {_mon.HP}/{_mon.MaxHp}");
         hpBar.SetHP((float)_mon.HP / (float)_mon.MaxHp);
     }
 

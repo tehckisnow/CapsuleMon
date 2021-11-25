@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     [SerializeField] InventoryUI inventoryUI;
 
     public GameState state;
+    public GameState State => state;
 
     public GameState stateBeforePause;
 

@@ -16,5 +16,7 @@ public class TODO : MonoBehaviour
     SpriteFader is broken (used in BattleSystem.ThrowCapsule())
 
     Saving system in PlayerController is not setting player facing in character for some reason
+
+    capsules are not always being deducted from their count after being used
     */
 }

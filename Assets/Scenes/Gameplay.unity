@@ -2178,6 +2178,17 @@ PrefabInstance:
       propertyPath: capsuleSlots.Array.data[1].count
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7107275478669413603, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: slots.Array.data[11].count
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7107275478669413603, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: slots.Array.data[11].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 8eeba334ab92e1f46bb3efe3a6122e13,
+        type: 2}
     - target: {fileID: 7463243799143007734, guid: 0862d17dbd7a917408a3c7e8e045dd73,
         type: 3}
       propertyPath: m_AnchorMin.y

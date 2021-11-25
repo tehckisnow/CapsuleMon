@@ -13,8 +13,8 @@ public class HealMons : MonoBehaviour
     {
         foreach(Mon mon in party.Mons)
         {
-            mon.HP = mon.MaxHp;
             mon.CureStatus();
+            mon.IncreaseHP(mon.MaxHp);
             foreach(Move move in mon.Moves)
             {
                 move.PP = move.Base.PP;
