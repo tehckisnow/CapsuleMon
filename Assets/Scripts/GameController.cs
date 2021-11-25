@@ -31,9 +31,6 @@ public class GameController : MonoBehaviour
 
         menuController = GetComponent<MenuController>();
 
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
-
         MonDB.Init();
         MoveDB.Init();
         ConditionsDB.Init();
@@ -203,6 +200,7 @@ public class GameController : MonoBehaviour
         {
             //mon
             partyScreen.gameObject.SetActive(true);
+            partyScreen.SetPartyData(playerController.GetComponent<MonParty>().Mons);
             state = GameState.PartyScreen;
         }
         else if(selectedItem == 1)

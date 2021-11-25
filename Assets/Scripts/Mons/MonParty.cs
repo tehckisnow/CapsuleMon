@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System;
 
 public class MonParty : MonoBehaviour
 {
     [SerializeField] List<Mon> mons;
     public List<Mon> Mons {
         get { return mons; }
+<<<<<<< HEAD
         set 
         { 
             mons = value; 
@@ -24,6 +24,9 @@ public class MonParty : MonoBehaviour
     {
         return PlayerParty;
         //return FindObjectOfType<PlayerController>().GetComponent<MonParty>();
+=======
+        set { mons = value; }
+>>>>>>> parent of 9fcabf5 (Finished #58)
     }
 
     private void Awake()
@@ -50,7 +53,6 @@ public class MonParty : MonoBehaviour
         if(mons.Count < 6)
         {
             mons.Add(newMon);
-            OnUpdated?.Invoke();
         }
         else
         {

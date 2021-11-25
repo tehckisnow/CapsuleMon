@@ -10,7 +10,6 @@ public class PartyScreen : MonoBehaviour
 
     PartyMemberUI[] memberSlots;
     List<Mon> mons;
-    MonParty party;
 
     private int selection = 0;
     public Mon SelectedMember => mons[selection];
@@ -21,22 +20,17 @@ public class PartyScreen : MonoBehaviour
     public void Init()
     {
         memberSlots = GetComponentsInChildren<PartyMemberUI>(true);
-        party = MonParty.GetPlayerParty();
-        SetPartyData();
-
-        party.OnUpdated += SetPartyData;
     }
 
-    public void SetPartyData()
+    public void SetPartyData(List<Mon> mons)
     {
-        mons = party.Mons;
-
+        this.mons = mons;
         for(int i = 0; i < memberSlots.Length; i++)
         {
             if(i < mons.Count)
             {
                 memberSlots[i].gameObject.SetActive(true);
-                memberSlots[i].Init(mons[i]);
+                memberSlots[i].SetData(mons[i]);
             }
             else
             {

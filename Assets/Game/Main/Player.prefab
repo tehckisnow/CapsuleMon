@@ -94,7 +94,6 @@ GameObject:
   - component: {fileID: 7837830639115474927}
   - component: {fileID: 7837830639115474913}
   - component: {fileID: 7837830639115474917}
-  - component: {fileID: 6740629998321009201}
   - component: {fileID: 7837830639115474912}
   - component: {fileID: 7837830639115474914}
   - component: {fileID: 7837830639115474919}
@@ -221,43 +220,6 @@ MonoBehaviour:
   runModifier: 2
   facing: 1
   originTransform: {fileID: 7659645919192007781}
---- !u!114 &6740629998321009201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7837830639115474924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0745e22c0344594499c19f9caa2d7635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slots:
-  - item: {fileID: 11400000, guid: 8eeba334ab92e1f46bb3efe3a6122e13, type: 2}
-    count: 5
-  - item: {fileID: 11400000, guid: 287040ed05b96b447836edda468b4dd3, type: 2}
-    count: 2
-  - item: {fileID: 11400000, guid: 609eb9fc6fa274743887211932d38218, type: 2}
-    count: 1
-  - item: {fileID: 11400000, guid: 9384769a8eeb51e4fa6638fb3714a428, type: 2}
-    count: 2
-  - item: {fileID: 11400000, guid: 8544e80608bd31e4f807e88aea7dc6d4, type: 2}
-    count: 2
-  - item: {fileID: 11400000, guid: 3bec987af6a57224db93b59a55c8c8ba, type: 2}
-    count: 1
-  - item: {fileID: 11400000, guid: 3bec987af6a57224db93b59a55c8c8ba, type: 2}
-    count: 4
-  - item: {fileID: 11400000, guid: 609eb9fc6fa274743887211932d38218, type: 2}
-    count: 12
-  - item: {fileID: 11400000, guid: 3bec987af6a57224db93b59a55c8c8ba, type: 2}
-    count: 4
-  - item: {fileID: 11400000, guid: 287040ed05b96b447836edda468b4dd3, type: 2}
-    count: 3
-  - item: {fileID: 11400000, guid: 7f861fe59a7d83b479bfa9438ce1ec83, type: 2}
-    count: 4
-  - item: {fileID: 11400000, guid: 9384769a8eeb51e4fa6638fb3714a428, type: 2}
-    count: 3
 --- !u!95 &7837830639115474912
 Animator:
   serializedVersion: 3

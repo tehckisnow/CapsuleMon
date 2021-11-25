@@ -18,11 +18,11 @@ public class PartyMemberUI : MonoBehaviour
         normalColor = nameText.color;
     }
 
-    public void Init(Mon mon)
+    public void SetData(Mon mon)
     {
         _mon = mon;
-        UpdateData();
 
+<<<<<<< HEAD
         _mon.OnHPChanged += UpdateData;
     }
 
@@ -33,6 +33,11 @@ public class PartyMemberUI : MonoBehaviour
 
         var hp = Mathf.Clamp( ((float)_mon.HP / _mon.MaxHp), 0, 1);
         hpBar.SetHP(hp);
+=======
+        nameText.text = mon.Base.Name;
+        levelText.text = "Lvl " + mon.Level;
+        hpBar.SetHP((float) mon.HP / mon.MaxHp);
+>>>>>>> parent of 9fcabf5 (Finished #58)
     }
 
     public void SetSelected(bool selected)
