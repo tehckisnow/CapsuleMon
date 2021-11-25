@@ -15,11 +15,11 @@ public class NPCController : MonoBehaviour, Interactable
   [SerializeField] float timeBetweenPattern;
   [SerializeField] MyGameObjectEvent action;
 
-  NPCState state;
-  float idleTimer;
-  int currentPattern = 0;
+  private NPCState state;
+  private float idleTimer;
+  private int currentPattern = 0;
 
-  Character character;
+  private Character character;
 
   private void Awake()
   {

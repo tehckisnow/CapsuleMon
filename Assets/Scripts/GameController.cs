@@ -108,6 +108,8 @@ public class GameController : MonoBehaviour
 
     public void StarterSelectMenu()
     {
+        selectStarter = SelectStarter.GetSelectStarter();
+        Debug.Log(selectStarter);
         selectStarter.gameObject.SetActive(true);
         selectStarter.Init();
         state = GameState.StarterSelectMenu;

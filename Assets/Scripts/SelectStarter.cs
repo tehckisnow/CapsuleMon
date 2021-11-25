@@ -11,16 +11,23 @@ public class SelectStarter : MonoBehaviour
     [SerializeField] List<MonBase> starterList;
     [SerializeField] Color highlightedColor;
     [SerializeField] List<Image> starterImages;
-    
+
+    public static SelectStarter Instance { get; private set; }
+
     private int currentSelection = 1;
     private Color unhighlightedColor;
     private MonParty playerParty;
-    private GameObject playerObject;
 
     private void Awake()
     {
         unhighlightedColor = labelsList[0].color;
         Init();
+        Instance = this;
+    }
+
+    public static SelectStarter GetSelectStarter()
+    {
+        return FindObjectOfType<SelectStarter>();
     }
 
     public void Init()
@@ -32,10 +39,10 @@ public class SelectStarter : MonoBehaviour
         }
     }
 
-    public void OpenSelectStarter(GameObject player)
+    public void OpenSelectStarter()
     {
         FindObjectOfType<GameController>().StarterSelectMenu();
-        playerParty = player.GetComponent<MonParty>();
+        playerParty = MonParty.GetPlayerParty();
     }
 
     public void HandleSelectStarter()

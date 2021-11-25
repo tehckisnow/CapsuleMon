@@ -18,16 +18,25 @@ public class MonParty : MonoBehaviour
 
     public event Action OnUpdated;
 
+    public static MonParty PlayerParty { get; private set; }
+
     public static MonParty GetPlayerParty()
     {
-        return FindObjectOfType<PlayerController>().GetComponent<MonParty>();
+        return PlayerParty;
+        //return FindObjectOfType<PlayerController>().GetComponent<MonParty>();
     }
 
-    private void Start()
+    private void Awake()
     {
         foreach(var mon in mons)
         {
             mon.Init();
+        }
+
+        var player = FindObjectOfType<PlayerController>();
+        if(player != null)
+        {
+            PlayerParty = player.GetComponent<MonParty>();
         }
     }
 
