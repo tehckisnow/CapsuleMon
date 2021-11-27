@@ -106,4 +106,21 @@ public class PartyScreen : MonoBehaviour
             onBack?.Invoke();
         }
     }
+
+    public void ShowIfTmIsUsable(TmItem tmItem)
+    {
+        for(int i = 0; i < mons.Count; i++)
+        {
+            string message = tmItem.CanBeTaught(mons[i])? "ABLE!" : "NOT ABLE!";
+            memberSlots[i].SetMessage(message);
+        }
+    }
+
+    public void ClearMemberSlotMessages()
+    {
+        for(int i = 0; i < mons.Count; i++)
+        {
+            memberSlots[i].SetMessage("");
+        }
+    }
 }

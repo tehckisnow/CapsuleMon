@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
     public GameState state;
     public GameState State => state;
 
-    public GameState stateBeforePause;
+    public GameState prevState;
 
     public SceneDetails CurrentScene { get; private set; }
     public SceneDetails PrevScene { get; private set; }
@@ -38,6 +38,7 @@ public class GameController : MonoBehaviour
         MonDB.Init();
         MoveDB.Init();
         ConditionsDB.Init();
+        ItemDB.Init();
     }
 
     private void Start()
@@ -48,13 +49,14 @@ public class GameController : MonoBehaviour
 
         DialogManager.Instance.OnShowDialog += () =>
         {
+            prevState = state;
             state = GameState.Dialog;
         };
-        DialogManager.Instance.OnCloseDialog += () =>
+        DialogManager.Instance.OnDialogFinished += () =>
         {
             if(state == GameState.Dialog)
             {
-                state = GameState.FreeRoam;
+                state = prevState;
             }
         };
 
@@ -70,12 +72,12 @@ public class GameController : MonoBehaviour
     {
         if(pause)
         {
-            stateBeforePause = state;
+            prevState = state;
             state = GameState.Paused;
         }
         else
         {
-            state = stateBeforePause;
+            state = prevState;
         }
     }
 

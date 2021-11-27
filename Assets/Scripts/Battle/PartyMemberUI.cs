@@ -8,6 +8,7 @@ public class PartyMemberUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] HPBar hpBar;
+    [SerializeField] TextMeshProUGUI messageText;
 
     private Color normalColor;
 
@@ -22,6 +23,7 @@ public class PartyMemberUI : MonoBehaviour
     {
         _mon = mon;
         UpdateData();
+        SetMessage("");
 
         _mon.OnHPChanged += UpdateData;
     }
@@ -43,5 +45,10 @@ public class PartyMemberUI : MonoBehaviour
         {
             nameText.color = GlobalSettings.i.UnhighlightedColor; //! normalColor isn't working for some reason
         }
+    }
+
+    public void SetMessage(string message)
+    {
+        messageText.text = message;
     }
 }

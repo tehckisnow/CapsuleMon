@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de41cc5a561008343a5e674d980bf027, type: 3}
+  m_Name: FaintedMon
+  m_EditorClassIdentifier: 
+  name: FaintedMon
+  description: Bring a revive to help another trainer's fainted mon
+  startDialog:
+    lines:
+    - My mon has fainted.
+    - Can you bring me a revive?
+  inProgressDialog:
+    lines:
+    - Please bring me a revive.
+  completedDialog:
+    lines:
+    - Oh, you got it! You're a lifesaver!
+    - Here, you can have this HM as a reward!
+  requiredItem: {fileID: 11400000, guid: 7f861fe59a7d83b479bfa9438ce1ec83, type: 2}
+  rewardItem: {fileID: 11400000, guid: 87ce6b076e4c38841aeaa4ec5af489b9, type: 2}
+  rewardItemCount: 1

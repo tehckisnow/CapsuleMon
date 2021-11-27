@@ -28,6 +28,8 @@ public class MonBase : ScriptableObject
     [SerializeField] int catchRate = 255;
 
     [SerializeField] List<LearnableMove> learnableMoves;
+    [SerializeField] List<MoveBase> learnableByItems;
+    public List<MoveBase> LearnableByItems => learnableByItems;
 
     public static int MaxNumberOfMoves { get; set; } = 4;
 

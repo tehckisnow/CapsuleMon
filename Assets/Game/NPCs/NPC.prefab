@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7898739779240828435}
   - component: {fileID: 7898739779240828434}
+  - component: {fileID: 202165597252699943}
   - component: {fileID: 7898739779240828438}
+  - component: {fileID: 3361188868997699538}
   - component: {fileID: 7898739779240828437}
   - component: {fileID: 7898739779240828436}
   - component: {fileID: 7898739779240828439}
@@ -62,6 +64,22 @@ MonoBehaviour:
   action:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &202165597252699943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7898739779240828456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e89f69e7e93924bae16933ca6a3bd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 0}
+  count: 1
+  dialog:
+    lines: []
 --- !u!114 &7898739779240828438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,6 +96,19 @@ MonoBehaviour:
   runModifier: 2
   facing: 1
   originTransform: {fileID: 7898739779659789985}
+--- !u!114 &3361188868997699538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7898739779240828456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4881f89f8b930e34489bbb86116ccd4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 
 --- !u!212 &7898739779240828437
 SpriteRenderer:
   m_ObjectHideFlags: 0

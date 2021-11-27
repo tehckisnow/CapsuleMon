@@ -1425,8 +1425,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3188455972818087055}
   - component: {fileID: 3188455972818087091}
-  - component: {fileID: 3188455972818087054}
+  - component: {fileID: 5181236632342906324}
   - component: {fileID: 3188455972818087090}
+  - component: {fileID: 3188455972818087054}
   - component: {fileID: 3188455972818087089}
   - component: {fileID: 3188455972818087088}
   - component: {fileID: 3188455972818087092}
@@ -1468,13 +1469,14 @@ MonoBehaviour:
   dialog:
     lines:
     - Here's a mon, my dude!
+  questToStart: {fileID: 0}
   movementPattern: []
   timeBetweenPattern: 0
   action:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3188455971298839676}
-        m_MethodName: OpenSelectStarter
+      - m_Target: {fileID: 0}
+        m_MethodName: 
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1484,6 +1486,41 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5181236632342906324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188455972818087053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea32845eb2522c6408e70be0be5b39ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monToGive:
+    _base: {fileID: 11400000, guid: 3985d245db4330543814566b9020e7aa, type: 2}
+    level: 5
+  dialog:
+    lines:
+    - It's not safe to go out there without a mon
+    - You can have this one!
+--- !u!114 &3188455972818087090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188455972818087053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63b882c4c45ef0d4184c371b78df8705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  runModifier: 2
+  facing: 1
+  originTransform: {fileID: 3188455972903848992}
 --- !u!212 &3188455972818087054
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1523,8 +1560,7 @@ SpriteRenderer:
   m_SortingLayerID: -1428774911
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7531178435074948946, guid: 8fed2d7878af101479711400063d53b6,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0d0d83f152184c74eb794b954e51111f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1535,22 +1571,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3188455972818087090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3188455972818087053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63b882c4c45ef0d4184c371b78df8705, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  runModifier: 2
-  facing: 1
-  originTransform: {fileID: 3188455972903848992}
 --- !u!61 &3188455972818087089
 BoxCollider2D:
   m_ObjectHideFlags: 0

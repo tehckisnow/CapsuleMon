@@ -10,7 +10,7 @@ public class Character : MonoBehaviour
     [SerializeField] Facing facing = Facing.Down;
     public Facing Facing {
         get { return facing; }
-        set {}
+        set { facing = value; }
     }
     [SerializeField] Transform originTransform;
 
@@ -32,6 +32,9 @@ public class Character : MonoBehaviour
         var dir = FacingClass.GetXY(facing);
         animator.SetFloat("moveX", dir.x);
         animator.SetFloat("moveY", dir.y);
+
+        animator.SetBool("isMoving", IsMoving);
+        animator.SetBool("isRunning", IsRunning);
     }
 
     public void SetPositionAndSnapToTile(Vector2 pos)

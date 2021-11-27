@@ -11,41 +11,104 @@ public class MyGameObjectEvent : UnityEvent<GameObject>
 public class NPCController : MonoBehaviour, Interactable
 {
   [SerializeField] Dialog dialog;
+
+  [Header("Quests")]
+  [SerializeField] QuestBase questToStart;
+  [SerializeField] QuestBase questToComplete;
+
+  [Header("Movement")]
   [SerializeField] List<Vector2> movementPattern;
   [SerializeField] float timeBetweenPattern;
+
+  [Header("State")]
   [SerializeField] MyGameObjectEvent action;
 
   NPCState state;
   float idleTimer;
   int currentPattern = 0;
+  Quest activeQuest;
 
   Character character;
+  ItemGiver itemGiver;
+  MonGiver monGiver;
 
   private void Awake()
   {
     character = GetComponent<Character>();
+    itemGiver = GetComponent<ItemGiver>();
+    monGiver = GetComponent<MonGiver>();
   }
 
-  public void Interact(Transform initiator)
+  public IEnumerator Interact(Transform initiator)
   {
     if(state == NPCState.Idle)
     {
       state = NPCState.Dialog;
       character.LookTowards(initiator.position);
 
-      StartCoroutine(WaitForDialogAndDoAction(action, initiator.gameObject));
+      if(questToComplete != null)
+      {
+        var quest = new Quest(questToComplete);
+        yield return quest.CompleteQuest(initiator);
+        questToComplete = null;
+
+        Debug.Log($"{quest.Base.Name} completed");
+      }
+
+      if(itemGiver != null && itemGiver.CanBeGiven())
+      {
+        yield return itemGiver.GiveItem(initiator.GetComponent<PlayerController>());
+      }
+      else if(monGiver != null && monGiver.CanBeGiven())
+      {
+        yield return monGiver.GiveMon(initiator.GetComponent<PlayerController>());
+      }
+      else if(questToStart != null)
+      {
+        activeQuest = new Quest(questToStart);
+        yield return activeQuest.StartQuest();
+        questToStart = null;
+
+        //check if quest has already been completed
+        if(activeQuest.CanBeCompleted())
+        {
+          yield return activeQuest.CompleteQuest(initiator);
+          activeQuest = null;
+        }
+      }
+      else if(activeQuest != null)
+      {
+        if(activeQuest.CanBeCompleted())
+        {
+          yield return activeQuest.CompleteQuest(initiator);
+          activeQuest = null;
+        }
+        else
+        {
+          yield return DialogManager.Instance.ShowDialog(activeQuest.Base.InProgressDialog);
+        }
+      }
+      else
+      {
+        yield return DialogManager.Instance.ShowDialog(dialog);
+      }
+
+      idleTimer = 0f;
+      state = NPCState.Idle;
+
+      //StartCoroutine(WaitForDialogAndDoAction(action, initiator.gameObject));
     }
   }
 
-  IEnumerator WaitForDialogAndDoAction(MyGameObjectEvent unityEvent, GameObject initiatorObj)
-  {
-    yield return DialogManager.Instance.ShowDialog(dialog, () => {
-        idleTimer = 0f;
-        state = NPCState.Idle;
-      });
-    yield return new WaitUntil(() => FindObjectOfType<GameController>().state != GameState.Dialog);
-    unityEvent?.Invoke(initiatorObj);
-  }
+  // IEnumerator WaitForDialogAndDoAction(MyGameObjectEvent unityEvent, GameObject initiatorObj)
+  // {
+  //   yield return DialogManager.Instance.ShowDialog(dialog, () => {
+  //       idleTimer = 0f;
+  //       state = NPCState.Idle;
+  //     });
+  //   yield return new WaitUntil(() => FindObjectOfType<GameController>().state != GameState.Dialog);
+  //   unityEvent?.Invoke(initiatorObj);
+  // }
 
   private void Update()
   {
@@ -63,7 +126,7 @@ public class NPCController : MonoBehaviour, Interactable
       }
     }
 
-    character.HandleUpdate();
+    //character.HandleUpdate();
   }
 
   IEnumerator Walk()

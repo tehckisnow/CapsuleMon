@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 
-public enum InventoryUIState { ItemSelection, PartySelection, Busy }
+public enum InventoryUIState { ItemSelection, PartySelection, MoveToForget, Busy }
 
 public class InventoryUI : MonoBehaviour
 {
@@ -20,11 +21,15 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] Image downArrow;
 
     [SerializeField] PartyScreen partyScreen;
+    [SerializeField] MoveSelectionUI moveSelectionUI;
 
     private Action<ItemBase> onItemUsed;
 
     private int selectedItem = 0;
     private int selectedCategory = 0;
+
+    private MoveBase moveToLearn;
+
     private InventoryUIState state;
 
     const int itemsInViewport = 8;
@@ -127,7 +132,7 @@ public class InventoryUI : MonoBehaviour
                 Action partyScreenAction = () =>
                 {
                     //OpenPartyScreen();
-                    ItemSelected();
+                    StartCoroutine(ItemSelected());
                 };
                 StartCoroutine(Delay(partyScreenAction, 0.1f));
             }
@@ -151,6 +156,16 @@ public class InventoryUI : MonoBehaviour
             partyScreen.HandleUpdate(onSelected, onBackPartyScreen);
         }
 
+        if(state == InventoryUIState.MoveToForget)
+        {
+            Action<int> onMoveSelected = (int moveIndex) =>
+            {
+                StartCoroutine(OnMoveToForgetSelected(moveIndex));
+            };
+
+            moveSelectionUI.HandleMoveSelection(onMoveSelected);
+        }
+
     }
 
     IEnumerator Delay(Action doThis, float delay)
@@ -160,8 +175,33 @@ public class InventoryUI : MonoBehaviour
     }
 
     // uses a capsule if a capsule was selected, opens party screen otherwise
-    private void ItemSelected()
+    IEnumerator ItemSelected()
     {
+        state = InventoryUIState.Busy;
+
+        var item = inventory.GetItem(selectedItem, selectedCategory);
+
+        if(GameController.Instance.State == GameState.Battle)
+        {
+            // In Battle
+            if(!item.CanUseInBattle)
+            {
+                yield return DialogManager.Instance.ShowDialogText($"This item cannot be used in battle");
+                state = InventoryUIState.ItemSelection;
+                yield break;
+            }
+        }
+        else
+        {
+            // outside battle
+            if(!item.CanUseOutsideBattle)
+            {
+                yield return DialogManager.Instance.ShowDialogText($"This item cannot be used outside battle");
+                state = InventoryUIState.ItemSelection;
+                yield break;
+            }
+        }
+
         if(selectedCategory == (int)ItemCategory.Capsules)
         {
             StartCoroutine(UseItem());
@@ -169,6 +209,11 @@ public class InventoryUI : MonoBehaviour
         else
         {
             OpenPartyScreen();
+
+            if(item is TmItem)
+            {
+                partyScreen.ShowIfTmIsUsable(item as TmItem);
+            }
         }
     }
 
@@ -176,10 +221,12 @@ public class InventoryUI : MonoBehaviour
     {
         state = InventoryUIState.Busy;
 
+        yield return HandleTmItems();
+
         var usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember, selectedCategory);
         if(usedItem != null)
         {
-            if(!(usedItem is CapsuleItem))
+            if(usedItem is RecoveryItem)
             {
                 yield return DialogManager.Instance.ShowDialogText($"The player used {usedItem.Name}");
             }
@@ -187,10 +234,60 @@ public class InventoryUI : MonoBehaviour
         }
         else
         {
-            yield return DialogManager.Instance.ShowDialogText($"It wont have any effect!");
+            if(selectedCategory == (int)ItemCategory.Items)
+                yield return DialogManager.Instance.ShowDialogText($"It wont have any effect!");
         }
 
         ClosePartyScreen();
+    }
+
+    IEnumerator HandleTmItems()
+    {
+        var tmItem = inventory.GetItem(selectedItem, selectedCategory) as TmItem;
+        if(tmItem == null)
+        {
+            yield break;
+        }
+        else
+        {
+            var mon = partyScreen.SelectedMember;
+
+            if(mon.HasMove(tmItem.Move))
+            {
+                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} already knows {tmItem.Move.Name}");
+                yield break;
+            }
+
+            if(!tmItem.CanBeTaught(mon))
+            {
+                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} can't learn {tmItem.Move.Name}");
+                yield break;
+            }
+
+            if(mon.Moves.Count < MonBase.MaxNumberOfMoves)
+            {
+                mon.LearnMove(tmItem.Move);
+                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} learned {tmItem.Move.Name}");
+            }
+            else
+            {
+                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} is trying to learn {tmItem.Move.Name}");
+                yield return DialogManager.Instance.ShowDialogText($"But it cannot learn more than {MonBase.MaxNumberOfMoves}");
+                yield return ChooseMoveToForget(mon, tmItem.Move);
+                yield return new WaitUntil(() => state != InventoryUIState.MoveToForget);
+            }
+        }
+    }
+
+    IEnumerator ChooseMoveToForget(Mon mon, MoveBase newMove)
+    {
+        state = InventoryUIState.Busy;
+        yield return DialogManager.Instance.ShowDialogText($"Choose a move you want to forget", true, false);
+        moveSelectionUI.gameObject.SetActive(true);
+        moveSelectionUI.SetMoveData(mon.Moves.Select(x => x.Base).ToList(), newMove);
+        moveToLearn = newMove;
+
+        state = InventoryUIState.MoveToForget;
     }
 
     private void UpdateItemSelection()
@@ -262,6 +359,31 @@ public class InventoryUI : MonoBehaviour
     private void ClosePartyScreen()
     {
         state = InventoryUIState.ItemSelection;
+
+        partyScreen.ClearMemberSlotMessages();
         partyScreen.gameObject.SetActive(false);
+    }
+
+    IEnumerator OnMoveToForgetSelected(int moveIndex)
+    {
+        var mon = partyScreen.SelectedMember;
+
+        DialogManager.Instance.CloseDialog();
+        moveSelectionUI.gameObject.SetActive(false);
+        if(moveIndex == MonBase.MaxNumberOfMoves)
+        {
+            //don't learn the new move
+            yield return DialogManager.Instance.ShowDialogText($"{mon.Name} did not learn {moveToLearn.Name}");
+        }
+        else
+        {
+            //forget the selected move and learn new move
+            var selectedMove = mon.Moves[moveIndex].Base;
+            yield return DialogManager.Instance.ShowDialogText($"{mon.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}");
+            
+            mon.Moves[moveIndex] = new Move(moveToLearn);
+        }
+        moveToLearn = null;
+        state = InventoryUIState.ItemSelection;
     }
 }

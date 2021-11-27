@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff9b681a69415a4385063364ca15b1a, type: 3}
   m_Name: Revive
   m_EditorClassIdentifier: 
-  name: Reviv e
+  name: Revive
   description: Revives a mon
   icon: {fileID: 8724728256399721647, guid: b7d6053ee084c5043848cc2dcacd7487, type: 3}
   hpAmount: 0

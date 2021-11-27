@@ -170,9 +170,12 @@ MonoBehaviour:
   dialog:
     lines:
     - My mons are strong! Let me show you!
+  loseDialog:
+    lines: []
   dialogAfterBattle:
     lines:
     - I will train harder to beat you one day.
+  battleReward: 0
   exclamation: {fileID: 6827964332838235405}
   fovPivot: {fileID: 6827964330872102561}
 --- !u!114 &6827964330995525706
@@ -478,13 +481,12 @@ SpriteRenderer:
   m_SortingLayerID: -643341769
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 5955781087917997448, guid: 50ca56800e3f0f6428af8e0514613952,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 98d8875e4d86b6f4d87f901fb755cd52, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.8125, y: 0.75}
+  m_Size: {x: 0.16, y: 0.16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

@@ -6,9 +6,9 @@ public class Sign : MonoBehaviour, Interactable
 {
     [SerializeField] Dialog dialog;
 
-    public void Interact(Transform player)
+    public IEnumerator Interact(Transform player)
     {
-        StartCoroutine(ShowDialog());
+        yield return ShowDialog();
     }
 
     IEnumerator ShowDialog()

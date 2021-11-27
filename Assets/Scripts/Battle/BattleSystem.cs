@@ -428,7 +428,7 @@ public class BattleSystem : MonoBehaviour
                 {
                     if(playerUnit.Mon.Moves.Count < MonBase.MaxNumberOfMoves)
                     {
-                        playerUnit.Mon.LearnMove(newMove);
+                        playerUnit.Mon.LearnMove(newMove.Base);
                         yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} learned {newMove.Base.Name}");
                         dialogBox.SetMoveNames(playerUnit.Mon.Moves);
                     }

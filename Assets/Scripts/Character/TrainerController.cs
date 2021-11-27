@@ -7,7 +7,9 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
     [SerializeField] string name;
     [SerializeField] Sprite sprite;
     [SerializeField] Dialog dialog;
+    [SerializeField] Dialog loseDialog;
     [SerializeField] Dialog dialogAfterBattle;
+    [SerializeField] int battleReward;
     [SerializeField] GameObject exclamation;
     [SerializeField] GameObject fovPivot;
     
@@ -26,26 +28,24 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
         SetFovRotation(character.Facing);
     }
 
-    public void Interact(Transform initiator)
+    public IEnumerator Interact(Transform initiator)
     {
         character.LookTowards(initiator.position);
         if(!battleLost)
         {
-            StartCoroutine(DialogManager.Instance.ShowDialog(dialog, () => 
-            {
-                GameController.Instance.StartTrainerBattle(this);
-            }));
+            yield return DialogManager.Instance.ShowDialog(dialog);
+            GameController.Instance.StartTrainerBattle(this);
         }
         else
         {
-            StartCoroutine(DialogManager.Instance.ShowDialog(dialogAfterBattle));
+            yield return DialogManager.Instance.ShowDialog(dialogAfterBattle);
         }
     }
 
-    private void Update()
-    {
-        character.HandleUpdate();
-    }
+    // private void Update()
+    // {
+    //     character.HandleUpdate();
+    // }
 
     public IEnumerator TriggerTrainerBattle(PlayerController player)
     {
@@ -62,9 +62,8 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
         yield return character.Move(moveVec);
 
         //show dialog
-        StartCoroutine(DialogManager.Instance.ShowDialog(dialog, () => {
-            GameController.Instance.StartTrainerBattle(this);
-        }));
+        yield return DialogManager.Instance.ShowDialog(dialog);
+        GameController.Instance.StartTrainerBattle(this);
     }
 
     public void BattleLost()

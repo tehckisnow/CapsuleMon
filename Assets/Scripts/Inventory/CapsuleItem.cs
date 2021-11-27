@@ -9,15 +9,11 @@ public class CapsuleItem : ItemBase
 
     public float CatchRateModifier => catchRateModifier;
 
+    public override bool CanUseOutsideBattle => false;
+
     public override bool Use(Mon mon)
     {
-        if(GameController.Instance.State == GameState.Battle)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
+
 }
