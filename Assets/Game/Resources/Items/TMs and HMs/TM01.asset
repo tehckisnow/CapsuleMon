@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TM01
   m_EditorClassIdentifier: 
   name: TM01
-  description: Teaches Supersonic to a mon
+  description: Teaches QuickAttack to a mon
   icon: {fileID: 188137887093963557, guid: c6e9fa2b7d6d0354bbaad5eba1022750, type: 3}
   move: {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
   isHM: 0

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused }
+public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution }
 
 public class GameController : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     public GameState State => state;
 
     public GameState prevState;
+    public GameState stateBeforeEvolution;
 
     public SceneDetails CurrentScene { get; private set; }
     public SceneDetails PrevScene { get; private set; }
@@ -39,6 +40,7 @@ public class GameController : MonoBehaviour
         MoveDB.Init();
         ConditionsDB.Init();
         ItemDB.Init();
+        QuestDB.Init();
     }
 
     private void Start()
@@ -66,6 +68,16 @@ public class GameController : MonoBehaviour
         };
 
         menuController.onMenuSelected += OnMenuSelected;
+
+        EvolutionManager.i.OnStartEvolution += () => 
+        {
+            stateBeforeEvolution = state;
+            state = GameState.Evolution;
+        };
+        EvolutionManager.i.OnCompleteEvolution += () => 
+        {
+            state = stateBeforeEvolution;
+        };
     }
 
     public void PauseGame(bool pause)
@@ -134,6 +146,9 @@ public class GameController : MonoBehaviour
         state = GameState.FreeRoam;
         battleSystem.gameObject.SetActive(false);
         worldCamera.gameObject.SetActive(true);
+
+        var playerParty = playerController.GetComponent<MonParty>();
+        StartCoroutine(playerParty.CheckForEvolutions());
     }
 
     private void Update()

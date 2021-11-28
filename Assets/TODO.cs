@@ -18,5 +18,9 @@ public class TODO : MonoBehaviour
     Saving system in PlayerController is not setting player facing in character for some reason
 
     capsules are not always being deducted from their count after being used
+
+    Player is weirdly offset from the grid.  Has to do with Character.OffsetY and SetPositionAndSnapToTile() in Awake()
+
+    NPCs are weirdly offset vertically.  Has to do with SetPositionAndSnapToTile() in Awake();
     */
 }

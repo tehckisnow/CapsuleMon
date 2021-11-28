@@ -2397,25 +2397,6 @@ Transform:
   m_Father: {fileID: 4000165867119788859}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1451579223646967511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7292653463549893235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3fdd7a9b3866894b898446e8f8c01b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wildMons:
-  - _base: {fileID: 11400000, guid: 8cc159525a14ec148b0e81a36e778cc1, type: 2}
-    level: 5
-  - _base: {fileID: 11400000, guid: 8cc159525a14ec148b0e81a36e778cc1, type: 2}
-    level: 7
-  - _base: {fileID: 11400000, guid: c0e33bdeeb091e948be2d91bc7f0ee83, type: 2}
-    level: 5
 --- !u!1 &1770772598700735737
 GameObject:
   m_ObjectHideFlags: 0
@@ -5835,7 +5816,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4000165867119788859}
   - component: {fileID: 2764996961752845955}
-  - component: {fileID: 1451579223646967511}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged

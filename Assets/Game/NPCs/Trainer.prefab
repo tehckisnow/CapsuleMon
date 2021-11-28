@@ -124,11 +124,11 @@ GameObject:
   - component: {fileID: 6827964330995525718}
   - component: {fileID: 6827964330995525706}
   - component: {fileID: 6827964330995525716}
+  - component: {fileID: 3399900916954251569}
   - component: {fileID: 6827964330995525705}
   - component: {fileID: 6827964330995525704}
   - component: {fileID: 6827964330995525707}
   - component: {fileID: 6827964330995525709}
-  - component: {fileID: 3399900916954251569}
   m_Layer: 11
   m_Name: Trainer
   m_TagString: Untagged
@@ -208,9 +208,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mons:
   - _base: {fileID: 11400000, guid: c0e33bdeeb091e948be2d91bc7f0ee83, type: 2}
-    level: 6
-  - _base: {fileID: 11400000, guid: fcf6d6e3568072447bae13b824522925, type: 2}
-    level: 8
+    level: 3
+--- !u!114 &3399900916954251569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827964330995525708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4881f89f8b930e34489bbb86116ccd4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 82d71c65-0068-4f0e-868e-eefdc1c82476
 --- !u!212 &6827964330995525705
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -328,19 +339,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3399900916954251569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6827964330995525708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4881f89f8b930e34489bbb86116ccd4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uniqueId: 
 --- !u!1 &6827964331735198710
 GameObject:
   m_ObjectHideFlags: 0

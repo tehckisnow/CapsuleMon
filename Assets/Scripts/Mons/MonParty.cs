@@ -49,4 +49,25 @@ public class MonParty : MonoBehaviour
 
         }
     }
+
+    public IEnumerator CheckForEvolutions()
+    {
+        foreach(var mon in mons)
+        {
+            var evolution = mon.CheckForEvolution();
+            if(evolution != null)
+            {
+                yield return EvolutionManager.i.Evolve(mon, evolution);
+            }
+        }
+
+        OnUpdated?.Invoke();
+    }
+
+    //I Added this to fix name not updating in partylist after evolving with evolutionItem
+    //this is to be able to invoke OnUpdated from outside of MonParty; particularly in the EvolutionManager
+    public void UpdateParty()
+    {
+        OnUpdated?.Invoke();
+    }
 }

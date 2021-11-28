@@ -113,7 +113,7 @@ public class Mon
 
     public Mon(MonSaveData saveData)
     {
-        _base = MonDB.GetMonByName(saveData.name);
+        _base = MonDB.GetObjectByName(saveData.name);
         level = saveData.level;
         Name = saveData.nickname;
         HP = saveData.hp;
@@ -143,7 +143,7 @@ public class Mon
         var saveData = new MonSaveData()
         {
             nickname = Name,
-            name = Base.Name,
+            name = Base.name,
             level = Level,
             hp = HP,
             exp = Exp,
@@ -218,6 +218,22 @@ public class Mon
     public bool HasMove(MoveBase moveToCheck)
     {
         return Moves.Count(mon => mon.Base == moveToCheck) > 0;
+    }
+
+    public Evolution CheckForEvolution()
+    {
+        return Base.Evolutions.FirstOrDefault(e => e.RequiredLevel == level);
+    }
+
+    public Evolution CheckForEvolution(ItemBase item)
+    {
+        return Base.Evolutions.FirstOrDefault(e => e.RequiredItem == item);
+    }
+
+    public void Evolve(Evolution evolution)
+    {
+        _base = evolution.EvolveInto;
+        CalculateStats();
     }
 
     public int Attack

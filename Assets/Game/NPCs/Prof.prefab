@@ -1427,6 +1427,7 @@ GameObject:
   - component: {fileID: 3188455972818087091}
   - component: {fileID: 5181236632342906324}
   - component: {fileID: 3188455972818087090}
+  - component: {fileID: 5112495349987983111}
   - component: {fileID: 3188455972818087054}
   - component: {fileID: 3188455972818087089}
   - component: {fileID: 3188455972818087088}
@@ -1470,6 +1471,7 @@ MonoBehaviour:
     lines:
     - Here's a mon, my dude!
   questToStart: {fileID: 0}
+  questToComplete: {fileID: 0}
   movementPattern: []
   timeBetweenPattern: 0
   action:
@@ -1521,6 +1523,19 @@ MonoBehaviour:
   runModifier: 2
   facing: 1
   originTransform: {fileID: 3188455972903848992}
+--- !u!114 &5112495349987983111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188455972818087053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4881f89f8b930e34489bbb86116ccd4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 
 --- !u!212 &3188455972818087054
 SpriteRenderer:
   m_ObjectHideFlags: 0

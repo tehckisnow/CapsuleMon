@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonDB : ScriptableObjectDB<MonBase>
+public class QuestDB : ScriptableObjectDB<QuestBase>
 {
     
 }

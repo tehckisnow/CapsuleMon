@@ -31,6 +31,9 @@ public class MonBase : ScriptableObject
     [SerializeField] List<MoveBase> learnableByItems;
     public List<MoveBase> LearnableByItems => learnableByItems;
 
+    [SerializeField] List<Evolution> evolutions;
+    public List<Evolution> Evolutions => evolutions;
+
     public static int MaxNumberOfMoves { get; set; } = 4;
 
     public int GetExpForLevel(int level)
@@ -134,6 +137,18 @@ public class LearnableMove
     {
         get { return level; }
     }
+}
+
+[System.Serializable]
+public class Evolution
+{
+    [SerializeField] MonBase evolveInto;
+    [SerializeField] int requiredLevel;
+    [SerializeField] EvolutionItem requiredItem;
+
+    public MonBase EvolveInto => evolveInto;
+    public int RequiredLevel => requiredLevel;
+    public EvolutionItem RequiredItem => requiredItem;
 }
 
 public enum MonType
