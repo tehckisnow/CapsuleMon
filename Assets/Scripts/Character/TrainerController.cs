@@ -106,4 +106,7 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
     public Sprite Sprite {
         get => sprite;
     }
+
+    public Dialog LoseDialog => loseDialog;
+    public int BattleReward => battleReward;
 }

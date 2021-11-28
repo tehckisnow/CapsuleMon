@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution }
 
@@ -13,6 +14,10 @@ public class GameController : MonoBehaviour
     [SerializeField] SelectStarter selectStarter;
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] InventoryUI inventoryUI;
+
+    [Header("stuff")]
+    [SerializeField] TextMeshProUGUI moneyDisplay;
+    [SerializeField] TextMeshProUGUI nameDisplay;
 
     public GameState state;
     public GameState State => state;
@@ -78,6 +83,15 @@ public class GameController : MonoBehaviour
         {
             state = stateBeforeEvolution;
         };
+
+        Debug.Log(PlayerController.Instance.Money);
+        UpdateMoneyDisplay(PlayerController.Instance.Money);
+        nameDisplay.text = PlayerController.Instance.Name;
+    }
+
+    public void UpdateMoneyDisplay(int amount)
+    {
+        moneyDisplay.text = "$" + amount.ToString();
     }
 
     public void PauseGame(bool pause)

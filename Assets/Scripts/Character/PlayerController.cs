@@ -11,12 +11,25 @@ public class PlayerController : MonoBehaviour, ISavable
     [SerializeField] float moveSpeed = 5;
     [SerializeField] float runModifier = 2;
 
+    [SerializeField] int money;
+    public int Money {
+        get { return money; }
+        set { money = value; }
+    }
+
     private bool isMoving;
     private bool isRunning;
     private Vector2 input;
 
     private Animator animator;
     private Character character;
+
+    public static PlayerController Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {

@@ -462,6 +462,7 @@ public class BattleSystem : MonoBehaviour
             }
             else
             {
+                // player loses
                 BattleOver(false);
             }
         }
@@ -480,10 +481,39 @@ public class BattleSystem : MonoBehaviour
                 }
                 else
                 {
-                    BattleOver(true);
+                    //player wins
+                    
+                    StartCoroutine(DefeatTrainer());
+
+                    //Called this inside DefeatTrained coroutine instead
+                    //BattleOver(true);
                 }
             }
         }
+    }
+
+    IEnumerator DefeatTrainer()
+    {
+        yield return DialogManager.Instance.ShowDialogText($"{player.Name} defeated {trainer.Name}!");
+        //yield return dialogBox.TypeDialog($"{player.Name} defeated {trainer.Name}!");
+        trainerImage.gameObject.SetActive(true);
+        //! animate?
+        yield return DialogManager.Instance.ShowDialog(trainer.LoseDialog);
+        
+        // string lines = "";
+        // foreach(var line in trainer.LoseDialog.Lines)
+        // {
+        //     lines += line + " \n";
+        // }
+        // yield return dialogBox.TypeDialog(lines);
+        
+        player.Money += trainer.BattleReward;
+        GameController.Instance.UpdateMoneyDisplay(player.Money);
+
+        yield return DialogManager.Instance.ShowDialogText($"{player.Name} received ${trainer.BattleReward}!");
+        //yield return dialogBox.TypeDialog($"{player.Name} received ${trainer.BattleReward}!");
+
+        BattleOver(true);
     }
 
     IEnumerator ShowDamageDetails(DamageDetails damageDetails)

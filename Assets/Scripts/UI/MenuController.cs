@@ -19,7 +19,10 @@ public class MenuController : MonoBehaviour
 
     private void Awake()
     {
-        menuItems = menu.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+        //menu2 is the dynamic, selectable menu, as opposed to the static, player into panel below it
+        var menu2 = menu.transform.GetChild(0);
+        //use menu2 instead so that the static infopanel is not selectable
+        menuItems = menu2.GetComponentsInChildren<TextMeshProUGUI>().ToList();
         unhighlightedColor = menuItems[0].color;
     }
 

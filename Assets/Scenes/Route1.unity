@@ -199,7 +199,7 @@ PrefabInstance:
         type: 3}
       propertyPath: mons.Array.data[1]._base
       value: 
-      objectReference: {fileID: 11400000, guid: e6dd2458f85548045b3eddf12896dd5f,
+      objectReference: {fileID: 11400000, guid: fcf6d6e3568072447bae13b824522925,
         type: 2}
     - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
@@ -209,7 +209,18 @@ PrefabInstance:
     - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
       propertyPath: mons.Array.data[0].level
-      value: 6
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[0]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: ddda7de25e05a3a4ab18115b017f2410,
+        type: 2}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: loseDialog.lines.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
@@ -219,7 +230,22 @@ PrefabInstance:
     - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
       propertyPath: dialogAfterBattle.lines.Array.data[0]
-      value: I guess I showed you how my mons did it.
+      value: I'm going home...
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: name
+      value: Eugene
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: battleReward
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: loseDialog.lines.Array.data[0]
+      value: 'Eugene: I guess I showed you how my mons did it.'
       objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525719, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
@@ -275,6 +301,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964332838235402, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: -83864317
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964332838235402, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 639ab25be9c5d6648a27810e40d02078, type: 3}
@@ -4026,6 +4062,26 @@ PrefabInstance:
         type: 3}
       propertyPath: mons.Array.data[0].level
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: loseDialog.lines.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: battleReward
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: loseDialog.lines.Array.data[0]
+      value: 'Max: Oh no!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: loseDialog.lines.Array.data[1]
+      value: 'Max: Oh no...'
       objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525719, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
