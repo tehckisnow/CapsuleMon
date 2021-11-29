@@ -3450,9 +3450,10 @@ MonoBehaviour:
   playerController: {fileID: 6047220846342035763}
   battleSystem: {fileID: 6047220844565781510}
   worldCamera: {fileID: 6047220844606028228}
-  selectStarter: {fileID: 0}
   partyScreen: {fileID: 2489901217282668415}
   inventoryUI: {fileID: 8819470087146038617}
+  selectStarterPrefab: {fileID: 3507628039906098345, guid: de3cdb410463a7f4285208735058e9e5,
+    type: 3}
   moneyDisplay: {fileID: 4871476108050676508}
   nameDisplay: {fileID: 1233807748432608167}
   state: 0

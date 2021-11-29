@@ -31,12 +31,14 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
   Character character;
   ItemGiver itemGiver;
   MonGiver monGiver;
+  StarterMenuOpener starterMenuOpener;
 
   private void Awake()
   {
     character = GetComponent<Character>();
     itemGiver = GetComponent<ItemGiver>();
     monGiver = GetComponent<MonGiver>();
+    starterMenuOpener = GetComponent<StarterMenuOpener>();
   }
 
   public IEnumerator Interact(Transform initiator)
@@ -59,7 +61,16 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
       {
         yield return itemGiver.GiveItem(initiator.GetComponent<PlayerController>());
       }
-      else if(monGiver != null && monGiver.CanBeGiven())
+      if(starterMenuOpener != null && monGiver != null && !monGiver.Used)
+      {
+        yield return DialogManager.Instance.ShowDialog(monGiver.Dialog);
+        //string chooseStarterText = "It is dangerous to go alone, take one of these!";
+        //yield return DialogManager.Instance.ShowDialogText(chooseStarterText);
+        GameController.Instance.StarterSelectMenu();
+        yield return new WaitUntil(() => GameController.Instance.State != GameState.StarterSelectMenu);
+      }
+      //else if(monGiver != null && monGiver.CanBeGiven())
+      if(monGiver != null && monGiver.CanBeGiven())
       {
         yield return monGiver.GiveMon(initiator.GetComponent<PlayerController>());
       }

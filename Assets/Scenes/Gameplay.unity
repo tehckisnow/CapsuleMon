@@ -860,6 +860,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: EssentialGameObjects
       objectReference: {fileID: 0}
+    - target: {fileID: 6047220846342035761, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: mons.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6047220846342035761, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: mons.Array.data[0]._base
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6047220846342035761, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: mons.Array.data[0].level
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6069990509352885827, guid: 0862d17dbd7a917408a3c7e8e045dd73,
         type: 3}
       propertyPath: m_textInfo.characterCount

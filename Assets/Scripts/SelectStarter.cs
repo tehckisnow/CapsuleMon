@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class SelectStarter : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class SelectStarter : MonoBehaviour
     private MonParty playerParty;
     private GameObject playerObject;
 
+    private GameState prevState;
+
     private void Awake()
     {
         unhighlightedColor = labelsList[0].color;
@@ -25,6 +28,7 @@ public class SelectStarter : MonoBehaviour
 
     public void Init()
     {
+        //playerParty = MonParty.GetPlayerParty();
         for(int i = 0; i < starterList.Count; i++)
         {
             starterImages[i].sprite = starterList[i].FrontSprite;
@@ -32,10 +36,24 @@ public class SelectStarter : MonoBehaviour
         }
     }
 
-    public void OpenSelectStarter(GameObject player)
+    private void Update()
     {
-        FindObjectOfType<GameController>().StarterSelectMenu();
-        playerParty = player.GetComponent<MonParty>();
+        var gameState = GameController.Instance.state;
+        if(gameState != GameState.StarterSelectMenu)
+        {
+            gameState = GameState.StarterSelectMenu;
+            Debug.Log(gameState);
+        }
+    }
+
+    public void UpdatePrevState(GameState state)
+    {
+        prevState = state;
+    }
+
+    public void OpenSelectStarter()
+    {
+        GameController.Instance.StarterSelectMenu();
     }
 
     public void HandleSelectStarter()
@@ -60,8 +78,7 @@ public class SelectStarter : MonoBehaviour
 
         if(Input.GetButtonDown("Cancel"))
         {
-            selectStarterCanvas.gameObject.SetActive(false);
-            FindObjectOfType<GameController>().state = GameState.FreeRoam;
+            CloseStarterMenu();
         }
     }
 
@@ -71,7 +88,7 @@ public class SelectStarter : MonoBehaviour
         {
             if( i == selection)
             {
-                labelsList[i].color = highlightedColor;
+                labelsList[i].color = GlobalSettings.i.HighlightedColor;
             }
             else
             {
@@ -82,10 +99,27 @@ public class SelectStarter : MonoBehaviour
 
     private void ChooseStarter(int selection)
     {
-        playerParty.Mons[0] = new Mon(starterList[selection], 5);
-        //nickname?
+        //playerParty.Mons[0] = new Mon(starterList[selection], 5);
+        MonBase starterBase = starterList[selection];
 
-        selectStarterCanvas.gameObject.SetActive(false);
-        FindObjectOfType<GameController>().state = GameState.FreeRoam;
+        //! find prof and set his mon to this
+        var monGivers = FindObjectsOfType<MonGiver>();
+        var prof = monGivers.FirstOrDefault(x => x.name == "Prof");
+        //! how to ensure this is the prof?
+
+        Mon mon = new Mon(starterBase, 5);
+        prof.SetMonToGive(mon);
+
+        CloseStarterMenu();
+    }
+
+    public void CloseStarterMenu()
+    {
+        //FindObjectOfType<GameController>().state = GameState.FreeRoam;
+        GameController.Instance.state = prevState;
+        //! prevState = ?? //can't be null
+
+        //selectStarterCanvas.gameObject.SetActive(false);
+        Destroy(this.gameObject);
     }
 }

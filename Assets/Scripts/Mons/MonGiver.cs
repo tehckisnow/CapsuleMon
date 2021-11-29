@@ -6,12 +6,19 @@ public class MonGiver : MonoBehaviour, ISavable
 {
     [SerializeField] Mon monToGive;
     [SerializeField] Dialog dialog;
+    public Dialog Dialog => dialog;
 
     private bool used = false;
+    public bool Used => used;
+
+    public void SetMonToGive(Mon mon)
+    {
+        monToGive = mon;
+    }
 
     public IEnumerator GiveMon(PlayerController player)
     {
-        yield return DialogManager.Instance.ShowDialog(dialog);
+        //yield return DialogManager.Instance.ShowDialog(dialog);
 
         monToGive.Init();
         player.GetComponent<MonParty>().AddMon(monToGive);

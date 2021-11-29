@@ -850,8 +850,8 @@ public class BattleSystem : MonoBehaviour
             // Mon was caught
             yield return dialogBox.TypeDialog($"{enemyUnit.Mon.Name} was caught!");
             
-            //yield return capsule.DOFade(0, 1.5f).WaitForCompletion();
-            //!SpriteFader.FadeSprite(capsule, 0.01f);
+            yield return capsule.DOFade(0, 1.5f).WaitForCompletion();
+            //SpriteFader.FadeSprite(capsule, 0.01f);
             //yield return new WaitForSeconds(0.5f);
 
             playerParty.AddMon(enemyUnit.Mon);
@@ -865,8 +865,8 @@ public class BattleSystem : MonoBehaviour
             // Mon broke out
             yield return new WaitForSeconds(1f);
             
-            //capsule.DOFade(0, 0.2f);
-            //!SpriteFader.FadeSprite(capsule, 0.01f);
+            capsule.DOFade(0, 0.2f);
+            //SpriteFader.FadeSprite(capsule, 0.01f);
             
             yield return enemyUnit.PlayBreakoutAnimation();
             

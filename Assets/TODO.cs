@@ -11,11 +11,11 @@ public class TODO : MonoBehaviour
 
     when a trainer's facing is changed in the inspector, their FOV does not rotate correctly when set to UP
 
-    trainer will walk diagonally to reach the player (is check for trainerbattle happenning too early?)
+    //trainer will walk diagonally to reach the player (is check for trainerbattle happenning too early?)
 
-    SpriteFader is broken (used in BattleSystem.ThrowCapsule())
+    //SpriteFader is broken (used in BattleSystem.ThrowCapsule())
 
-    Saving system in PlayerController is not setting player facing in character for some reason
+    //Saving system in PlayerController is not setting player facing in character for some reason
 
     capsules are not always being deducted from their count after being used
 

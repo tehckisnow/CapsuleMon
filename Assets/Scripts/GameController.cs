@@ -11,9 +11,12 @@ public class GameController : MonoBehaviour
     [SerializeField] PlayerController playerController;
     [SerializeField] BattleSystem battleSystem;
     [SerializeField] Camera worldCamera;
-    [SerializeField] SelectStarter selectStarter;
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] InventoryUI inventoryUI;
+
+    //[SerializeField] SelectStarter selectStarter;
+    [SerializeField] GameObject selectStarterPrefab;
+    private SelectStarter selectStarter;
 
     [Header("stuff")]
     [SerializeField] TextMeshProUGUI moneyDisplay;
@@ -137,10 +140,9 @@ public class GameController : MonoBehaviour
 
     public void StarterSelectMenu()
     {
-        selectStarter.gameObject.SetActive(true);
-        selectStarter.Init();
+        selectStarter = Instantiate(selectStarterPrefab).GetComponent<SelectStarter>();
+        selectStarter.UpdatePrevState(state);
         state = GameState.StarterSelectMenu;
-        //DialogManager.Instance.gameObject.SetActive(false);
     }
 
     public void OnEnterTrainersView(TrainerController trainer)
