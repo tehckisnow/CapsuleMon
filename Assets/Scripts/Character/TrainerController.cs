@@ -77,7 +77,7 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
         float angle = 0f;
         if(dir == Facing.Right)
             angle = 90f;
-        else if(dir == Facing.Right)
+        else if(dir == Facing.Up)
             angle = 180f;
         else if(dir == Facing.Left)
             angle = 270f;

@@ -15,6 +15,10 @@ public class DialogManager : MonoBehaviour
 
     public static DialogManager Instance { get; private set; }
 
+    private bool isTyping = false;
+    private IEnumerator currentlyTypingDialog;
+    private string textIfSkipped = "";
+
     private void Awake()
     {
         Instance = this;
@@ -30,7 +34,10 @@ public class DialogManager : MonoBehaviour
         IsShowing = true;
         dialogBox.SetActive(true);
 
-        yield return TypeDialog(text);
+        //
+        yield return currentlyTypingDialog = TypeDialog(text);
+        //yield return TypeDialog(text);
+        
         if(waitForInput)
         {
             yield return new WaitUntil(() => Input.GetButtonDown("Submit"));
@@ -47,6 +54,8 @@ public class DialogManager : MonoBehaviour
     {
         dialogBox.SetActive(false);
         IsShowing = false;
+        currentlyTypingDialog = null;
+        textIfSkipped = "";
     }
 
     public IEnumerator ShowDialog(Dialog dialog)
@@ -60,7 +69,10 @@ public class DialogManager : MonoBehaviour
 
         foreach(var line in dialog.Lines)
         {
-            yield return TypeDialog(line);
+            //
+            yield return currentlyTypingDialog = TypeDialog(line);
+            //yield return TypeDialog(line);
+            
             yield return new WaitUntil(() => Input.GetButtonDown("Submit"));
         }
         dialogBox.SetActive(false);
@@ -70,16 +82,32 @@ public class DialogManager : MonoBehaviour
 
     public void HandleUpdate()
     {
-        
+        if(Input.GetButtonDown("Submit"))
+        {
+            if(isTyping)
+            {
+                SkipTyping();
+            }
+        }
     }
 
     public IEnumerator TypeDialog(string dialog)
     {
         dialogText.text = "";
+        textIfSkipped = dialog;
+        isTyping = true;
         foreach(var letter in dialog.ToCharArray())
         {
             dialogText.text += letter;
             yield return new WaitForSeconds(1f/lettersPerSecond);
         }
+        isTyping = false;
+    }
+
+    private void SkipTyping()
+    {
+        isTyping = false;
+        StopCoroutine(currentlyTypingDialog);
+        dialogText.text = textIfSkipped;
     }
 }

@@ -21,7 +21,8 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
   [SerializeField] float timeBetweenPattern;
 
   [Header("State")]
-  [SerializeField] MyGameObjectEvent action;
+  //[SerializeField] MyGameObjectEvent action;
+  [SerializeField] UnityEvent action;
 
   NPCState state;
   float idleTimer;
@@ -102,6 +103,7 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
       else
       {
         yield return DialogManager.Instance.ShowDialog(dialog);
+        action?.Invoke();
       }
 
       idleTimer = 0f;

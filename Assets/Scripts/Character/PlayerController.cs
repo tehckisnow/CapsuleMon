@@ -147,6 +147,7 @@ public class PlayerController : MonoBehaviour, ISavable
 
     public string Name {
         get => name;
+        set => name = value;
     }
 
     public Sprite Sprite {

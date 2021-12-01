@@ -74,6 +74,8 @@ public class BattleSystem : MonoBehaviour
             playerUnit.Setup(playerParty.GetHealthyMon());
             enemyUnit.Setup(wildMon);
             
+            trainerImage.gameObject.SetActive(false);
+
             dialogBox.SetMoveNames(playerUnit.Mon.Moves);
             yield return dialogBox.TypeDialog($"A wild {enemyUnit.Mon.Name} appeared!");
         }
@@ -262,7 +264,25 @@ public class BattleSystem : MonoBehaviour
         {
             sourceUnit.PlayAttackAnimation();
             yield return new WaitForSeconds(1f);
-            targetUnit.PlayHitAnimation();
+            
+            //play hit animation only if target is foe
+            bool playHit = move.Base.Target == MoveTarget.Foe ? true : false;
+            //same for secondary effect targets
+            if(!playHit)
+            {
+                foreach(var effect in move.Base.SecondaryEffects)
+                {
+                    if(playHit = effect.Target == MoveTarget.Foe ? true : playHit)
+                    {
+                        break;
+                    }
+                }
+            }
+            //play hit animation or not
+            if(playHit)
+            {
+                targetUnit.PlayHitAnimation();
+            }
 
             if(move.Base.Category == MoveCategory.Status)
             {

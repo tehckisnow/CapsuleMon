@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 7837830639115474917}
   - component: {fileID: 6740629998321009201}
   - component: {fileID: 7123045133521466111}
+  - component: {fileID: 4225372966358064522}
   - component: {fileID: 5481137884236313536}
   - component: {fileID: 7837830639115474927}
   - component: {fileID: 7837830639115474912}
@@ -155,6 +156,7 @@ MonoBehaviour:
   sprite: {fileID: 6127329350961274698, guid: 9138443e80ceb9840ba200614011da7b, type: 3}
   moveSpeed: 5
   runModifier: 2
+  money: 0
 --- !u!114 &7837830639115474917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,6 +224,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 908ae69ed6b5c544b8baa234466b48f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4225372966358064522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7837830639115474924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05cedc50badf02b4097d7f6ba15b4bfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lastWarpPoint: {x: 0, y: 0}
 --- !u!114 &5481137884236313536
 MonoBehaviour:
   m_ObjectHideFlags: 0

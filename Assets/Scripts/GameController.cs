@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution }
+public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution, NameSetter, MonInfoScreen }
 
 public class GameController : MonoBehaviour
 {
@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour
     [SerializeField] Camera worldCamera;
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] InventoryUI inventoryUI;
+    [SerializeField] NameSetterMenu nameSetterMenu;
+    [SerializeField] MonInfoScreen monInfoScreen;
 
     //[SerializeField] SelectStarter selectStarter;
     [SerializeField] GameObject selectStarterPrefab;
@@ -87,7 +89,6 @@ public class GameController : MonoBehaviour
             state = stateBeforeEvolution;
         };
 
-        Debug.Log(PlayerController.Instance.Money);
         UpdateMoneyDisplay(PlayerController.Instance.Money);
         nameDisplay.text = PlayerController.Instance.Name;
     }
@@ -95,6 +96,11 @@ public class GameController : MonoBehaviour
     public void UpdateMoneyDisplay(int amount)
     {
         moneyDisplay.text = "$" + amount.ToString();
+    }
+
+    public void UpdateNameDisplay()
+    {
+        nameDisplay.text = PlayerController.Instance.Name;
     }
 
     public void PauseGame(bool pause)
@@ -145,6 +151,19 @@ public class GameController : MonoBehaviour
         state = GameState.StarterSelectMenu;
     }
 
+    public void StartNameSetterMenu()
+    {
+        nameSetterMenu.gameObject.SetActive(true);
+        state = GameState.NameSetter;
+    }
+
+    public void OpenMonInfoScreen()
+    {
+        monInfoScreen.gameObject.SetActive(true);
+        state = GameState.MonInfoScreen;
+        monInfoScreen.SetupMon(partyScreen.SelectedMember);
+    }
+
     public void OnEnterTrainersView(TrainerController trainer)
     {
         state = GameState.Cutscene;
@@ -163,8 +182,18 @@ public class GameController : MonoBehaviour
         battleSystem.gameObject.SetActive(false);
         worldCamera.gameObject.SetActive(true);
 
-        var playerParty = playerController.GetComponent<MonParty>();
-        StartCoroutine(playerParty.CheckForEvolutions());
+        if(!won)
+        {
+            //! white out
+            var warpController = PlayerController.Instance.GetComponent<WarpController>();
+            //warpController.GoToLastWarp();
+            StartCoroutine(warpController.GoToLastWarpAnim());
+        }
+        else
+        {
+            var playerParty = playerController.GetComponent<MonParty>();
+            StartCoroutine(playerParty.CheckForEvolutions());
+        }
     }
 
     private void Update()
@@ -191,6 +220,14 @@ public class GameController : MonoBehaviour
         {
             selectStarter.HandleSelectStarter();
         }
+        else if(state == GameState.NameSetter)
+        {
+            nameSetterMenu.HandleUpdate();
+        }
+        else if(state == GameState.MonInfoScreen)
+        {
+            monInfoScreen.HandleUpdate();
+        }
         else if(state == GameState.Menu)
         {
             menuController.HandleUpdate();
@@ -201,6 +238,7 @@ public class GameController : MonoBehaviour
             {
                 //TODO: goto summary screen
 
+                OpenMonInfoScreen();
             };
 
             Action onBack = () =>
