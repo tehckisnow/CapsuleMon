@@ -124,6 +124,8 @@ public class PlayerController : MonoBehaviour, ISavable
 
         var saveData = new PlayerSaveData()
         {
+            name = name,
+            money = money,
             position = new float[] {transform.position.x, transform.position.y, facing.x, facing.y},
             mons = GetComponent<MonParty>().Mons.Select(p => p.GetSaveData()).ToList()
         };
@@ -134,15 +136,32 @@ public class PlayerController : MonoBehaviour, ISavable
     public void RestoreState(object state)
     {
         var saveData = (PlayerSaveData)state;
+        
+        name = saveData.name;
+        money = saveData.money;
 
         // Restore position
         var pos = saveData.position;
         transform.position = new Vector3(pos[0], pos[1]);
-        Facing facing = FacingClass.GetFacing(pos[2], pos[3]);
-        character.Facing = facing;
+        if(character != null)
+        {
+            Facing facing = FacingClass.GetFacing(pos[2], pos[3]);
+            character.Facing = facing;
+        }
+
+        var gameController = GameController.Instance;
+        if(gameController != null)
+        {
+            GameController.Instance.UpdateMoneyDisplay();
+            GameController.Instance.UpdateNameDisplay();
+        }
 
         // Restore party
-        GetComponent<MonParty>().Mons = saveData.mons.Select(s => new Mon(s)).ToList();
+        var monParty = GetComponent<MonParty>();
+        if(monParty != null)
+        {
+            monParty.Mons = saveData.mons.Select(s => new Mon(s)).ToList();
+        }
     }
 
     public string Name {
@@ -160,6 +179,8 @@ public class PlayerController : MonoBehaviour, ISavable
 [Serializable]
 public class PlayerSaveData
 {
+    public string name;
+    public int money;
     public float[] position;
     public List<MonSaveData> mons;
 }

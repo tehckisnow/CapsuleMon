@@ -50,6 +50,55 @@ public class MonParty : MonoBehaviour
         }
     }
 
+    public void AddMon(Mon newMon, int index)
+    {
+        if(mons.Count < 6 && index < 5)
+        {
+            mons.Insert(index, newMon);
+            OnUpdated?.Invoke();
+        }
+        else
+        {
+            //TODO: PC
+        }
+    }
+
+    public Mon RemoveMon(Mon mon)
+    {
+        mons.Remove(mon);
+        OnUpdated?.Invoke();
+        return mon;
+    }
+
+    //this will reorder the indexes of the other mons
+    public Mon RemoveMon(int index)
+    {
+        Mon mon = mons[index];
+        mons.RemoveAt(index);
+        OnUpdated?.Invoke();
+        return mon;
+    }
+
+    public void SwitchMons(Mon monA, Mon monB)
+    {
+        int firstIndex = mons.IndexOf(monA);
+        Mon first = mons[firstIndex];
+        
+        int secondIndex = mons.IndexOf(monB);
+        Mon second = mons[secondIndex];
+
+        //mons[firstIndex] = mons[secondIndex];
+        //alternative to below
+        
+        RemoveMon(firstIndex);
+        AddMon(second, firstIndex);
+
+        //mons[secondIndex] = first;
+
+        RemoveMon(secondIndex);
+        AddMon(first, secondIndex);
+    }
+    
     public IEnumerator CheckForEvolutions()
     {
         foreach(var mon in mons)

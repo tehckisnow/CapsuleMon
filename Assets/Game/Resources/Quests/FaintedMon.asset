@@ -26,5 +26,6 @@ MonoBehaviour:
     - Oh, you got it! You're a lifesaver!
     - Here, you can have this HM as a reward!
   requiredItem: {fileID: 11400000, guid: 7f861fe59a7d83b479bfa9438ce1ec83, type: 2}
+  confirmationMessage: Give 1 revive?
   rewardItem: {fileID: 11400000, guid: 87ce6b076e4c38841aeaa4ec5af489b9, type: 2}
   rewardItemCount: 1

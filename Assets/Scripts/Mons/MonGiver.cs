@@ -18,16 +18,16 @@ public class MonGiver : MonoBehaviour, ISavable
 
     public IEnumerator GiveMon(PlayerController player)
     {
-        //yield return DialogManager.Instance.ShowDialog(dialog);
-
         monToGive.Init();
         player.GetComponent<MonParty>().AddMon(monToGive);
         
         used = true;
 
-        string dialogText = $"{player.Name} recieved {monToGive.Base.Name}";
+        string dialogText = $"{player.Name} recieved {monToGive.Base.Name}!";
 
         yield return DialogManager.Instance.ShowDialogText(dialogText);
+
+        GameController.Instance.OpenNicknameMenu(monToGive, GameState.FreeRoam);
     }
 
     public bool CanBeGiven()

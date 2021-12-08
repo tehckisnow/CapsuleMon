@@ -12,12 +12,13 @@ public class BattleHud : MonoBehaviour
     [SerializeField] TextMeshProUGUI statusText;
     [SerializeField] GameObject expBar;
 
-    [SerializeField] Color psnColor;
-    [SerializeField] Color brnColor;
-    [SerializeField] Color slpColor;
-    [SerializeField] Color parColor;
-    [SerializeField] Color frzColor;
-    Dictionary<ConditionID, Color> statusColors;
+    //moved to GlobalSettings
+    // [SerializeField] Color psnColor;
+    // [SerializeField] Color brnColor;
+    // [SerializeField] Color slpColor;
+    // [SerializeField] Color parColor;
+    // [SerializeField] Color frzColor;
+    // Dictionary<ConditionID, Color> statusColors;
 
     Mon _mon;
 
@@ -27,19 +28,20 @@ public class BattleHud : MonoBehaviour
 
         _mon = mon;
 
-        nameText.text = mon.Base.Name;
+        nameText.text = mon.Name;
         SetLevel();
         hpBar.SetHP((float) mon.HP / mon.MaxHp);
         SetExp();
 
-        statusColors = new Dictionary<ConditionID, Color>()
-        {
-            {ConditionID.psn, psnColor},
-            {ConditionID.brn, brnColor},
-            {ConditionID.slp, slpColor},
-            {ConditionID.par, parColor},
-            {ConditionID.frz, frzColor}
-        };
+        //Moved to GlobalSettings
+        // statusColors = new Dictionary<ConditionID, Color>()
+        // {
+        //     {ConditionID.psn, psnColor},
+        //     {ConditionID.brn, brnColor},
+        //     {ConditionID.slp, slpColor},
+        //     {ConditionID.par, parColor},
+        //     {ConditionID.frz, frzColor}
+        // };
 
         SetStatusText();
         _mon.OnStatusChanged += SetStatusText;
@@ -55,7 +57,8 @@ public class BattleHud : MonoBehaviour
         else
         {
             statusText.text = _mon.Status.Id.ToString().ToUpper();
-            statusText.color = statusColors[_mon.Status.Id];
+            //statusText.color = statusColors[_mon.Status.Id];
+            statusText.color = GlobalSettings.i.StatusColors[_mon.Status.Id];
         }
     }
 

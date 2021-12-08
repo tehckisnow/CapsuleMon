@@ -181,6 +181,13 @@ public class InventoryUI : MonoBehaviour
 
         var item = inventory.GetItem(selectedItem, selectedCategory);
 
+        //if inventory is empty and "no item" is selected
+        if(item == null)
+        {
+            state = InventoryUIState.ItemSelection;
+            yield break;
+        }
+
         if(GameController.Instance.State == GameState.Battle)
         {
             // In Battle

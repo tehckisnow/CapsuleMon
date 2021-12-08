@@ -26,10 +26,22 @@ public class BattleDialogBox : MonoBehaviour
     [SerializeField] TextMeshProUGUI yesText;
     [SerializeField] TextMeshProUGUI noText;
 
+    private string textIfSkipped = "";
+    private bool isTyping = false;
+    private Coroutine currentlyTypingDialog;
+
     void Start()
     {
         highlightedColor = GlobalSettings.i.HighlightedColor;
         unhighlightedColor = actionTexts[0].color;
+    }
+
+    private void Update()
+    {
+        if(Input.GetButtonDown("Submit"))
+        {
+            SkipTyping();
+        }
     }
 
     public void SetDialog(string text)
@@ -39,7 +51,19 @@ public class BattleDialogBox : MonoBehaviour
 
     public IEnumerator TypeDialog(string dialog)
     {
+
+        currentlyTypingDialog = StartCoroutine(TypeDialogAnim(dialog));
+        yield return new WaitUntil(() => isTyping != true);
+        yield return new WaitForSeconds(1f);
+        //yield return new WaitUntil(() => Input.GetButtonDown("Submit"));
+    }
+
+    //This was originally TypeDialog() but was modified to be skippable with SkipTyping()
+    public IEnumerator TypeDialogAnim(string dialog)
+    {
         dialogText.text = "";
+        textIfSkipped = dialog;
+        isTyping = true;
         foreach(var letter in dialog.ToCharArray())
         {
             dialogText.text += letter;
@@ -47,6 +71,17 @@ public class BattleDialogBox : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1f);
+        isTyping = false;
+    }
+
+    public void SkipTyping()
+    {
+        if(isTyping)
+        {
+            StopCoroutine(currentlyTypingDialog);
+            isTyping = false;
+            dialogText.text = textIfSkipped;
+        }
     }
 
     public void EnableDialogText(bool enabled)

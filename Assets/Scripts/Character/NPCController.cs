@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 [System.Serializable]
 public class MyGameObjectEvent : UnityEvent<GameObject>
@@ -84,16 +85,30 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
         //check if quest has already been completed
         if(activeQuest.CanBeCompleted())
         {
-          yield return activeQuest.CompleteQuest(initiator);
-          activeQuest = null;
+          //!  appears below as well; consolidate?
+          GameController.Instance.OpenConfirmationMenu(activeQuest.Base.ConfirmationMessage, activeQuest.OnYesFunc, activeQuest.OnNoFunc);
+          yield return GameController.Instance.confirmationMenu.WaitForChoice();
+
+          if(activeQuest.ConfirmQuestResolve())
+          {
+            yield return activeQuest.CompleteQuest(initiator);
+            activeQuest = null;
+          }
         }
       }
       else if(activeQuest != null)
       {
         if(activeQuest.CanBeCompleted())
         {
-          yield return activeQuest.CompleteQuest(initiator);
-          activeQuest = null;
+          //!
+          GameController.Instance.OpenConfirmationMenu(activeQuest.Base.ConfirmationMessage, activeQuest.OnYesFunc, activeQuest.OnNoFunc);
+          yield return GameController.Instance.confirmationMenu.WaitForChoice();
+
+          if(activeQuest.ConfirmQuestResolve())
+          {
+            yield return activeQuest.CompleteQuest(initiator);
+            activeQuest = null;
+          }
         }
         else
         {

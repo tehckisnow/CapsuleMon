@@ -33,12 +33,18 @@ public class MonInfoScreen : MonoBehaviour
         for(int i = 0; i < MonBase.MaxNumberOfMoves; i++)
         {
             var moveText = moves.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>();
-            moveText.text = "-"; 
-            if(mon.Moves[i] != null) //! ArgumentOutOfRangeException: Index was out of range
+            moveText.text = "-";
+            if(mon.Moves.Count > i)
             {
                 moveText.text = mon.Moves[i].Base.Name;
                 moveText.text += " PP: " + mon.Moves[i].PP + "/" + mon.Moves[i].Base.PP;
             }
+
+            // if(mon.Moves[i] != null) //! ArgumentOutOfRangeException: Index was out of range
+            // {
+            //     moveText.text = mon.Moves[i].Base.Name;
+            //     moveText.text += " PP: " + mon.Moves[i].PP + "/" + mon.Moves[i].Base.PP;
+            // }
         }
     }
 

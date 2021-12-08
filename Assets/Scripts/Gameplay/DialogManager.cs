@@ -16,7 +16,8 @@ public class DialogManager : MonoBehaviour
     public static DialogManager Instance { get; private set; }
 
     private bool isTyping = false;
-    private IEnumerator currentlyTypingDialog;
+    //private IEnumerator currentlyTypingDialog;
+    private Coroutine currentlyTypingDialog;
     private string textIfSkipped = "";
 
     private void Awake()
@@ -25,6 +26,14 @@ public class DialogManager : MonoBehaviour
     }
 
     public bool IsShowing { get; private set; }
+
+    private void Update()
+    {
+        if(Input.GetButtonDown("Submit"))
+        {
+            SkipTyping();
+        }
+    }
 
     //show only a single line instead of a dialog
     public IEnumerator ShowDialogText(string text, bool waitForInput=true, bool autoClose=true)
@@ -35,8 +44,14 @@ public class DialogManager : MonoBehaviour
         dialogBox.SetActive(true);
 
         //
-        yield return currentlyTypingDialog = TypeDialog(text);
+        currentlyTypingDialog = StartCoroutine(TypeDialog(text));
+        //yield return currentlyTypingDialog = StartCoroutine(TypeDialog(text));
+        
+        //yield return currentlyTypingDialog = TypeDialog(text);
         //yield return TypeDialog(text);
+
+        yield return new WaitUntil(() => isTyping != true);
+        yield return new WaitForSeconds(0.1f);
         
         if(waitForInput)
         {
@@ -70,9 +85,12 @@ public class DialogManager : MonoBehaviour
         foreach(var line in dialog.Lines)
         {
             //
-            yield return currentlyTypingDialog = TypeDialog(line);
+            currentlyTypingDialog = StartCoroutine(TypeDialog(line));
+            //yield return currentlyTypingDialog = TypeDialog(line);
             //yield return TypeDialog(line);
             
+            yield return new WaitUntil(() => isTyping != true);
+            yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => Input.GetButtonDown("Submit"));
         }
         dialogBox.SetActive(false);
@@ -84,10 +102,7 @@ public class DialogManager : MonoBehaviour
     {
         if(Input.GetButtonDown("Submit"))
         {
-            if(isTyping)
-            {
-                SkipTyping();
-            }
+            SkipTyping();
         }
     }
 
@@ -106,8 +121,11 @@ public class DialogManager : MonoBehaviour
 
     private void SkipTyping()
     {
-        isTyping = false;
-        StopCoroutine(currentlyTypingDialog);
-        dialogText.text = textIfSkipped;
+        if(isTyping)
+        {
+            StopCoroutine(currentlyTypingDialog);
+            isTyping = false;
+            dialogText.text = textIfSkipped;
+        }
     }
 }

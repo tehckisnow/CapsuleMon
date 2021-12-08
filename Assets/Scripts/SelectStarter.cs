@@ -10,6 +10,7 @@ public class SelectStarter : MonoBehaviour
     [SerializeField] GameObject selectStarterCanvas;
     [SerializeField] List<TextMeshProUGUI> labelsList;
     [SerializeField] List<MonBase> starterList;
+    [SerializeField] int level = 5;
     [SerializeField] Color highlightedColor;
     [SerializeField] List<Image> starterImages;
     
@@ -107,7 +108,9 @@ public class SelectStarter : MonoBehaviour
         var prof = monGivers.FirstOrDefault(x => x.name == "Prof");
         //! how to ensure this is the prof?
 
-        Mon mon = new Mon(starterBase, 5);
+        //! level is ignored here and 5 is always used.  WHY!?
+        Mon mon = new Mon(starterBase, level);
+
         prof.SetMonToGive(mon);
 
         CloseStarterMenu();

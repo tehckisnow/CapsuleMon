@@ -11,6 +11,7 @@ public class WarpController : MonoBehaviour
     private void Start()
     {
         character = GetComponent<Character>();
+        SetWarpPoint(transform);
     }
 
     public void GoToLastWarp()

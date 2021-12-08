@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
-public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution, NameSetter, MonInfoScreen }
+public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution, NameSetter, MonInfoScreen, ConfirmationMenu, OptionsMenu, SetMonNick }
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] GlobalSO Global;
+    [SerializeField] Canvas uiCanvas;
     [SerializeField] PlayerController playerController;
     [SerializeField] BattleSystem battleSystem;
     [SerializeField] Camera worldCamera;
@@ -15,6 +18,10 @@ public class GameController : MonoBehaviour
     [SerializeField] InventoryUI inventoryUI;
     [SerializeField] NameSetterMenu nameSetterMenu;
     [SerializeField] MonInfoScreen monInfoScreen;
+    [SerializeField] public ConfirmationMenu confirmationMenu;
+    [SerializeField] NicknameMenu nicknameMenu;
+    [SerializeField] GameObject optionsMenuPrefab;
+    public OptionsMenu activeOptionsMenu;
 
     //[SerializeField] SelectStarter selectStarter;
     [SerializeField] GameObject selectStarterPrefab;
@@ -37,8 +44,11 @@ public class GameController : MonoBehaviour
 
     public static GameController Instance {get; private set; }
 
+    private string saveSlotName;
+
     private void Awake()
     {
+        saveSlotName = Global.SaveSlotName;
         Instance = this;
 
         menuController = GetComponent<MenuController>();
@@ -89,13 +99,14 @@ public class GameController : MonoBehaviour
             state = stateBeforeEvolution;
         };
 
-        UpdateMoneyDisplay(PlayerController.Instance.Money);
+        UpdateMoneyDisplay();
         nameDisplay.text = PlayerController.Instance.Name;
     }
 
-    public void UpdateMoneyDisplay(int amount)
+    public void UpdateMoneyDisplay()
     {
-        moneyDisplay.text = "$" + amount.ToString();
+        //moneyDisplay.text = "$" + amount.ToString();
+        moneyDisplay.text = "$" + PlayerController.Instance.Money.ToString();
     }
 
     public void UpdateNameDisplay()
@@ -164,6 +175,50 @@ public class GameController : MonoBehaviour
         monInfoScreen.SetupMon(partyScreen.SelectedMember);
     }
 
+    public void OpenConfirmationMenu(string message=null, Action yesAction=null, Action noAction=null, CancelAction cancelAction=CancelAction.ChooseNo)
+    {
+        confirmationMenu.OpenMenu(message, yesAction, noAction, cancelAction);
+    }
+
+    public void OpenOptionsMenu(List<string> texts, List<Action> actions)
+    {
+        activeOptionsMenu = Instantiate(optionsMenuPrefab, uiCanvas.gameObject.transform).GetComponent<OptionsMenu>();
+        activeOptionsMenu.Open(texts, actions);
+    }
+
+    //Overflow to specify the gamestate to return to after setting nick
+    public void OpenNicknameMenu(Mon mon, GameState gameState)
+    {
+        GameState defaultState = gameState;
+        string message = $"Would you like to give a nickname to {mon.Base.Name}?";
+        Action yesAction = () =>
+        {
+            nicknameMenu.gameObject.SetActive(true);
+            nicknameMenu.Open(mon, defaultState);
+        };
+        Action noAction = ()=> { state = defaultState; };
+        OpenConfirmationMenu(message, yesAction, noAction);
+    }
+    
+    public void OpenNicknameMenu(Mon mon)
+    {
+        string message = $"Would you like to give a nickname to {mon.Base.Name}?";
+        Action yesAction = () =>
+        {
+            nicknameMenu.gameObject.SetActive(true);
+            nicknameMenu.Open(mon);
+        };
+        OpenConfirmationMenu(message, yesAction);
+
+        //nicknameMenu.gameObject.SetActive(true);
+        //nicknameMenu.Open(mon);
+    }
+
+    public void StartCoroutineFromNonMonoBehavior(IEnumerator ienumerator)
+    {
+        StartCoroutine(ienumerator);
+    }
+
     public void OnEnterTrainersView(TrainerController trainer)
     {
         state = GameState.Cutscene;
@@ -205,8 +260,10 @@ public class GameController : MonoBehaviour
             if(Input.GetButtonDown("Cancel"))
             {
                 menuController.OpenMenu();
+                UpdateMoneyDisplay();
                 state = GameState.Menu;
             }
+
         }
         else if(state == GameState.Battle)
         {
@@ -228,6 +285,18 @@ public class GameController : MonoBehaviour
         {
             monInfoScreen.HandleUpdate();
         }
+        else if(state == GameState.ConfirmationMenu)
+        {
+            confirmationMenu.HandleUpdate();
+        }
+        else if(state == GameState.OptionsMenu)
+        {
+            activeOptionsMenu.HandleUpdate();
+        }
+        else if(state == GameState.SetMonNick)
+        {
+            nicknameMenu.HandleUpdate();
+        }
         else if(state == GameState.Menu)
         {
             menuController.HandleUpdate();
@@ -236,9 +305,22 @@ public class GameController : MonoBehaviour
         {
             Action onSelected = () =>
             {
-                //TODO: goto summary screen
+                //Summary screen
+                if(partyScreen.SelectedMember == null)
+                {
+                    return;
+                }
 
-                OpenMonInfoScreen();
+                //OpenMonInfoScreen();
+                //!
+                List<string> optionText = new List<string>() {"Info", "Reorder", "Release"};
+                List<Action> optionAction = new List<Action>()
+                {
+                    () => { OpenMonInfoScreen(); },
+                    () => { partyScreen.ReorderMode(); },
+                    () => { StartCoroutine(ReleaseMonCheck()); }
+                };
+                OpenOptionsMenu(optionText, optionAction);
             };
 
             Action onBack = () =>
@@ -259,6 +341,36 @@ public class GameController : MonoBehaviour
 
             inventoryUI.HandleUpdate(onBack);
         }
+    }
+
+    Mon monToRelease;
+    public IEnumerator ReleaseMon()
+    {
+        var mon = monToRelease;
+        MonParty.GetPlayerParty().RemoveMon(mon);
+        yield return DialogManager.Instance.ShowDialogText($"{mon.Name} has been released.");
+        state = GameState.PartyScreen;
+    }
+
+    public IEnumerator ReleaseMonCheck()
+    {
+        var mon = partyScreen.SelectedMember;
+        string message = $"Are you sure you want to release {mon.Name}?";
+        monToRelease = mon;
+        // Action releaseAction = () =>
+        // {
+        //     MonParty.GetPlayerParty().RemoveMon(mon);
+        //     DialogManager.Instance.ShowDialogText($"{mon.Name} has been released.");
+        //     state = GameState.PartyScreen;
+        // };
+        Action releaseAction = () => { StartCoroutine(ReleaseMon()); };
+        Action declineAction = () => 
+        {
+            Debug.Log("no");
+            state = GameState.PartyScreen;
+        };
+        OpenConfirmationMenu(message, releaseAction, declineAction);
+        yield return null;
     }
 
     public void SetCurrentScene(SceneDetails currScene)
@@ -284,15 +396,20 @@ public class GameController : MonoBehaviour
         else if(selectedItem == 2)
         {
             //save
-            SavingSystem.i.Save("saveSlot1");
+            SavingSystem.i.Save(saveSlotName);
             state = GameState.FreeRoam;
         }
         else if(selectedItem == 3)
         {
             //load
-            SavingSystem.i.Load("saveSlot1");
+            SavingSystem.i.Load(saveSlotName);
             state = GameState.FreeRoam;
         }
-
+        else if(selectedItem == 4)
+        {
+            //quit
+            Destroy(FindObjectOfType<EssentialObjects>().gameObject);
+            SceneManager.LoadScene("Opening");
+        }
     }
 }

@@ -12,6 +12,12 @@ public class SavableEntity : MonoBehaviour
 
     public string UniqueId => uniqueId;
 
+    //I added this for this game
+    public void SetUniqueId(string id)
+    {
+        uniqueId = id;
+    }
+
     // Used to capture state of the gameobject on which the savableEntity is attached
     public object CaptureState()
     {

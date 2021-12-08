@@ -6,17 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/HomeTown.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Opening.unity
+    guid: 16aa28dddde64fc45aef2e219914234a
   - enabled: 1
-    path: Assets/Scenes/Route1.unity
-    guid: b28cd640afcfada4ebaf46ba3b695ea6
+    path: Assets/Scenes/StartMenu.unity
+    guid: 358e6c5c1f66f814aba2b558233eeb7d
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: b5f1979174f61974dbfb1a017a098a14
+  - enabled: 1
+    path: Assets/Scenes/Gameplay.unity
+    guid: ee12799cb6d6f9242961cd3199381d40
   - enabled: 1
     path: Assets/Scenes/House1.unity
     guid: 9440a32fae8afc84b82c0aece04ab74b
   - enabled: 1
+    path: Assets/Scenes/HomeTown.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
     path: Assets/Scenes/Lab.unity
     guid: cfd11315ef29e3c4b9beb298596c0fae
+  - enabled: 1
+    path: Assets/Scenes/Route1.unity
+    guid: b28cd640afcfada4ebaf46ba3b695ea6
   - enabled: 1
     path: Assets/Scenes/Town2.unity
     guid: 37a2367d1e34d484da0cf10495d1634b

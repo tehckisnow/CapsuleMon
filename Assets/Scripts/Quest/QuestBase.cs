@@ -13,6 +13,7 @@ public class QuestBase : ScriptableObject
     [SerializeField] Dialog completedDialog;
 
     [SerializeField] ItemBase requiredItem;
+    [SerializeField] string confirmationMessage = "Would you like to complete this quest?";
     [SerializeField] ItemBase rewardItem;
     [SerializeField] int rewardItemCount = 1;
 
@@ -22,6 +23,7 @@ public class QuestBase : ScriptableObject
     public Dialog InProgressDialog => inProgressDialog?.Lines?.Count > 0 ? inProgressDialog : startDialog;
     public Dialog CompletedDialog => completedDialog;
     public ItemBase RequiredItem => requiredItem;
+    public string ConfirmationMessage => confirmationMessage;
     public ItemBase RewardItem => rewardItem;
     public int RewardItemCount => rewardItemCount;
 }

@@ -528,7 +528,7 @@ public class BattleSystem : MonoBehaviour
         // yield return dialogBox.TypeDialog(lines);
         
         player.Money += trainer.BattleReward;
-        GameController.Instance.UpdateMoneyDisplay(player.Money);
+        GameController.Instance.UpdateMoneyDisplay();
 
         yield return DialogManager.Instance.ShowDialogText($"{player.Name} received ${trainer.BattleReward}!");
         //yield return dialogBox.TypeDialog($"{player.Name} received ${trainer.BattleReward}!");
@@ -876,6 +876,16 @@ public class BattleSystem : MonoBehaviour
 
             playerParty.AddMon(enemyUnit.Mon);
             yield return dialogBox.TypeDialog($"{enemyUnit.Mon.Name} has been added to your party");
+
+            //!
+            GameController.Instance.OpenNicknameMenu(enemyUnit.Mon, GameState.FreeRoam);
+            yield return new WaitUntil(()=>GameController.Instance.state == GameState.ConfirmationMenu);
+            yield return new WaitUntil(()=>GameController.Instance.state != GameState.ConfirmationMenu);
+            
+            if(GameController.Instance.state == GameState.SetMonNick)
+            {
+                yield return new WaitUntil(()=>GameController.Instance.state != GameState.SetMonNick);
+            }
 
             Destroy(capsule);
             BattleOver(true);

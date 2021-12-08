@@ -45,6 +45,12 @@ public class Inventory : MonoBehaviour, ISavable
     public ItemBase GetItem(int itemIndex, int categoryIndex)
     {
         var currentSlots = GetSlotsByCategory(categoryIndex);
+        
+        if(currentSlots.Count < 1)
+        {
+            return null;
+        }
+        
         return currentSlots[itemIndex].Item;
     }
 
