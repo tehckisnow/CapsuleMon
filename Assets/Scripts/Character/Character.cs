@@ -184,6 +184,12 @@ public class Character : MonoBehaviour
             Debug.LogError("Error in Look Towards: You cannot ask a character to look diagonally");
         }
     }
+
+    public void FacePlayer()
+    {
+        var player = PlayerController.Instance;
+        LookTowards(player.transform.position);
+    }
 }
 
 //this is duplicated in CharacterAnimator as FacingDirection

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: Pickenchew 2
+  m_EditorClassIdentifier: 
+  name: Pickenchew 2
+  description: An electric rat known for chewing power cables.
+  frontSprite: {fileID: 21300000, guid: 3d01c38abf4fe0a42ae2359e8b64a443, type: 3}
+  backSprite: {fileID: 21300000, guid: a39eca10d887844498009bd0f296be5d, type: 3}
+  type1: 4
+  type2: 0
+  maxHp: 60
+  attack: 90
+  defense: 55
+  spAttack: 90
+  spDefense: 80
+  speed: 100
+  expYield: 122
+  growthRate: 1
+  catchRate: 75
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: a565dd5eb40cb6d4282ee4ecf34231a4, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 54531e6990e6c4d4396f4c49a4c1940c, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 93f77ff631ba6a34e89ca40258736959, type: 2}
+    level: 6
+  - moveBase: {fileID: 11400000, guid: 823c6a2071be1f54ba3b77064eb465ae, type: 2}
+    level: 8
+  - moveBase: {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
+    level: 11
+  - moveBase: {fileID: 11400000, guid: 800f560dd13bf18428c83a5a6b27cbd5, type: 2}
+    level: 15
+  - moveBase: {fileID: 11400000, guid: 45addc1743f58a84cb84b3fc7d996a5f, type: 2}
+    level: 20
+  - moveBase: {fileID: 11400000, guid: 804b97635c915434688e06b6824ea0fc, type: 2}
+    level: 26
+  - moveBase: {fileID: 11400000, guid: e527816d1c101574d8b5aa464de9a882, type: 2}
+    level: 33
+  - moveBase: {fileID: 11400000, guid: 060a4f8b11328104789501a1e5ce5341, type: 2}
+    level: 41
+  learnableByItems:
+  - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
+  - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+  - {fileID: 11400000, guid: a565dd5eb40cb6d4282ee4ecf34231a4, type: 2}
+  movesLearnedUponEvolution: []
+  evolutions: []

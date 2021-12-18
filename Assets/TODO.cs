@@ -25,11 +25,15 @@ public class TODO : MonoBehaviour
 
     //problem with healing party
 
-    quest pickup revive is not persistent if the scene it is in is unloaded before the game is saved
-        Secondary save system to temporarily handle state
-        OR use secondary save file instead?
+    // quest pickup revive is not persistent if the scene it is in is unloaded before the game is saved
+    //     Secondary save system to temporarily handle state
+    //     OR use secondary save file instead?
     
     //confirmation menu may need to unsub from events upon closing (check after implementing a second confirm menu)
+
+    //nickname menu sometimes reopens (prof)
+
+    //can activate dialog from one additional square away downward
 
     //get stuck on item screen when try to use an item in no battle when there are no items
 
@@ -50,8 +54,6 @@ public class TODO : MonoBehaviour
     //-battlescreen dialog overlaps choices (I think this is fixed)
 
     //set state correctly after giving mon a nick
-
-    nickname menu sometimes reopens (prof)
 
     //show name and muns at load
 
@@ -82,13 +84,205 @@ public class TODO : MonoBehaviour
 
     //release
 
+    //trainer enterBattle animation
+
+    //obtain 7th mon...
+
+    // partyscreen HP bars are too long? wtf
+    //     every time I load they get longer
+    
+    //pikachu keeps trying to evolve after I catch pokemon (use pokeball?)
+
+    //prevent last mon from being stored or released
+
+    //monstorage system
+        //check if mon has been initialized before (set bool value upon init?)
+        //upon opening system a second time, no option is selected
+        //can select an option out of range (could this have to do with having taken a mon?)
+        //dialog is behind monstorage window
+        //null condition for if monstorage is empty
+        //scrolling
+        //reorder mons
+        //confirmation menu to withdraw
+
+    //Transfer mon to storage sys
+        //confirmation menu to deposit
+
+    //after using rarecandy, charmander automatically stopped evolving
+    //inventoryUI selector is appearing in weird places
+        //index appears to be being reset upon reopening the menu, but UI isn't
+
+    //monparty UI snak lv20 is displayed on 2 lines
+
+    //Confirm that glare only works 75% of the time
+
+    //confirm pokemon learn moves after using rarecandy
+
+    //Inventory.UseItem() success or failure changes outcome of evolution
+    
+    //only remove evolution stone if evolution is not skipped
+        //(or prevent skipping evolution when using a stone?)
+
+    //Press X during the message; "mon.Name is evolving"
+
+    //nickname changes upon evolution if matches species name
+        //if(mon.Base.Name.ToLower() == mon.Name.ToLower()){}    ?
+    
+    // after using last item in inventory (evolution stone) and evolution takes place, 
+    //     after evolution screen closes and return to inventory, UI still shows evolution stone
+    //         update UI
+
+    //maximum nickname length
+
+    //TOO MUCH XP
+    
+    //Only show battle reward notification if battlereward is > 0
+
+    //prevent action selection after mon faints
+
+    Glitches:
+
+    sometimes when nicknaming a mon, text gets messed up ???
+        multiple dialog coroutines being called at once
+            GameController.Instance.WhenDialogClose()
+
+    stepping into trainerFOV adjacent to trainer, trainer may rotate to face wrong direction
+        this seems to be a result of the Character.Move() algorithm determining the shortest distance to an adjacent tile
+
+    multiple evolution moves will leave the game in the wrong state
+    
+    // check; 
+    //     mon evolves in battle
+    //         CheckForEvolutionMove
+    //             battle continues
+    //                 are new moves listed in move list or does update need to be called?
+
+    //paint outside of monmart or something
+
+    TODO:
+
+    re-enable storyevent blocking route1
+
+    lower pidge's xp yield
+
+    place computer storage
+
+    place nicknamer
+
+    //lv 100 is 2 lines on monInfo screen
+
+    //mon.GetLearnableMovesAtCurrentLevel()
+    //multiple learnable moves on the same level overlap
+    //message text is colliding
+
+    //charmander trying to evolve after battle (before reaching level 16)
+
+    //option to cancel evolution?
+
+    // mon learn moves upon evolution?
+    //     choose move to forget outsideOfBattle menu
+
+    //set nickname upon evolution?
+
+    //Name rater (to set new nick)
+
+    //nickname menu: previous name should not use Base
+    
+    Optional:
+
+        //Store Interacton/UI to purchase items
+
+        bike
+    
     content
+        //starter mon
+            //starter mons' moves
+            //starter mon evolutions
+                //starter mon evolutions' moves
+        //other mons
+            //other mons' moves
+            //other monss evolutions
+                //other mons' evolutions' moves
+        //items
+            //gym badge (open access to new area?)
+        trainers
+            trainers' teams
+        gym
+            //building layout/theme/type/puzzle
+            //gym leader
+                leader's team
+                reward (a new TM?)
+            initiate congratulatory dialog (cutscene) right after battle has ended (if won)
 
     //Opening
 
     sound effects/music
 
+    flesh out all animations
+
     a way to see move descriptions would be nice
+
+    reorder moves would be nice, too
+
+    select or customize character?
+    
+    be able to reorder mons in mon storage
+
+    --------------------------------------
+
+    mon friendship levels
+
+    interaction that gives money?
+
+    one-time purchases from mart? make them savable? limited quantity of stock?
+
+    items
+        item that gives money?
+        escape items
+            pokedoll
+        valuable/exchangable items
+            gold nugget
+                value
+        flute
+            gain an affect without consuming the item
+                some flutes can be used in battle to remove an effect like sleep (pokeflute)
+                some flutes can be used out of battle to perform an action (like adjusting encounter rate)
+        fossils
+            can be "revived" (traded at certain events) for special prehistoric mons
+        repel
+            repel (wild mons with a level lower than 1st member of player's party will not appear for next 100 steps)
+            super repel (200 steps)
+            max repel (250 steps)
+        held items
+            (many types)
+        Battle Items
+            X attack
+            X defense
+            ...
+            Dire Hit
+            Guard Spec
+        vitamins
+            hp up
+            protein (attack)
+            iron (defense)
+            calcium (spatt)
+            zinc (spdef)
+            carbos (speed)
+            pp up
+            pp max
+        herbal medicine( healing effect at cost of mon's friendship value)
+            heal powder (heals all status problems)
+            energy powder (heals 60hp)
+            energy root (heals 120hp)
+            revival herb (revives mon with full hp)
+        Key items
+
+        item storage
+
+        breeding
+
+        daycare
+
 
     //see status from partymenu
 

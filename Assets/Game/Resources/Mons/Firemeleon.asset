@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Firemeleon
   description: A flame salamander mon.
-  frontSprite: {fileID: 21300000, guid: 65fe9d5ca0dab2645930be006ec4a102, type: 3}
-  backSprite: {fileID: 21300000, guid: 0d20c6ccb53ebf743bad587dd3ccf5f1, type: 3}
+  frontSprite: {fileID: 21300000, guid: 0d20c6ccb53ebf743bad587dd3ccf5f1, type: 3}
+  backSprite: {fileID: 21300000, guid: 2d105a3dddcc1f44fbc0c70d19e9f90e, type: 3}
   type1: 2
   type2: 0
   maxHp: 58
@@ -36,9 +36,23 @@ MonoBehaviour:
     level: 1
   - moveBase: {fileID: 11400000, guid: cc93aee94c4bf6148b92fc06a17fd182, type: 2}
     level: 13
+  - moveBase: {fileID: 11400000, guid: 6aa2a0a39540f4044bec9f5e3d73a1b6, type: 2}
+    level: 20
+  - moveBase: {fileID: 11400000, guid: 0b4034a4700e8274691cf5790608cae1, type: 2}
+    level: 27
+  - moveBase: {fileID: 11400000, guid: 5e0a617c1da77b648b3ea00f857b6c7d, type: 2}
+    level: 34
+  - moveBase: {fileID: 11400000, guid: c1ed894039a05544db700c3fe74b64b8, type: 2}
+    level: 41
+  - moveBase: {fileID: 11400000, guid: 97db97663395e2b44a8248dda0515a77, type: 2}
+    level: 48
   learnableByItems:
   - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
   - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
   - {fileID: 11400000, guid: a341b45f2b1d5744884ea462f0af32bd, type: 2}
   - {fileID: 11400000, guid: b23d128bb75075141a4e17792ef72608, type: 2}
-  evolutions: []
+  movesLearnedUponEvolution: []
+  evolutions:
+  - evolveInto: {fileID: 11400000, guid: bad346ec73891e84abbca3517f0149ff, type: 2}
+    requiredLevel: 36
+    requiredItem: {fileID: 11400000, guid: 6c2d7f858600e8846b5ae31a3418baf7, type: 2}

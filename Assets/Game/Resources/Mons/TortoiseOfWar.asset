@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: TortoiseOfWar
+  m_EditorClassIdentifier: 
+  name: TortoiseOfWar
+  description: It appears to be damp.
+  frontSprite: {fileID: 21300000, guid: aa17af8f74b84594b9f2b69fee0c6edc, type: 3}
+  backSprite: {fileID: 21300000, guid: a4eb7201e65c11844857927bc944f1ea, type: 3}
+  type1: 3
+  type2: 0
+  maxHp: 59
+  attack: 63
+  defense: 80
+  spAttack: 65
+  spDefense: 80
+  speed: 58
+  expYield: 143
+  growthRate: 1
+  catchRate: 45
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 93f77ff631ba6a34e89ca40258736959, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 92358634effd79243ab05a75b7b5a246, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 137716157d3ac3d4ea5bc1becfca4f09, type: 2}
+    level: 10
+  - moveBase: {fileID: 11400000, guid: b1687ad4982b3134e9e269b0e2d58676, type: 2}
+    level: 13
+  - moveBase: {fileID: 11400000, guid: 2e17235e788d92d439e2178618e32a92, type: 2}
+    level: 19
+  - moveBase: {fileID: 11400000, guid: ac0e7e978f5a3e547b972ccb9dd8e197, type: 2}
+    level: 25
+  learnableByItems:
+  - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
+  - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+  evolutions:
+  - evolveInto: {fileID: 11400000, guid: 5b98259eef9c7944d9df13311c7740ed, type: 2}
+    requiredLevel: 36
+    requiredItem: {fileID: 0}

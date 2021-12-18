@@ -215,11 +215,7 @@ MonoBehaviour:
   levelText: {fileID: 7730659595881347230}
   hpBar: {fileID: 7730659596211931463}
   statusText: {fileID: 3366984362798633947}
-  psnColor: {r: 0.9811321, g: 0.18511924, b: 0.88362926, a: 1}
-  brnColor: {r: 0.98039216, g: 0.28878474, b: 0.18431368, a: 1}
-  slpColor: {r: 0.5331965, g: 0.46208617, b: 0.5566038, a: 1}
-  parColor: {r: 0.990566, g: 0.7116791, b: 0.09344961, a: 1}
-  frzColor: {r: 0.18431368, g: 0.6309444, b: 0.98039216, a: 1}
+  expBar: {fileID: 0}
 --- !u!222 &7730659595755486923
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -291,8 +287,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -46.700012, y: 27.907}
-  m_SizeDelta: {x: 74.29309, y: 44.185028}
+  m_AnchoredPosition: {x: -52.55, y: 27.907}
+  m_SizeDelta: {x: 85.99646, y: 44.185028}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7730659595881347225
 CanvasRenderer:
@@ -448,8 +444,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 114, y: 27.907}
-  m_SizeDelta: {x: 199.62424, y: 44.185028}
+  m_AnchoredPosition: {x: 110.97, y: 27.907}
+  m_SizeDelta: {x: 193.55795, y: 44.185028}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7730659596173425742
 CanvasRenderer:

@@ -9,7 +9,8 @@ public class NicknameMenu : MonoBehaviour
     [SerializeField] TextMeshProUGUI speciesText;
     [SerializeField] Image sprite;
     [SerializeField] TMP_InputField input;
-    
+    [SerializeField] int maxLength = 15;
+
     private GameState prevState;
     private Mon mon;
 
@@ -34,6 +35,7 @@ public class NicknameMenu : MonoBehaviour
 
     public void Open(Mon mon)
     {
+        input.text = "";
         prevState = GameController.Instance.state;
         GameController.Instance.state = GameState.SetMonNick;
 
@@ -56,9 +58,13 @@ public class NicknameMenu : MonoBehaviour
         var name = input.text;
         if(ValidateName(name))
         {
+            var oldName = mon.Name;
             mon.Name = input.text;
-            yield return DialogManager.Instance.ShowDialogText($"{mon.Base.Name} is now known as {mon.Name}!");
+            yield return DialogManager.Instance.ShowDialogText($"{oldName} is now known as {mon.Name}!");
             MonParty.GetPlayerParty().UpdateParty();
+            
+            //Wait until dialog is closed to prevent overlapping text with next process?
+            //GameController.Instance.WhenDialogClose(() => CloseMenu());
             CloseMenu();
         }
         else
@@ -83,6 +89,10 @@ public class NicknameMenu : MonoBehaviour
             return false;
         }
         else if(name.Contains("\n") || name.Contains("\\"))
+        {
+            return false;
+        }
+        else if(name.Length > maxLength)
         {
             return false;
         }

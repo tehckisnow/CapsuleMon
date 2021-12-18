@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: Cacoonus
+  m_EditorClassIdentifier: 
+  name: Cacoonus
+  description: Dweeble's cacoon form.  At least it can't bite you from in there.
+  frontSprite: {fileID: 21300000, guid: 65fe9d5ca0dab2645930be006ec4a102, type: 3}
+  backSprite: {fileID: 21300000, guid: b90ccea8c7bd28047aad7cff818cd541, type: 3}
+  type1: 12
+  type2: 8
+  maxHp: 45
+  attack: 25
+  defense: 50
+  spAttack: 25
+  spDefense: 25
+  speed: 35
+  expYield: 71
+  growthRate: 0
+  catchRate: 120
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: d87bd65f4d157b242a1edbea0caf0ebb, type: 2}
+    level: 1
+  learnableByItems: []
+  movesLearnedUponEvolution:
+  - {fileID: 11400000, guid: d87bd65f4d157b242a1edbea0caf0ebb, type: 2}
+  evolutions:
+  - evolveInto: {fileID: 11400000, guid: 7feb292da86cc1b4a8d39761b402d96b, type: 2}
+    requiredLevel: 10
+    requiredItem: {fileID: 0}

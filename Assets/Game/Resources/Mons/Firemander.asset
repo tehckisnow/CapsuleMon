@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Firemander
   description: A flame salamander mon.
-  frontSprite: {fileID: 21300000, guid: 3abb5cdf296302047aedb498f0eadb49, type: 3}
-  backSprite: {fileID: 21300000, guid: 9da14c03fdff44c42a5bb1bf98d3c00e, type: 3}
+  frontSprite: {fileID: 21300000, guid: 9da14c03fdff44c42a5bb1bf98d3c00e, type: 3}
+  backSprite: {fileID: 21300000, guid: 7c2f80e94d5c4a540b4c6b14fcf383b9, type: 3}
   type1: 2
   type2: 0
   maxHp: 39
@@ -26,21 +26,30 @@ MonoBehaviour:
   speed: 65
   expYield: 62
   growthRate: 1
-  catchRate: 255
+  catchRate: 45
   learnableMoves:
   - moveBase: {fileID: 11400000, guid: f56dd14dca920d346bf2a99fedb7d856, type: 2}
     level: 1
   - moveBase: {fileID: 11400000, guid: 54531e6990e6c4d4396f4c49a4c1940c, type: 2}
-    level: 4
+    level: 1
   - moveBase: {fileID: 11400000, guid: 936f9ab22dd2d20439aacfefe2e56a5d, type: 2}
     level: 7
-  - moveBase: {fileID: 11400000, guid: cc93aee94c4bf6148b92fc06a17fd182, type: 2}
+  - moveBase: {fileID: 11400000, guid: 6aa2a0a39540f4044bec9f5e3d73a1b6, type: 2}
     level: 13
+  - moveBase: {fileID: 11400000, guid: 97db97663395e2b44a8248dda0515a77, type: 2}
+    level: 19
+  - moveBase: {fileID: 11400000, guid: 5e0a617c1da77b648b3ea00f857b6c7d, type: 2}
+    level: 31
+  - moveBase: {fileID: 11400000, guid: c1ed894039a05544db700c3fe74b64b8, type: 2}
+    level: 37
+  - moveBase: {fileID: 11400000, guid: 5e0a617c1da77b648b3ea00f857b6c7d, type: 2}
+    level: 24
   learnableByItems:
   - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
   - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
   - {fileID: 11400000, guid: a341b45f2b1d5744884ea462f0af32bd, type: 2}
   - {fileID: 11400000, guid: b23d128bb75075141a4e17792ef72608, type: 2}
+  movesLearnedUponEvolution: []
   evolutions:
   - evolveInto: {fileID: 11400000, guid: 087259eabf4dcf34d891748650fa0318, type: 2}
     requiredLevel: 16

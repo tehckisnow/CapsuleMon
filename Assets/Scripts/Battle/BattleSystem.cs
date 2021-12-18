@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -28,6 +27,11 @@ public class BattleSystem : MonoBehaviour
     private int currentAction;
     private int currentMove;
     private bool aboutToUseChoice = true;
+
+    private AnimatedImage playerAnimatedImage;
+    private AnimatedImage trainerAnimatedImage;
+
+    private bool animPlaying = false;
 
     MonParty playerParty;
     MonParty trainerParty;
@@ -65,6 +69,8 @@ public class BattleSystem : MonoBehaviour
 
     public IEnumerator SetupBattle()
     {
+        dialogBox.EnableMoveSelector(false);
+        dialogBox.EnableActionSelector(false);
         playerUnit.Clear();
         enemyUnit.Clear();
 
@@ -81,26 +87,38 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            //trainer battle
+
             playerUnit.gameObject.SetActive(false);
             enemyUnit.gameObject.SetActive(false);
 
             playerImage.gameObject.SetActive(true);
             trainerImage.gameObject.SetActive(true);
+            
             playerImage.sprite = player.Sprite;
             trainerImage.sprite = trainer.Sprite;
 
+            playerAnimatedImage = playerImage.gameObject.GetComponent<AnimatedImage>();
+            trainerAnimatedImage = trainerImage.gameObject.GetComponent<AnimatedImage>();
+            
+            dialogBox.SetDialog("");
+
+            yield return WantsToBattleAnim();
+            
+            yield return new WaitUntil(() => !animPlaying);
+
             yield return dialogBox.TypeDialog($"{trainer.Name} wants to battle");
 
+            yield return ReadyBattleAnim();
+
             //send out first mon of trainer
-            trainerImage.gameObject.SetActive(false);
+            // trainerImage.gameObject.SetActive(false);
             enemyUnit.gameObject.SetActive(true);
             var enemyMon = trainerParty.GetHealthyMon();
             enemyUnit.Setup(enemyMon);
             yield return dialogBox.TypeDialog($"{trainer.Name} sent out {enemyMon.Name}");
 
             //send out first mon of player
-            playerImage.gameObject.SetActive(false);
+            //playerImage.gameObject.SetActive(false);
             playerUnit.gameObject.SetActive(true);
             var playerMon = playerParty.GetHealthyMon();
             playerUnit.Setup(playerMon);
@@ -111,6 +129,26 @@ public class BattleSystem : MonoBehaviour
         escapeAttempts = 0;
         partyScreen.Init();
         ActionSelection();
+    }
+
+    IEnumerator WantsToBattleAnim()
+    {
+        Action finishAction = () => { animPlaying = false; };
+        animPlaying = true;
+        trainerAnimatedImage.transform.position = new Vector3(400, 0);
+        playerAnimatedImage.ReturnToOriginalPos(-400, 0, 1.5f);
+        yield return trainerAnimatedImage.ReturnToOriginalPosCoroutine(400, 0, 1.5f, finishAction);
+    }
+
+    IEnumerator ReadyBattleAnim()
+    {
+        yield return new WaitForSeconds(0.5f);
+        playerAnimatedImage.MoveRelativeLocal(-400, 0, 1.5f);
+        trainerAnimatedImage.MoveRelativeLocal(400, 0, 1.5f);
+        
+        yield return new WaitForSeconds(1f);
+        playerAnimatedImage.Disable();
+        trainerAnimatedImage.Disable();
     }
 
     private void BattleOver(bool won)
@@ -442,30 +480,52 @@ public class BattleSystem : MonoBehaviour
                 yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} grew to level {playerUnit.Mon.Level}");
                 
                 //try to learn a new move
-
-                var newMove = playerUnit.Mon.GetLearnableMoveAtCurrentLevel();
-                if(newMove != null)
+                var newMoves = playerUnit.Mon.GetLearnableMovesAtCurrentLevel();
+                if(newMoves.Count > 0)
                 {
-                    if(playerUnit.Mon.Moves.Count < MonBase.MaxNumberOfMoves)
+                    foreach(LearnableMove newMove in newMoves)
                     {
-                        playerUnit.Mon.LearnMove(newMove.Base);
-                        yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} learned {newMove.Base.Name}");
-                        dialogBox.SetMoveNames(playerUnit.Mon.Moves);
-                    }
-                    else
-                    {
-                        yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} is trying to learn {newMove.Base.Name}");
-                        yield return dialogBox.TypeDialog($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
-                        yield return ChooseMoveToForget(playerUnit.Mon, newMove.Base);
-                        yield return new WaitUntil(() => state != BattleState.MoveToForget);
-                        yield return new WaitForSeconds(2f);
+                            if(playerUnit.Mon.Moves.Count < MonBase.MaxNumberOfMoves)
+                            {
+                                playerUnit.Mon.LearnMove(newMove.Base);
+                                yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} learned {newMove.Base.Name}");
+                                dialogBox.SetMoveNames(playerUnit.Mon.Moves);
+                                playerUnit.Mon.SetReadyForMove();
+                            }
+                            else
+                            {
+                                yield return dialogBox.TypeDialog($"{playerUnit.Mon.Name} is trying to learn {newMove.Base.Name}");
+                                yield return dialogBox.TypeDialog($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
+                                yield return ChooseMoveToForget(playerUnit.Mon, newMove.Base);
+                                yield return new WaitUntil(() => state != BattleState.MoveToForget);
+                                yield return new WaitForSeconds(2f);
+                            }
+                        yield return new WaitUntil(() => playerUnit.Mon.ReadyForMove);
                     }
                 }
+                
+                //check for evolution on each levelup
+                var evolution = playerUnit.Mon.CheckForEvolution();
+                if(evolution != null)
+                {
+                    void OnComplete()
+                    {
+                        playerUnit.Setup(playerUnit.Mon);
+                        EvolutionManager.i.OnCompleteEvolution -= OnComplete;
+                    }
+                    Action onComplete = OnComplete;
+                    EvolutionManager.i.OnCompleteEvolution += onComplete;
+                    
+                    yield return EvolutionManager.i.Evolve(playerUnit.Mon, evolution);
+                }
+
+                //refresh moves
+                dialogBox.SetMoveNames(playerUnit.Mon.Moves);
 
                 yield return playerUnit.Hud.SetExpSmooth(true);
             }
 
-            yield return new WaitForSeconds(1f);
+            //yield return new WaitForSeconds(1f);
         }
 
         CheckForBattleOver(faintedUnit);
@@ -514,24 +574,31 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator DefeatTrainer()
     {
-        yield return DialogManager.Instance.ShowDialogText($"{player.Name} defeated {trainer.Name}!");
-        //yield return dialogBox.TypeDialog($"{player.Name} defeated {trainer.Name}!");
         trainerImage.gameObject.SetActive(true);
-        //! animate?
+        trainerAnimatedImage = trainerImage.gameObject.GetComponent<AnimatedImage>();
+        
+        IEnumerator TrainerWantsToBattle()
+        {
+            animPlaying = true;
+            Action finishAction = () => { animPlaying = false; };
+            trainerAnimatedImage.transform.position = new Vector3(400, 0);
+            yield return trainerAnimatedImage.ReturnToOriginalPosCoroutine(400, 0, 1.5f, finishAction);
+        }
+        state = BattleState.Busy;
+        yield return TrainerWantsToBattle();
+        yield return new WaitUntil(() => !animPlaying);
+        
+        yield return DialogManager.Instance.ShowDialogText($"{player.Name} defeated {trainer.Name}!");
+        
+        //! automatically include trainer name here in line below;
         yield return DialogManager.Instance.ShowDialog(trainer.LoseDialog);
         
-        // string lines = "";
-        // foreach(var line in trainer.LoseDialog.Lines)
-        // {
-        //     lines += line + " \n";
-        // }
-        // yield return dialogBox.TypeDialog(lines);
-        
-        player.Money += trainer.BattleReward;
-        GameController.Instance.UpdateMoneyDisplay();
-
-        yield return DialogManager.Instance.ShowDialogText($"{player.Name} received ${trainer.BattleReward}!");
-        //yield return dialogBox.TypeDialog($"{player.Name} received ${trainer.BattleReward}!");
+        if(trainer.BattleReward > 0)
+        {
+            player.Money += trainer.BattleReward;
+            GameController.Instance.UpdateMoneyDisplay();
+            yield return DialogManager.Instance.ShowDialogText($"{player.Name} received ${trainer.BattleReward}!");
+        }
 
         BattleOver(true);
     }
@@ -595,6 +662,9 @@ public class BattleSystem : MonoBehaviour
                 {
                     //don't learn the new move
                     StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Mon.Name} did not learn {moveToLearn.Name}"));
+                    
+                    //! wait for dialogBox.TypeDialog to conclude?
+                    //playerUnit.Mon.SetReadyForMove();
                 }
                 else
                 {
@@ -603,7 +673,13 @@ public class BattleSystem : MonoBehaviour
                     StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Mon.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}"));
                     
                     playerUnit.Mon.Moves[moveIndex] = new Move(moveToLearn);
+                    
+                    //! wait for dialogBox.TypeDialog to conclude?
+                    //playerUnit.Mon.SetReadyForMove();
                 }
+                //! wait for dialogBox.TypeDialog to conclude?
+                playerUnit.Mon.SetReadyForMove();
+                
                 moveToLearn = null;
                 state = BattleState.RunningTurn;
             };

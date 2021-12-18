@@ -28,6 +28,7 @@ public class BattleDialogBox : MonoBehaviour
 
     private string textIfSkipped = "";
     private bool isTyping = false;
+    public bool IsTyping => isTyping;
     private Coroutine currentlyTypingDialog;
 
     void Start()

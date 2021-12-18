@@ -49,6 +49,9 @@ public class Mon
     public event System.Action OnStatusChanged;
     public event System.Action OnHPChanged;
 
+    private bool initialized = false;
+    public bool Initialized => initialized;
+
     public void Init()
     {
         //generate moves
@@ -76,6 +79,8 @@ public class Mon
         ResetStatBoost();
         Status = null;
         VolatileStatus = null;
+
+        initialized = true;
     }
 
     private void ResetStatBoost()
@@ -162,7 +167,12 @@ public class Mon
         Stats.Add(Stat.SpDefense, Mathf.FloorToInt((Base.SpDefense * Level) / 100f) + 5);
         Stats.Add(Stat.Speed, Mathf.FloorToInt((Base.Speed * Level) / 100f) + 5);
 
+        int oldMaxHP = MaxHp;
         MaxHp = Mathf.FloorToInt((Base.MaxHp * Level) / 100f) + 10 + Level;
+
+        HP += MaxHp - oldMaxHP;
+        
+        HP = Mathf.Clamp(HP, 0, MaxHp);
     }
 
     public void ApplyBoosts(List<StatBoost> statBoosts)
@@ -187,9 +197,10 @@ public class Mon
 
     public bool CheckForLevelUp()
     {
-        if(Exp > Base.GetExpForLevel(level + 1))
+        if(Exp >= Base.GetExpForLevel(level + 1))
         {
             ++level;
+            CalculateStats();
             return true;
         }
         else
@@ -198,9 +209,24 @@ public class Mon
         }
     }
 
-    public LearnableMove GetLearnableMoveAtCurrentLevel()
+    // // deprecated: remove this
+    // public LearnableMove GetLearnableMoveAtCurrentLevel()
+    // {
+    //     return Base.LearnableMoves.Where(x => x.Level == level).FirstOrDefault();
+    // }
+
+    // this replaces the above
+    public List<LearnableMove> GetLearnableMovesAtCurrentLevel()
     {
-        return Base.LearnableMoves.Where(x => x.Level == level).FirstOrDefault();
+        List<LearnableMove> newList = new List<LearnableMove>();
+        foreach(LearnableMove move in Base.LearnableMoves)
+        {
+            if(move.Level == level)
+            {
+                newList.Add(move);
+            }
+        }
+        return newList;
     }
 
     public void LearnMove(MoveBase moveToLearn)
@@ -222,7 +248,7 @@ public class Mon
 
     public Evolution CheckForEvolution()
     {
-        return Base.Evolutions.FirstOrDefault(e => e.RequiredLevel == level);
+        return Base.Evolutions.FirstOrDefault(e => e.RequiredLevel <= level && e.RequiredLevel != 0);
     }
 
     public Evolution CheckForEvolution(ItemBase item)
@@ -388,6 +414,65 @@ public class Mon
         ResetStatBoost();
     }
 
+    //-------------------------------------------------------
+    // UI
+
+    public IEnumerator CheckForEvolutionMove()
+    {
+        yield return TryToLearnMove(true);
+    }
+
+    //These two are used by TryToLearnMove for iterating through multiple moves learned at once (upon levelup, evolution, etc.)
+    private bool readyForMove = false;
+    public bool ReadyForMove => readyForMove;
+    public void SetReadyForMove()
+    {
+        readyForMove = true;
+    }
+
+    public IEnumerator TryToLearnMove(bool evo=false)
+    {
+        var moves = GetLearnableMovesAtCurrentLevel();
+        if(evo)
+        {
+            moves = new List<LearnableMove>();
+            foreach(MoveBase moveBase in Base.MovesLearnedUponEvolution)
+            {
+                var move = new LearnableMove()
+                {
+                    Base = moveBase,
+                    Level = 1
+                };
+                moves.Add(move);
+            }
+        }
+        if(moves == null)
+        {
+            yield break;
+        }
+        readyForMove = false;
+        foreach(LearnableMove move in moves)
+        {
+            if(move != null)
+            {
+                if(Moves.Count < MonBase.MaxNumberOfMoves)
+                {
+                    LearnMove(move.Base);
+                    yield return DialogManager.Instance.ShowDialogText($"{Name} learned {move.Base.Name}");
+                    readyForMove = true;
+                }
+                else
+                {
+                    yield return DialogManager.Instance.ShowDialogText($"{Name} is trying to learn {move.Base.Name}");
+                    yield return DialogManager.Instance.ShowDialogText($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
+                    yield return DialogManager.Instance.ShowDialogText($"Choose a move to forget");
+                    GameController.Instance.OpenMoveSelectionUI(this, move.Base);
+                }
+            }
+            yield return new WaitUntil(() => readyForMove);
+        }
+        readyForMove = false;
+    }
 }
 
 public class DamageDetails

@@ -15,8 +15,8 @@ MonoBehaviour:
   name: Pidge
   description: A lazy bird known for roosting near banks and leaving an unsanitary
     mess.
-  frontSprite: {fileID: 21300000, guid: b6f85d3da7564e24e9737df6a8404157, type: 3}
-  backSprite: {fileID: 21300000, guid: 1018d20abe445c94c8d1f290bb546c6a, type: 3}
+  frontSprite: {fileID: 21300000, guid: 248fe3189b2265547bf87019f2fe4ce6, type: 3}
+  backSprite: {fileID: 21300000, guid: 0305a32f4a01513418072feb4f1e6e37, type: 3}
   type1: 1
   type2: 10
   maxHp: 40
@@ -25,7 +25,7 @@ MonoBehaviour:
   spAttack: 35
   spDefense: 35
   speed: 56
-  expYield: 50
+  expYield: 655
   growthRate: 1
   catchRate: 255
   learnableMoves:
@@ -37,7 +37,13 @@ MonoBehaviour:
     level: 9
   - moveBase: {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
     level: 13
+  - moveBase: {fileID: 11400000, guid: aee24aa03af592e40aa1089d1d49ec2d, type: 2}
+    level: 25
   learnableByItems:
   - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
   - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
-  evolutions: []
+  movesLearnedUponEvolution: []
+  evolutions:
+  - evolveInto: {fileID: 11400000, guid: f4f689713e8b3f5459a2764ce91f9409, type: 2}
+    requiredLevel: 18
+    requiredItem: {fileID: 0}

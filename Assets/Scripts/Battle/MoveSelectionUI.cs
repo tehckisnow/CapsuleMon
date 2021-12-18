@@ -12,6 +12,9 @@ public class MoveSelectionUI : MonoBehaviour
     
     Color unhighlightedColor;
 
+    Action<int> OnSelected;
+    Action OnCancel;
+
     private int currentSelection = 0;
 
     private void Awake()
@@ -29,6 +32,69 @@ public class MoveSelectionUI : MonoBehaviour
         moveTexts[currentMoves.Count].text = newMove.Name;
     }
 
+    public void ClearData()
+    {
+        foreach(TextMeshProUGUI text in moveTexts)
+        {
+            text.text = "";
+            text.color = unhighlightedColor;
+            currentSelection = 0;
+        }
+    }
+
+    public void SetOnSelectionAction(Action<int> onSelected)
+    {
+        Action<int> UnsubAction = default;
+        UnsubAction = Unsub;
+        void Unsub(int val)
+        {
+            OnSelected -= onSelected;
+            OnSelected -= UnsubAction;
+        };
+        OnSelected += onSelected;
+        OnSelected += UnsubAction;
+    }
+
+    public void SetOnCancelAction(Action onCancel)
+    {
+        Action UnsubAction = default;
+        UnsubAction = Unsub;
+        void Unsub()
+        {
+            OnCancel -= onCancel;
+            OnCancel -= UnsubAction;
+        }
+        OnCancel += onCancel;
+        OnCancel += UnsubAction;
+    }
+
+    public void HandleMoveSelection()
+    {
+        if(Input.GetButtonDown("Down"))
+        {
+            ++currentSelection;
+        }
+        else if(Input.GetButtonDown("Up"))
+        {
+            --currentSelection;
+        }
+
+        currentSelection = Mathf.Clamp(currentSelection, 0, MonBase.MaxNumberOfMoves);
+
+        UpdateMoveSelection(currentSelection);
+
+        if(Input.GetButtonDown("Submit"))
+        {
+            OnSelected?.Invoke(currentSelection);
+        }
+
+        if(Input.GetButtonDown("Cancel"))
+        {
+            OnCancel.Invoke();
+        }
+    }
+
+    //Uses passed in onSelected action
     public void HandleMoveSelection(Action<int> onSelected)
     {
         if(Input.GetButtonDown("Down"))
@@ -46,9 +112,14 @@ public class MoveSelectionUI : MonoBehaviour
 
         if(Input.GetButtonDown("Submit"))
         {
-            Debug.Log(currentSelection);
             onSelected?.Invoke(currentSelection);
         }
+    }
+
+    public void GenericCancel()
+    {
+        currentSelection = MonBase.MaxNumberOfMoves;
+        OnSelected?.Invoke(currentSelection);
     }
 
     public void UpdateMoveSelection(int selection)
@@ -64,5 +135,11 @@ public class MoveSelectionUI : MonoBehaviour
                 moveTexts[i].color = unhighlightedColor;
             }
         }
+    }
+
+    public void Close()
+    {
+        ClearData();
+        gameObject.SetActive(false);
     }
 }

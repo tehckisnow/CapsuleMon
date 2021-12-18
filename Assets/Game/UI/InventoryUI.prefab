@@ -1444,7 +1444,7 @@ MonoBehaviour:
   itemList: {fileID: 2657459144554672623}
   itemSlotUI: {fileID: 2620717764800156666, guid: c3c91815e62a1fb40b430655e63e70b1,
     type: 3}
-  categoryText: {fileID: 0}
+  categoryText: {fileID: 7099865762449109160}
   itemIcon: {fileID: 3489647471317681576}
   itemDescription: {fileID: 9201505138367151835}
   upArrow: {fileID: 3475688826527430551}
@@ -4118,7 +4118,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 626641971f4a3e34daaa56a210cc9aa9, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

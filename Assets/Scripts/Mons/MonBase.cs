@@ -31,6 +31,10 @@ public class MonBase : ScriptableObject
     [SerializeField] List<MoveBase> learnableByItems;
     public List<MoveBase> LearnableByItems => learnableByItems;
 
+    //moves attempted to learn immediately after evolving into this mon (e.g. Metapod tried to learn Harden)
+    [SerializeField] List<MoveBase> movesLearnedUponEvolution;
+    public List<MoveBase> MovesLearnedUponEvolution => movesLearnedUponEvolution;
+
     [SerializeField] List<Evolution> evolutions;
     public List<Evolution> Evolutions => evolutions;
 
@@ -131,11 +135,13 @@ public class LearnableMove
     public MoveBase Base
     {
         get { return moveBase; }
+        set { moveBase = value; }
     }
 
     public int Level
     {
         get { return level; }
+        set { level = value; }
     }
 }
 

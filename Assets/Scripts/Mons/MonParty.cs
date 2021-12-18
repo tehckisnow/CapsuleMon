@@ -15,6 +15,8 @@ public class MonParty : MonoBehaviour
             OnUpdated?.Invoke();
         }
     }
+    
+    public const int MAXPARTYSIZE = 6;
 
     public event Action OnUpdated;
 
@@ -38,7 +40,7 @@ public class MonParty : MonoBehaviour
 
     public void AddMon(Mon newMon)
     {
-        if(mons.Count < 6)
+        if(mons.Count < MonParty.MAXPARTYSIZE)
         {
             mons.Add(newMon);
             OnUpdated?.Invoke();
@@ -46,13 +48,66 @@ public class MonParty : MonoBehaviour
         else
         {
             //TODO: add to the PC once that's implemented
-
+            if(!newMon.Initialized)
+            {
+                newMon.Init();
+            }
+            SendToStorage(newMon);
         }
+    }
+
+    public bool LastMon()
+    {
+        if(mons.Count < 2)
+        {
+            string message = "You probably shouldn't get rid of your last mon...";
+            StartCoroutine(DialogManager.Instance.ShowDialogText(message));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void OpenDepositConfirmation(Mon mon)
+    {
+        if(LastMon())
+        {
+            //GameController.Instance.state = GameState.PartyScreen;
+            GameController.Instance.RevertFromDialogTo(GameState.PartyScreen);
+            return;
+        }
+        
+        string message = $"Do you want to deposit {mon.Name}?";
+        Action yesAction = () =>
+        {
+            void RevertState()
+            {
+                DialogManager.Instance.OnDialogFinished -= RevertState;
+                GameController.Instance.state = GameState.PartyScreen;
+            }
+            GameController.Instance.state = GameState.Dialog;
+            DialogManager.Instance.OnDialogFinished += RevertState;
+            GetPlayerParty().SendToStorage(mon);
+        };
+        Action noAction = () =>
+        {
+            GameController.Instance.state = GameState.PartyScreen;
+        };
+        GameController.Instance.OpenConfirmationMenu(message, yesAction, noAction);
+    }
+
+    public void SendToStorage(Mon mon)
+    {
+        MonStorage.Instance.AddMon(mon);
+        RemoveMon(mon);
+        StartCoroutine(DialogManager.Instance.ShowDialogText($"{mon.Name} has been sent to the digital storage system."));
     }
 
     public void AddMon(Mon newMon, int index)
     {
-        if(mons.Count < 6 && index < 5)
+        if(mons.Count < MonParty.MAXPARTYSIZE && index < MonParty.MAXPARTYSIZE - 1)
         {
             mons.Insert(index, newMon);
             OnUpdated?.Invoke();
@@ -60,6 +115,7 @@ public class MonParty : MonoBehaviour
         else
         {
             //TODO: PC
+            SendToStorage(newMon);
         }
     }
 
@@ -109,8 +165,6 @@ public class MonParty : MonoBehaviour
                 yield return EvolutionManager.i.Evolve(mon, evolution);
             }
         }
-
-        OnUpdated?.Invoke();
     }
 
     //I Added this to fix name not updating in partylist after evolving with evolutionItem

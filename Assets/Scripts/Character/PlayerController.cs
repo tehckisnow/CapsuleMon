@@ -76,10 +76,32 @@ public class PlayerController : MonoBehaviour, ISavable
         }
     }
 
+    IEnumerator DrawCicle(Vector3 interactPos)
+    {
+        GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        cylinder.transform.position = interactPos;
+        cylinder.transform.rotation = Quaternion.Euler(90, 0, 0);
+        cylinder.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+
+        yield return new WaitForSeconds(2f);
+
+        Destroy(cylinder);
+    }
+
     private IEnumerator Interact()
     {
+        
         var facingDir = new Vector3(animator.GetFloat("moveX"), animator.GetFloat("moveY"));
+        //prevent interactPos from floating up into next tile above
+        if(character.Facing == Facing.Up)
+        {
+            facingDir.y -= 0.4f;
+        }
         var interactPos = transform.position + facingDir;
+        
+        //Debug
+        // StartCoroutine(DrawCicle(transform.position));
+        // StartCoroutine(DrawCicle(interactPos));
 
         //Debug.DrawLine(transform.position, interactPos, Color.red, 0.5f);
         var collider = Physics2D.OverlapCircle(interactPos, 0.3f, GameLayers.Instance.InteractablesLayer);
@@ -118,6 +140,19 @@ public class PlayerController : MonoBehaviour, ISavable
         }
     }
 
+    public bool SpendMoney(int amount)
+    {
+        if(amount <= money)
+        {
+            money -= amount;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public object CaptureState()
     {
         var facing = FacingClass.GetXY(character.Facing);
@@ -127,7 +162,8 @@ public class PlayerController : MonoBehaviour, ISavable
             name = name,
             money = money,
             position = new float[] {transform.position.x, transform.position.y, facing.x, facing.y},
-            mons = GetComponent<MonParty>().Mons.Select(p => p.GetSaveData()).ToList()
+            mons = GetComponent<MonParty>().Mons.Select(p => p.GetSaveData()).ToList(),
+            storage = GetComponent<MonStorage>().Mons.Select(p => p.GetSaveData()).ToList()
         };
 
         return saveData;
@@ -162,6 +198,12 @@ public class PlayerController : MonoBehaviour, ISavable
         {
             monParty.Mons = saveData.mons.Select(s => new Mon(s)).ToList();
         }
+
+        var storage = GetComponent<MonStorage>();
+        if(storage != null)
+        {
+            storage.Mons = saveData.storage.Select(s => new Mon(s)).ToList();
+        }
     }
 
     public string Name {
@@ -183,4 +225,5 @@ public class PlayerSaveData
     public int money;
     public float[] position;
     public List<MonSaveData> mons;
+    public List<MonSaveData> storage;
 }

@@ -25,7 +25,7 @@ public class InventoryUI : MonoBehaviour
 
     private Action<ItemBase> onItemUsed;
 
-    private int selectedItem = 0;
+    [SerializeField] int selectedItem = 0;
     private int selectedCategory = 0;
 
     private MoveBase moveToLearn;
@@ -232,15 +232,23 @@ public class InventoryUI : MonoBehaviour
 
         var item = inventory.GetItem(selectedItem, selectedCategory);
         var mon = partyScreen.SelectedMember;
-        
+        var player = PlayerController.Instance;
+
         //handle evolution items
+        bool cancelUseItem = false;
         if(item is EvolutionItem)
         {
             var evolution = mon.CheckForEvolution(item);
             if(evolution != null)
             {
+                // if evolution was interrupted, set cancelUseItem to false
+                EvolutionManager.i.OnCompleteEvolution += EvolutionCheck;
+                void EvolutionCheck()
+                {
+                    EvolutionManager.i.OnCompleteEvolution -= EvolutionCheck;
+                    cancelUseItem = !EvolutionManager.i.EvolutionSuccess;
+                }
                 yield return EvolutionManager.i.Evolve(mon, evolution);
-                inventory.RemoveItem(item);
             }
             else
             {
@@ -249,23 +257,57 @@ public class InventoryUI : MonoBehaviour
                 yield break;
             }
         }
+        
+        yield return HandleLevelUpItems();
 
-        var usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember, selectedCategory);
+        ItemBase usedItem = null;
+        if(!cancelUseItem)
+        {
+            usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember, selectedCategory);
+        }
         if(usedItem != null)
         {
             if(usedItem is RecoveryItem)
             {
-                yield return DialogManager.Instance.ShowDialogText($"The player used {usedItem.Name}");
+                yield return DialogManager.Instance.ShowDialogText($"{player.Name} used {usedItem.Name}");
             }
             onItemUsed?.Invoke(usedItem);
         }
         else
         {
+            //! I think I want to move this
             if(selectedCategory == (int)ItemCategory.Items)
                 yield return DialogManager.Instance.ShowDialogText($"It wont have any effect!");
         }
-
         ClosePartyScreen();
+        UpdateItemList();
+    }
+
+    IEnumerator HandleLevelUpItems()
+    {
+        var item = inventory.GetItem(selectedItem, selectedCategory);
+        var mon = partyScreen.SelectedMember;
+        var player = PlayerController.Instance;
+
+        if(item is LevelUpItem)
+        {
+            yield return DialogManager.Instance.ShowDialogText($"{player.Name} used {item.Name}");
+            
+            int exp = mon.Base.GetExpForLevel(mon.Level + 1);
+            mon.Exp += exp;
+            mon.CheckForLevelUp();
+            
+            yield return DialogManager.Instance.ShowDialogText($"{mon.Name} grew to level {mon.Level}!");
+
+            yield return mon.TryToLearnMove();
+
+            Evolution evolution = mon.CheckForEvolution();
+            if(evolution != null)
+            {
+                yield return EvolutionManager.i.Evolve(mon, evolution);
+            }
+            MonParty.GetPlayerParty().UpdateParty();
+        }
     }
 
     IEnumerator HandleTmItems()
@@ -342,11 +384,18 @@ public class InventoryUI : MonoBehaviour
         if(slots.Count > 0)
         {
             var item = slots[selectedItem].Item;
-            itemIcon.sprite = item.Icon;
-            itemDescription.text = item.Description;
+            if(item == null)
+            {
+                itemIcon.sprite = null;
+                itemDescription.text = "";
+            }
+            else
+            {
+                itemIcon.sprite = item.Icon;
+                itemDescription.text = item.Description;
+            }
         }
         
-
         HandleScrolling();
     }
 

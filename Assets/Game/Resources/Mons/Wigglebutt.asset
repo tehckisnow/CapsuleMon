@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: Wigglebutt
+  m_EditorClassIdentifier: 
+  name: Wigglebutt
+  description: What the heck is this?
+  frontSprite: {fileID: 21300000, guid: a889d00ebf867c547a8284949d14cb80, type: 3}
+  backSprite: {fileID: 21300000, guid: 9791974c1c3e1c84ea44385b6bf1b2d9, type: 3}
+  type1: 1
+  type2: 0
+  maxHp: 140
+  attack: 70
+  defense: 45
+  spAttack: 75
+  spDefense: 50
+  speed: 45
+  expYield: 109
+  growthRate: 1
+  catchRate: 50
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 44b249d01f3b82f45af3f79f7912cabd, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: e3a11c091c26cf446baeb0293ee856b2, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: b23d128bb75075141a4e17792ef72608, type: 2}
+    level: 1
+  learnableByItems: []
+  movesLearnedUponEvolution: []
+  evolutions: []

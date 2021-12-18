@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Butterflap
   description: It flip, it flap!
-  frontSprite: {fileID: 21300000, guid: 196665b79be0b5e4cb4cdcaa8c3f4502, type: 3}
-  backSprite: {fileID: 21300000, guid: 99bb916ff48cf1e4c8b86a828b26b26e, type: 3}
+  frontSprite: {fileID: 21300000, guid: 967d8bb6a863a04468b63ec5043daa37, type: 3}
+  backSprite: {fileID: 21300000, guid: c64fc59c81fe1084081222eb609a0b5f, type: 3}
   type1: 12
   type2: 10
   maxHp: 60
@@ -26,7 +26,7 @@ MonoBehaviour:
   speed: 70
   expYield: 198
   growthRate: 1
-  catchRate: 255
+  catchRate: 45
   learnableMoves:
   - moveBase: {fileID: 11400000, guid: 61622ba62ef04c54994bfcc16f534b4b, type: 2}
     level: 1
@@ -38,6 +38,12 @@ MonoBehaviour:
     level: 15
   - moveBase: {fileID: 11400000, guid: 190a601e36fdeaa4ca060cce15d1acd3, type: 2}
     level: 18
+  - moveBase: {fileID: 11400000, guid: 5e7b4fd31b6a7584cbb7f5f61f83a088, type: 2}
+    level: 28
+  - moveBase: {fileID: 11400000, guid: 76e24e0779e44aa489a17a55e749ec20, type: 2}
+    level: 34
   learnableByItems:
   - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
   - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+  movesLearnedUponEvolution: []
+  evolutions: []

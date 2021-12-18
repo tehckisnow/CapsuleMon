@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: Pidgest
+  m_EditorClassIdentifier: 
+  name: Pidgest
+  description: The laziest bird known for roosting near banks and leaving an unsanitary
+    mess.
+  frontSprite: {fileID: 21300000, guid: 845ce9315e8d254428b0bf17c31c22b8, type: 3}
+  backSprite: {fileID: 21300000, guid: 86e34640ccb38e94093b1225be2f9759, type: 3}
+  type1: 1
+  type2: 10
+  maxHp: 83
+  attack: 80
+  defense: 75
+  spAttack: 70
+  spDefense: 70
+  speed: 91
+  expYield: 172
+  growthRate: 1
+  catchRate: 45
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: e3880bc221567ec4ba2b3af61edbad6c, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 5e7b4fd31b6a7584cbb7f5f61f83a088, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: aee24aa03af592e40aa1089d1d49ec2d, type: 2}
+    level: 27
+  - moveBase: {fileID: 11400000, guid: 4a6e598bc53506a449e8fa8103955540, type: 2}
+    level: 34
+  - moveBase: {fileID: 11400000, guid: e527816d1c101574d8b5aa464de9a882, type: 2}
+    level: 48
+  learnableByItems:
+  - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
+  - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+  movesLearnedUponEvolution: []
+  evolutions: []

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Squittle
   description: Ew, he squittled all over!
-  frontSprite: {fileID: 21300000, guid: 967d8bb6a863a04468b63ec5043daa37, type: 3}
-  backSprite: {fileID: 21300000, guid: 3610e9d9f51a5974a805f28716227dd1, type: 3}
+  frontSprite: {fileID: 21300000, guid: 3610e9d9f51a5974a805f28716227dd1, type: 3}
+  backSprite: {fileID: 21300000, guid: b53387abea182a548be136973164599a, type: 3}
   type1: 3
   type2: 0
   maxHp: 44
@@ -24,9 +24,9 @@ MonoBehaviour:
   spAttack: 50
   spDefense: 64
   speed: 43
-  expYield: 63
+  expYield: 66
   growthRate: 1
-  catchRate: 255
+  catchRate: 45
   learnableMoves:
   - moveBase: {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
     level: 1
@@ -38,6 +38,16 @@ MonoBehaviour:
     level: 10
   - moveBase: {fileID: 11400000, guid: b1687ad4982b3134e9e269b0e2d58676, type: 2}
     level: 13
+  - moveBase: {fileID: 11400000, guid: 2e17235e788d92d439e2178618e32a92, type: 2}
+    level: 18
+  - moveBase: {fileID: 11400000, guid: ac0e7e978f5a3e547b972ccb9dd8e197, type: 2}
+    level: 23
+  - moveBase: {fileID: 11400000, guid: a61683fca3ec23f419b71aa01419cf92, type: 2}
+    level: 47
   learnableByItems:
   - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
   - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+  evolutions:
+  - evolveInto: {fileID: 11400000, guid: db9bdaec622a3ec429e4336e38336f8a, type: 2}
+    requiredLevel: 16
+    requiredItem: {fileID: 0}

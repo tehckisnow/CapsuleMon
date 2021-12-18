@@ -77,8 +77,10 @@ public class Opening : MonoBehaviour
 
         frontSprite.enabled = true;
         rearSprite.enabled = true;
-        frontSprite.GetComponent<AnimatedImage>().PlayEnterAnim(-500f, 2f);
-        rearSprite.GetComponent<AnimatedImage>().PlayEnterAnim(500f, 2f);
+        //frontSprite.GetComponent<AnimatedImage>().PlayEnterAnim(-500f, 2f);
+        frontSprite.GetComponent<AnimatedImage>().ReturnToOriginalPos(-500f, 0f, 2f);
+        //rearSprite.GetComponent<AnimatedImage>().PlayEnterAnim(500f, 2f);
+        rearSprite.GetComponent<AnimatedImage>().ReturnToOriginalPos(500f, 0f, 2f);
         yield return new WaitForSeconds(2f);
 
         ground.enabled = true;

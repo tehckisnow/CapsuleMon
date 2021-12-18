@@ -77,10 +77,12 @@ public class SelectStarter : MonoBehaviour
             ChooseStarter(currentSelection);
         }
 
-        if(Input.GetButtonDown("Cancel"))
-        {
-            CloseStarterMenu();
-        }
+        //canceling allows NPCController to advance and gives the default starter
+        //this is disabled to prevent that
+        // if(Input.GetButtonDown("Cancel"))
+        // {
+        //     CloseStarterMenu();
+        // }
     }
 
     private void UpdateStarterLabelsList(int selection)

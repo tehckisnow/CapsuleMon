@@ -79,7 +79,19 @@ public class SceneDetails : MonoBehaviour
     private List<SavableEntity> GetSavableEntitiesInScene()
     {
         var currScene = SceneManager.GetSceneByName(gameObject.name);
-        var savableEntities = FindObjectsOfType<SavableEntity>().Where(x => x.gameObject.scene == currScene).ToList();
+        //var savableEntities = FindObjectsOfType<SavableEntity>().Where(x => x.gameObject.scene == currScene).ToList();
+        //replaced the line above with the code below using FindObjectsOfTypeAll so that it operates on inactive objects as well;
+        var savableEntitiesArray = Resources.FindObjectsOfTypeAll(typeof(SavableEntity));
+        //convert to list
+        List<SavableEntity> savableEntities = new List<SavableEntity>();
+        foreach(SavableEntity entity in savableEntitiesArray)
+        {
+            if(entity.gameObject.scene == currScene)
+            {
+                savableEntities.Add(entity);
+            }
+        }
+
         return savableEntities;
     }
 }

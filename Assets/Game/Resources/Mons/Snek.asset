@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: Snek
+  m_EditorClassIdentifier: 
+  name: Snek
+  description: A slithery snek.
+  frontSprite: {fileID: 21300000, guid: bada778ed3442a34e801114a35fbf19c, type: 3}
+  backSprite: {fileID: 21300000, guid: 18cdf4e20430307408e3109c8f0d3af1, type: 3}
+  type1: 8
+  type2: 0
+  maxHp: 35
+  attack: 60
+  defense: 44
+  spAttack: 40
+  spDefense: 54
+  speed: 55
+  expYield: 62
+  growthRate: 0
+  catchRate: 255
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 799b04cb96825a447af8de686b381a72, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 1534a17cca88ba14c9c0e84e8c4bcaa3, type: 2}
+    level: 8
+  - moveBase: {fileID: 11400000, guid: 2e17235e788d92d439e2178618e32a92, type: 2}
+    level: 13
+  - moveBase: {fileID: 11400000, guid: 8ffef166269915a458eafcac52ecb4c0, type: 2}
+    level: 20
+  - moveBase: {fileID: 11400000, guid: 5348f6299d40d95478dab26c1107b795, type: 2}
+    level: 25
+  - moveBase: {fileID: 11400000, guid: 9c307fea30a829843909bc804c97349a, type: 2}
+    level: 32
+  learnableByItems: []
+  movesLearnedUponEvolution: []
+  evolutions:
+  - evolveInto: {fileID: 11400000, guid: d4dfb171a12e9dc499924da6cf82355f, type: 2}
+    requiredLevel: 22
+    requiredItem: {fileID: 0}

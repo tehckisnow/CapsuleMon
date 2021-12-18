@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Seedosaur
   description: A very seedy saurus.
-  frontSprite: {fileID: 21300000, guid: 845ce9315e8d254428b0bf17c31c22b8, type: 3}
-  backSprite: {fileID: 21300000, guid: 18c00efddd605ea48941786d3c365919, type: 3}
+  frontSprite: {fileID: 21300000, guid: 18c00efddd605ea48941786d3c365919, type: 3}
+  backSprite: {fileID: 21300000, guid: 3735f62b04dccb14c8458ebc70b78859, type: 3}
   type1: 5
   type2: 8
   maxHp: 45
@@ -24,9 +24,9 @@ MonoBehaviour:
   spAttack: 65
   spDefense: 65
   speed: 45
-  expYield: 564
+  expYield: 64
   growthRate: 1
-  catchRate: 55
+  catchRate: 45
   learnableMoves:
   - moveBase: {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
     level: 1
@@ -40,7 +40,18 @@ MonoBehaviour:
     level: 9
   - moveBase: {fileID: 11400000, guid: 2c21e447516390842ae073024fdc9791, type: 2}
     level: 12
+  - moveBase: {fileID: 11400000, guid: 519b0e89515056147a85edcaa1d255f0, type: 2}
+    level: 15
+  - moveBase: {fileID: 11400000, guid: 6acbb63284a406a4ba567e4b94911019, type: 2}
+    level: 15
+  - moveBase: {fileID: 11400000, guid: c4d111fd6440c6a4c8509a47ba456df2, type: 2}
+    level: 18
+  - moveBase: {fileID: 11400000, guid: 137397e3d1cc42e4699ebc73a8625d36, type: 2}
+    level: 21
   learnableByItems:
   - {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
   - {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
-  evolutions: []
+  evolutions:
+  - evolveInto: {fileID: 11400000, guid: 2cd5e7a6620c35b43a607af3522161c7, type: 2}
+    requiredLevel: 16
+    requiredItem: {fileID: 0}

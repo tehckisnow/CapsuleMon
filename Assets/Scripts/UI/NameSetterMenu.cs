@@ -6,7 +6,8 @@ using TMPro;
 public class NameSetterMenu : MonoBehaviour
 {
     [SerializeField] TMP_InputField nameInputField;
-    
+    [SerializeField] int maxLength = 15;
+
     private PlayerController player;
 
     private void Awake()
@@ -46,6 +47,10 @@ public class NameSetterMenu : MonoBehaviour
             return false;
         }
         else if(name.Contains("\n") || name.Contains("\\"))
+        {
+            return false;
+        }
+        else if(name.Length > maxLength)
         {
             return false;
         }

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bfaf6d826f772d4d99f59c51235de6b, type: 3}
+  m_Name: Raticide
+  m_EditorClassIdentifier: 
+  name: Raticide
+  description: A really fat rat.  Nice.
+  frontSprite: {fileID: 21300000, guid: 196665b79be0b5e4cb4cdcaa8c3f4502, type: 3}
+  backSprite: {fileID: 21300000, guid: f54a628ca84b3bc4285a720170662675, type: 3}
+  type1: 1
+  type2: 0
+  maxHp: 55
+  attack: 81
+  defense: 60
+  spAttack: 50
+  spDefense: 70
+  speed: 97
+  expYield: 116
+  growthRate: 0
+  catchRate: 127
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 01fcff0b189ebea4a9d5647759cac551, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 93f77ff631ba6a34e89ca40258736959, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: d9fc46143a16b6a4b9bff8897659e672, type: 2}
+    level: 7
+  - moveBase: {fileID: 11400000, guid: 9803c9f995795b84c94a50a38f16c3c7, type: 2}
+    level: 13
+  - moveBase: {fileID: 11400000, guid: 0b4034a4700e8274691cf5790608cae1, type: 2}
+    level: 20
+  - moveBase: {fileID: 11400000, guid: 6dcdad1b40b377e4fa5907e1638be6c0, type: 2}
+    level: 30
+  learnableByItems: []
+  movesLearnedUponEvolution: []
+  evolutions: []

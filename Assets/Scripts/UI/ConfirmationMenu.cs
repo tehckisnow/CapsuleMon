@@ -23,6 +23,7 @@ public class ConfirmationMenu : MonoBehaviour
 
     private bool yesSelected = true;
     public bool YesSelected => yesSelected;
+    public GameState prevState;
     private Color unhighlightedColor;
 
     private void Awake()
@@ -32,6 +33,8 @@ public class ConfirmationMenu : MonoBehaviour
 
     public void OpenMenu(string message="", Action yesAction=null, Action noAction=null, CancelAction cancelAction=CancelAction.ChooseNo)
     {
+        //state is saved to prevState automatically but must be manually used in actions
+        prevState = GameController.Instance.state;
         GameController.Instance.state = GameState.ConfirmationMenu;
         yesSelected = true;
         OnYes = yesAction;
