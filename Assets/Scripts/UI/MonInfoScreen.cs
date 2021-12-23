@@ -52,6 +52,7 @@ public class MonInfoScreen : MonoBehaviour
     {
         int[] statblock = new int[]
         {
+            mon.Exp,
             mon.MaxHp,
             mon.Attack,
             mon.Defense,
@@ -62,6 +63,7 @@ public class MonInfoScreen : MonoBehaviour
 
         string[] statLabels = new string[]
         {
+            "Exp: ",
             "MaxHp: ",
             "Att: ",
             "Def: ",

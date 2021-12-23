@@ -41,4 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MonMart.unity
     guid: 703e2827f8a4ef44285c786deb1ea264
+  - enabled: 1
+    path: Assets/Scenes/DeepForest.unity
+    guid: 60a0a665dd23e504281adbcef33ec74c
   m_configObjects: {}

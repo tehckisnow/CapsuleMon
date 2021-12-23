@@ -40,7 +40,19 @@ public class Quest
     public IEnumerator StartQuest()
     {
         Status = QuestStatus.Started;
-        yield return DialogManager.Instance.ShowDialog(Base.StartDialog);
+        //yield return DialogManager.Instance.ShowDialog(Base.StartDialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(Base.StartDialog);
+        
+        if(Base.StartGiveItems.Count > 0)
+        {
+            Inventory inv = PlayerController.Instance.GetComponent<Inventory>();
+            for(int i = 0; i < Base.StartGiveItems.Count; i++)
+            {
+                inv.AddItem(Base.StartGiveItems[i]);
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"Received {Base.StartGiveItems[i].Name}!");
+            }
+        }
+
         var questList = QuestList.GetQuestList();
         questList.AddQuest(this);
     }
@@ -48,12 +60,15 @@ public class Quest
     public IEnumerator CompleteQuest(Transform player)
     {
         Status = QuestStatus.Completed;
-        yield return DialogManager.Instance.ShowDialog(Base.CompletedDialog);
+        //yield return DialogManager.Instance.ShowDialog(Base.CompletedDialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(Base.CompletedDialog);
         
+
         var inventory = Inventory.GetInventory();
         if(Base.RequiredItem != null)
         {
             inventory.RemoveItem(Base.RequiredItem);
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"Gave the {Base.RequiredItem.Name}");
         }
 
         if(Base.RewardItem != null)
@@ -75,7 +90,8 @@ public class Quest
             }
             rewardText += Base.RewardItem.Name + plural;
 
-            yield return DialogManager.Instance.ShowDialogText(rewardText);
+            //yield return DialogManager.Instance.ShowDialogText(rewardText);
+            yield return DialogManager.Instance.QueueDialogTextCoroutine(rewardText);
         }
 
         var questList = QuestList.GetQuestList();
@@ -84,15 +100,31 @@ public class Quest
 
     public bool CanBeCompleted()
     {
+        bool result = true;
         var inventory = Inventory.GetInventory();
         if(Base.RequiredItem != null)
         {
             if(!inventory.HasItem(Base.RequiredItem))
             {
-                return false;
+                result = false;
             }
         }
-        return true;
+        if(result && Base.RequiredFlags.Count > 0)
+        {
+            for(int i = 0; i < Base.RequiredFlags.Count; i++)
+            {
+                if(QuestFlags.Instance.GetFlag(Base.RequiredFlags[i]))
+                {
+                    continue;
+                }
+                else
+                {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     public void OnYesFunc()

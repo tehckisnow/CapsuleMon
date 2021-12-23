@@ -15,14 +15,17 @@ public class DialogManager : MonoBehaviour
 
     public static DialogManager Instance { get; private set; }
 
+    private bool messageQueueReady = true;
+    private Queue<Message> messageQueue;
+
     private bool isTyping = false;
-    //private IEnumerator currentlyTypingDialog;
     private Coroutine currentlyTypingDialog;
     private string textIfSkipped = "";
 
     private void Awake()
     {
         Instance = this;
+        messageQueue = new Queue<Message>();
     }
 
     public bool IsShowing { get; private set; }
@@ -33,6 +36,69 @@ public class DialogManager : MonoBehaviour
         {
             SkipTyping();
         }
+
+        StartCoroutine(DequeueDialog());
+    }
+
+    public void QueueDialog(Dialog dialog)
+    {
+        Message message = new Message(dialog);
+        messageQueue.Enqueue(message);
+    }
+
+    // This can be called with yield return in order to stall a coroutine until the message has displayed
+    public IEnumerator QueueDialogCoroutine(Dialog dialog)
+    {
+        Message message = new Message(dialog);
+        messageQueue.Enqueue(message);
+        yield return new WaitUntil(() => message.Processed);
+    }
+
+    public void QueueDialogText(string dialog, bool waitForInput=true, bool autoClose=true)
+    {
+        Message message = new Message(dialog, waitForInput, autoClose);
+        messageQueue.Enqueue(message);
+    }
+
+    // This can be called with yield return in order to stall a coroutine until the message has displayed
+    public IEnumerator QueueDialogTextCoroutine(string dialog, bool waitForInput=true, bool autoClose=true)
+    {
+        Debug.Log(dialog);
+        Message message = new Message(dialog, waitForInput, autoClose);
+        messageQueue.Enqueue(message);
+        yield return new WaitUntil(() => message.Processed);
+    }
+
+    private void ReadyQueue()
+    {
+        messageQueueReady = true;
+        OnDialogFinished -= ReadyQueue;
+    }
+
+    private IEnumerator DequeueDialog()
+    {
+        while(messageQueue.Count > 0)
+        {
+            messageQueueReady = false;
+            var message = messageQueue.Dequeue();
+            if(message.IsDialog)
+            {
+                OnDialogFinished += ReadyQueue;
+                //yield return ShowDialog(message.Dialog);
+                yield return ShowDialog(message.Dialog);
+            }
+            else
+            {
+                OnDialogFinished += ReadyQueue;
+                //yield return ShowDialogText(message.Text);
+                yield return ShowDialogText(message.Text, message.WaitForInput, message.AutoClose);
+            }
+            message.Process();
+
+            yield return null;
+        }
+
+        //CloseDialog();
     }
 
     //show only a single line instead of a dialog
@@ -67,6 +133,7 @@ public class DialogManager : MonoBehaviour
 
     public void CloseDialog()
     {
+        ReadyQueue();
         dialogBox.SetActive(false);
         IsShowing = false;
         currentlyTypingDialog = null;
@@ -84,10 +151,7 @@ public class DialogManager : MonoBehaviour
 
         foreach(var line in dialog.Lines)
         {
-            //
             currentlyTypingDialog = StartCoroutine(TypeDialog(line));
-            //yield return currentlyTypingDialog = TypeDialog(line);
-            //yield return TypeDialog(line);
             
             yield return new WaitUntil(() => isTyping != true);
             yield return new WaitForSeconds(0.1f);
@@ -117,6 +181,7 @@ public class DialogManager : MonoBehaviour
             yield return new WaitForSeconds(1f/lettersPerSecond);
         }
         isTyping = false;
+        ReadyQueue();
     }
 
     private void SkipTyping()
@@ -126,6 +191,68 @@ public class DialogManager : MonoBehaviour
             StopCoroutine(currentlyTypingDialog);
             isTyping = false;
             dialogText.text = textIfSkipped;
+            //!message.Process();
+            ReadyQueue();
+        }
+    }
+}
+
+public class Message
+{
+    private bool isDialog = true;
+    private Dialog dialog;
+    private string text = "";
+    private bool processed = false;
+    private bool waitForInput;
+    private bool autoClose;
+
+    public bool IsDialog => isDialog;
+    public Dialog Dialog => dialog;
+    public string Text => text;
+    public bool Processed => processed;
+    public bool WaitForInput => waitForInput;
+    public bool AutoClose => autoClose;
+
+    public Message(Dialog _dialog)
+    {
+        dialog = _dialog;
+        isDialog = true;
+        text = "";
+
+        LogMessage();
+    }
+
+    public Message(string _text, bool _waitForInput=true, bool _autoClose=true)
+    {
+        text = _text;
+        isDialog = false;
+        dialog = null;
+        waitForInput = _waitForInput;
+        autoClose = _autoClose;
+
+        LogMessage();
+    }
+
+    public void Process()
+    {
+        processed = true;
+    }
+
+    public void LogMessage()
+    {
+        if(isDialog)
+        {
+            if(dialog != null)
+            {
+                foreach(string line in dialog.Lines)
+                {
+                    Debug.Log(line);
+                }
+            }
+        }
+        else
+        {
+            Debug.Log(text);
         }
     }
 }

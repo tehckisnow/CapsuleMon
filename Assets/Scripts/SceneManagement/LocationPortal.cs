@@ -13,9 +13,12 @@ public class LocationPortal : MonoBehaviour, IPlayerTriggerable
 
     public void OnPlayerTriggered(PlayerController player)
     {
-        this.player = player;
-        player.Character.IsMoving = false;
-        StartCoroutine(Teleport());
+        if(!player.OnBike)
+        {
+            this.player = player;
+            player.Character.IsMoving = false;
+            StartCoroutine(Teleport());
+        }
     }
 
     public bool TriggerRepeatedly => false;

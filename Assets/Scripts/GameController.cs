@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution, NameSetter, MonInfoScreen, ConfirmationMenu, OptionsMenu, SetMonNick, MonStorage, MoveSelectionUI, ChooseMonToNickname, Shop }
+public enum GameState { FreeRoam, Battle, Dialog, Cutscene, Menu, PartyScreen, Bag, StarterSelectMenu, Paused, Evolution, NameSetter, MonInfoScreen, ConfirmationMenu, OptionsMenu, SetMonNick, MonStorage, MoveSelectionUI, ChooseMonToNickname, Shop, Console, CheatMenu, ControlsTut }
 
 public class GameController : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
     [SerializeField] PartyScreen partyScreen;
     public PartyScreen PartyScreen => partyScreen;
     [SerializeField] InventoryUI inventoryUI;
-    [SerializeField] NameSetterMenu nameSetterMenu;
+    [SerializeField] public NameSetterMenu nameSetterMenu;
     [SerializeField] MonInfoScreen monInfoScreen;
     [SerializeField] public ConfirmationMenu confirmationMenu;
     [SerializeField] NicknameMenu nicknameMenu;
@@ -26,6 +26,9 @@ public class GameController : MonoBehaviour
     [SerializeField] MonStorageUI monStorage;
     [SerializeField] MoveSelectionUI moveSelectionUI;
     [SerializeField] ShopUI shopUI;
+    [SerializeField] ConsoleUI consoleUI;
+    [SerializeField] CheatMenuUI cheatMenu;
+    [SerializeField] ControlsTut controlsTut;
 
     //[SerializeField] SelectStarter selectStarter;
     [SerializeField] GameObject selectStarterPrefab;
@@ -251,14 +254,16 @@ public class GameController : MonoBehaviour
 
             if(val == mon.Moves.Count)
             {
-                StartCoroutine(DialogManager.Instance.ShowDialogText($"{mon.Name} did not learn {newMove.Name}"));
+                //StartCoroutine(DialogManager.Instance.ShowDialogText($"{mon.Name} did not learn {newMove.Name}"));
+                StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} did not learn {newMove.Name}"));
             }
             else
             {
                 Move moveToRemove = mon.Moves[val];
                 mon.Moves.Remove(moveToRemove);
                 mon.LearnMove(newMove);
-                StartCoroutine(DialogManager.Instance.ShowDialogText($"{mon.Name} forgot {moveToRemove.Base.Name} and learned {newMove.Name}"));
+                //StartCoroutine(DialogManager.Instance.ShowDialogText($"{mon.Name} forgot {moveToRemove.Base.Name} and learned {newMove.Name}"));
+                StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} forgot {moveToRemove.Base.Name} and learned {newMove.Name}"));
             }
             // wait for dialog to close, then mon.SetReadyForMove();
             StartCoroutine(WhenDialogClose(() => mon.SetReadyForMove()));
@@ -283,6 +288,21 @@ public class GameController : MonoBehaviour
     public void OpenShopUI(Shop shop)
     {
         shopUI.Open(shop);
+    }
+
+    public void OpenConsole()
+    {
+        consoleUI.Open();
+    }
+
+    public void OpenCheatMenu()
+    {
+        cheatMenu.Open();
+    }
+
+    public void OpenControlsTut()
+    {
+        controlsTut.Open();
     }
 
     public IEnumerator WhenDialogClose(Action action)
@@ -312,6 +332,7 @@ public class GameController : MonoBehaviour
 
     private void EndBattle(bool won)
     {
+        TrainerController lostTrainer = trainer;
         if(trainer != null && won == true)
         {
             trainer.BattleLost();
@@ -326,15 +347,18 @@ public class GameController : MonoBehaviour
 
         if(!won)
         {
-            //! white out
             var warpController = PlayerController.Instance.GetComponent<WarpController>();
-            //warpController.GoToLastWarp();
             StartCoroutine(warpController.GoToLastWarpAnim());
         }
         else
         {
             var playerParty = playerController.GetComponent<MonParty>();
             //!StartCoroutine(playerParty.CheckForEvolutions());
+            
+            if(lostTrainer != null && lostTrainer.IsGymLeader)
+            {
+                lostTrainer.afterBattleAction?.Invoke();
+            }
         }
     }
 
@@ -457,6 +481,18 @@ public class GameController : MonoBehaviour
         {
             shopUI.HandleUpdate();
         }
+        else if(state == GameState.Console)
+        {
+            consoleUI.HandleUpdate();
+        }
+        else if(state == GameState.CheatMenu)
+        {
+            cheatMenu.HandleUpdate();
+        }
+        else if(state == GameState.ControlsTut)
+        {
+            controlsTut.HandleUpdate();
+        }
         else if(state == GameState.Bag)
         {
             Action onBack = () =>
@@ -474,7 +510,8 @@ public class GameController : MonoBehaviour
     {
         var mon = monToRelease;
         MonParty.GetPlayerParty().RemoveMon(mon);
-        yield return DialogManager.Instance.ShowDialogText($"{mon.Name} has been released.");
+        //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} has been released.");
+        yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} has been released.");
         state = GameState.PartyScreen;
     }
 
@@ -565,6 +602,10 @@ public class GameController : MonoBehaviour
             //quit
             Destroy(FindObjectOfType<EssentialObjects>().gameObject);
             SceneManager.LoadScene("Opening");
+        }
+        else if(selectedItem == 5)
+        {
+            OpenControlsTut();
         }
     }
 }

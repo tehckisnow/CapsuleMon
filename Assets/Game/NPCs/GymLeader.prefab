@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 7732630952677863111}
   - component: {fileID: 7732630952677863131}
   - component: {fileID: 7732630952677863109}
+  - component: {fileID: 5459303835397178912}
   - component: {fileID: 1918744947110840224}
   - component: {fileID: 7732630952677863128}
   - component: {fileID: 7732630952677863129}
@@ -257,10 +258,11 @@ MonoBehaviour:
     - It would appear that my luck has run out.
   dialogAfterBattle:
     lines:
-    - Congratulations!
+    - Keep training hard!
   battleReward: 0
   exclamation: {fileID: 7732630951785098140}
   fovPivot: {fileID: 7732630952536447024}
+  isGymLeader: 1
 --- !u!114 &7732630952677863131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   runModifier: 2
+  bikeModifier: 4
   facing: 1
   originTransform: {fileID: 7732630952546828481}
 --- !u!114 &7732630952677863109
@@ -292,6 +295,35 @@ MonoBehaviour:
   mons:
   - _base: {fileID: 11400000, guid: c0e33bdeeb091e948be2d91bc7f0ee83, type: 2}
     level: 3
+--- !u!114 &5459303835397178912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7732630952677863133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 447cf2c559d912744b42d58cf8ba55c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  badgeDialog:
+    lines:
+    - Congratulations! As proof of your victory, I award you with the NORMAL BADGE!
+    - This is undoubtedly the first of many such badges you will earn.
+  badge: {fileID: 11400000, guid: 37f87b3603a74c34eae1bf08ac51b4bb, type: 2}
+  rewardDialog:
+    lines:
+    - In addition to that, I would like you to have this HM, which contains the move
+      CUT.
+    - You can use it to teach a mon the move CUT!
+  rewardItem: {fileID: 11400000, guid: 87ce6b076e4c38841aeaa4ec5af489b9, type: 2}
+  endDialog:
+    lines:
+    - This is the start of your journey into a whole new world to explore filled
+      with new and exciting people to meet.
+    - It may be frightening at first, but I am confident that you are up to the challenge.
+    - Now get out there and catch some mons!
 --- !u!114 &1918744947110840224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,8 +376,7 @@ SpriteRenderer:
   m_SortingLayerID: -1428774911
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 3829628905000939777, guid: 8fed2d7878af101479711400063d53b6,
-    type: 3}
+  m_Sprite: {fileID: 567033739634847838, guid: 6fe59322d3d54eb4195f2da43ae80060, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

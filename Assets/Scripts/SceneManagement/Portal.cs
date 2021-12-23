@@ -14,9 +14,12 @@ public class Portal : MonoBehaviour , IPlayerTriggerable
 
     public void OnPlayerTriggered(PlayerController player)
     {
-        this.player = player;
-        player.Character.IsMoving = false;
-        StartCoroutine(SwitchScene());
+        if(!player.OnBike)
+        {
+            this.player = player;
+            player.Character.IsMoving = false;
+            StartCoroutine(SwitchScene());
+        }
     }
 
     public bool TriggerRepeatedly => false;
@@ -49,4 +52,4 @@ public class Portal : MonoBehaviour , IPlayerTriggerable
     public Transform SpawnPoint => spawnPoint;
 }
 
-public enum DestinationIdentifier { A, B, C, D, E, F, G }
+public enum DestinationIdentifier { A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z }

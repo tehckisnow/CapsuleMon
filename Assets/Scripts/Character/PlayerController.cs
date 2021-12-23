@@ -8,14 +8,17 @@ public class PlayerController : MonoBehaviour, ISavable
 {
     [SerializeField] string name;
     [SerializeField] Sprite sprite;
-    [SerializeField] float moveSpeed = 5;
-    [SerializeField] float runModifier = 2;
+    
+    [SerializeField] ItemBase bikeScriptableObject;
 
     [SerializeField] int money;
     public int Money {
         get { return money; }
         set { money = value; }
     }
+
+    [SerializeField] int stepsPerPoisonDamage = 4;
+    private int stepsForPoison;
 
     private bool isMoving;
     private bool isRunning;
@@ -24,11 +27,25 @@ public class PlayerController : MonoBehaviour, ISavable
     private Animator animator;
     private Character character;
 
+    private bool onBike = false;
+    public bool OnBike => onBike;
+
+    private bool isOutside = true;
+    public bool IsOutside {
+        get { return isOutside; }
+        set { isOutside = value; }
+    }
+
+    private MonParty playerParty;
+
+    [SerializeField] private bool cheatsOn = false;
+
     public static PlayerController Instance { get; private set; }
 
     private void Awake()
     {
         Instance = this;
+        playerParty = MonParty.GetPlayerParty();
     }
 
     private void Start()
@@ -39,6 +56,23 @@ public class PlayerController : MonoBehaviour, ISavable
 
     public void HandleUpdate()
     {
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            if(cheatsOn)
+            {
+                GameController.Instance.OpenCheatMenu();
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            OpenConsole();
+        }
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            ToggleBike();
+        }
+
         if(!character.IsMoving)
         {
             //running
@@ -68,6 +102,9 @@ public class PlayerController : MonoBehaviour, ISavable
             }
         }
 
+        animator.SetBool("onBike", onBike);
+        character.IsBiking = onBike;
+
         character.HandleUpdate();
 
         if(Input.GetButtonDown("Submit"))
@@ -86,6 +123,11 @@ public class PlayerController : MonoBehaviour, ISavable
         yield return new WaitForSeconds(2f);
 
         Destroy(cylinder);
+    }
+
+    private void OpenConsole()
+    {
+        GameController.Instance.OpenConsole();
     }
 
     private IEnumerator Interact()
@@ -138,6 +180,52 @@ public class PlayerController : MonoBehaviour, ISavable
         {
             currentlyInTrigger = null;
         }
+
+        CheckForPoison();
+    }
+
+    private void CheckForPoison()
+    {
+        if(playerParty != null && playerParty.Mons.Count > 0)
+        {
+            stepsForPoison++;
+            if(stepsForPoison >= stepsPerPoisonDamage)
+            {
+                stepsForPoison = 0;
+                StartCoroutine(CheckMonsForPoison());
+            }
+        }
+    }
+
+    private IEnumerator CheckMonsForPoison()
+    {
+        foreach(Mon mon in playerParty.Mons)
+        {
+            if(mon.Status != null && mon.Status.Id == ConditionID.psn)
+            {
+                //play poison sound effect
+                //flash screen
+                Fader.Instance.SetColor(Fader.Instance.Color4);
+                yield return Fader.Instance.FadeIn(0.2f);
+                Fader.Instance.SetColor(Fader.Instance.DefaultColor);
+                mon.UpdateHP(1);
+                //check if fainted
+                if(mon.HP < 1 && !mon.isFainted)
+                {
+                    mon.isFainted = true;
+                    yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} has fainted!");
+                    //check for other useable mon
+                    var nextMon = playerParty.GetHealthyMon();
+                    if(nextMon == null)
+                    {
+                        //whiteout and tp to last waypoint
+                        var warpController = GetComponent<WarpController>();
+                        yield return warpController.GoToLastWarpAnim();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public bool SpendMoney(int amount)
@@ -153,9 +241,75 @@ public class PlayerController : MonoBehaviour, ISavable
         }
     }
 
+    public void GetOnBike()
+    {
+        if(!onBike)// && CheckForBike())
+        {
+            if(IsOutside)
+            {
+                onBike = true;
+            }
+            else
+            {
+                StartCoroutine(IndoorBikeMessage());
+            }
+        }
+    }
+
+    IEnumerator IndoorBikeMessage()
+    {
+        //yield return DialogManager.Instance.ShowDialogText($"Prof: HEY! No biking inside!");
+        yield return DialogManager.Instance.QueueDialogTextCoroutine($"Prof: HEY! No biking inside!");
+        //yield return DialogManager.Instance.ShowDialogText($"Woah!");
+        yield return DialogManager.Instance.QueueDialogTextCoroutine($"Woah!");
+        //yield return DialogManager.Instance.ShowDialogText($"Where did he come from?");
+        yield return DialogManager.Instance.QueueDialogTextCoroutine($"Where did he come from?");
+    }
+
+    public void GetOffBike()
+    {
+        onBike = false;
+    }
+
+    public void ToggleBike()
+    {
+        if(CheckForBike())
+        {
+            if(onBike)
+            {
+                GetOffBike();
+            }
+            else
+            {
+                GetOnBike();
+            }
+        }
+    }
+
+    public bool CheckForBike()
+    {
+        var inventory = GetComponent<Inventory>();
+        if(inventory)
+        {
+            return inventory.HasItem(bikeScriptableObject);
+        }
+        else return false;
+    }
+
+    public void CheatsOn()
+    {
+        cheatsOn = true;
+    }
+    public void CheatsOff()
+    {
+        cheatsOn = false;
+    }
+
     public object CaptureState()
     {
         var facing = FacingClass.GetXY(character.Facing);
+
+        Vector2 warpPoint = GetComponent<WarpController>().GetWarpPoint();
 
         var saveData = new PlayerSaveData()
         {
@@ -163,7 +317,10 @@ public class PlayerController : MonoBehaviour, ISavable
             money = money,
             position = new float[] {transform.position.x, transform.position.y, facing.x, facing.y},
             mons = GetComponent<MonParty>().Mons.Select(p => p.GetSaveData()).ToList(),
-            storage = GetComponent<MonStorage>().Mons.Select(p => p.GetSaveData()).ToList()
+            storage = GetComponent<MonStorage>().Mons.Select(p => p.GetSaveData()).ToList(),
+            onBike = onBike,
+            warpPointx = warpPoint.x,
+            warpPointy = warpPoint.y
         };
 
         return saveData;
@@ -204,6 +361,14 @@ public class PlayerController : MonoBehaviour, ISavable
         {
             storage.Mons = saveData.storage.Select(s => new Mon(s)).ToList();
         }
+
+        onBike = saveData.onBike;
+
+        var warpController = GetComponent<WarpController>();
+        if(warpController != null)
+        {
+            warpController.SetWarpPoint(new Vector2(saveData.warpPointx, saveData.warpPointy));
+        }
     }
 
     public string Name {
@@ -226,4 +391,7 @@ public class PlayerSaveData
     public float[] position;
     public List<MonSaveData> mons;
     public List<MonSaveData> storage;
+    public bool onBike;
+    public float warpPointx;
+    public float warpPointy;
 }

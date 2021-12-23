@@ -4,18 +4,34 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 
-[System.Serializable]
-public class MyGameObjectEvent : UnityEvent<GameObject>
-{
-}
-
 public class NPCController : MonoBehaviour, Interactable, ISavable
 {
   [SerializeField] Dialog dialog;
 
   [Header("Quests")]
+  [SerializeField] List<string> flagsToSetOnInteraction;
   [SerializeField] QuestBase questToStart;
   [SerializeField] QuestBase questToComplete;
+
+  public List<string> FlagsToSetOnInteraction {
+    //get { return flagsToSetOnInteraction; }
+    set 
+    {
+      for(int i = 0; i < value.Count; i++)
+      {
+        flagsToSetOnInteraction.Add(value[i]);
+      }
+    }
+  }
+
+  public QuestBase QuestToStart {
+    get { return questToStart; }
+    set { questToStart = value; }
+  }
+  public QuestBase QuestToComplete {
+    get { return questToComplete; }
+    set { questToComplete = value; }
+  }
 
   [Header("Movement")]
   [SerializeField] List<Vector2> movementPattern;
@@ -34,6 +50,7 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
   ItemGiver itemGiver;
   MonGiver monGiver;
   StarterMenuOpener starterMenuOpener;
+  ConditionalQuestSetter conditionalQuestSetter;
 
   private void Awake()
   {
@@ -41,12 +58,31 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
     itemGiver = GetComponent<ItemGiver>();
     monGiver = GetComponent<MonGiver>();
     starterMenuOpener = GetComponent<StarterMenuOpener>();
+    conditionalQuestSetter = GetComponent<ConditionalQuestSetter>();
+    //flagsToSetOnInteraction = new List<string>();
+  }
+
+  public void SetFlags()
+  {
+    Debug.Log("Setting Flags in NPCController");
+    foreach(string flag in flagsToSetOnInteraction)
+    {
+      QuestFlags.Instance.SetFlag(flag, true);
+    }
+    flagsToSetOnInteraction = new List<string>();
   }
 
   public IEnumerator Interact(Transform initiator)
   {
     if(state == NPCState.Idle)
     {
+      SetFlags();
+
+      if(conditionalQuestSetter != null)
+      {
+        conditionalQuestSetter.CheckCondition();
+      }
+
       state = NPCState.Dialog;
       character.LookTowards(initiator.position);
 
@@ -55,8 +91,6 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
         var quest = new Quest(questToComplete);
         yield return quest.CompleteQuest(initiator);
         questToComplete = null;
-
-        Debug.Log($"{quest.Base.Name} completed");
       }
 
       if(itemGiver != null && itemGiver.CanBeGiven())
@@ -65,9 +99,8 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
       }
       if(starterMenuOpener != null && monGiver != null && !monGiver.Used)
       {
-        yield return DialogManager.Instance.ShowDialog(monGiver.Dialog);
-        //string chooseStarterText = "It is dangerous to go alone, take one of these!";
-        //yield return DialogManager.Instance.ShowDialogText(chooseStarterText);
+        //yield return DialogManager.Instance.ShowDialog(monGiver.Dialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(monGiver.Dialog);
         GameController.Instance.StarterSelectMenu();
         yield return new WaitUntil(() => GameController.Instance.State != GameState.StarterSelectMenu);
       }
@@ -82,61 +115,59 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
         yield return activeQuest.StartQuest();
         questToStart = null;
 
-        //check if quest has already been completed
-        if(activeQuest.CanBeCompleted())
-        {
-          //!  appears below as well; consolidate?
-          GameController.Instance.OpenConfirmationMenu(activeQuest.Base.ConfirmationMessage, activeQuest.OnYesFunc, activeQuest.OnNoFunc);
-          yield return GameController.Instance.confirmationMenu.WaitForChoice();
+        //!check if quest has already been completed
+        // if(activeQuest.CanBeCompleted())
+        // {
+        //   //!  appears below as well; consolidate?
+        //   GameController.Instance.OpenConfirmationMenu(activeQuest.Base.ConfirmationMessage, activeQuest.OnYesFunc, activeQuest.OnNoFunc);
+        //   yield return GameController.Instance.confirmationMenu.WaitForChoice();
 
-          if(activeQuest.ConfirmQuestResolve())
-          {
-            yield return activeQuest.CompleteQuest(initiator);
-            activeQuest = null;
-          }
-        }
+        //   if(activeQuest.ConfirmQuestResolve())
+        //   {
+        //     yield return activeQuest.CompleteQuest(initiator);
+        //     activeQuest = null;
+        //   }
+        // }
       }
       else if(activeQuest != null)
       {
         if(activeQuest.CanBeCompleted())
         {
-          //!
-          GameController.Instance.OpenConfirmationMenu(activeQuest.Base.ConfirmationMessage, activeQuest.OnYesFunc, activeQuest.OnNoFunc);
-          yield return GameController.Instance.confirmationMenu.WaitForChoice();
-
-          if(activeQuest.ConfirmQuestResolve())
+          if(activeQuest.Base.PromptToComplete && activeQuest.Base.ConfirmationMessage != null)
           {
-            yield return activeQuest.CompleteQuest(initiator);
-            activeQuest = null;
+            GameController.Instance.OpenConfirmationMenu(activeQuest.Base.ConfirmationMessage, activeQuest.OnYesFunc, activeQuest.OnNoFunc);
+            yield return GameController.Instance.confirmationMenu.WaitForChoice();
+
+            if(activeQuest.ConfirmQuestResolve())
+            {
+              yield return activeQuest.CompleteQuest(initiator);
+              activeQuest = null;
+            }
+          }
+          else
+          {
+              yield return activeQuest.CompleteQuest(initiator);
+              activeQuest = null;
           }
         }
         else
         {
-          yield return DialogManager.Instance.ShowDialog(activeQuest.Base.InProgressDialog);
+          //yield return DialogManager.Instance.ShowDialog(activeQuest.Base.InProgressDialog);
+          yield return DialogManager.Instance.QueueDialogCoroutine(activeQuest.Base.InProgressDialog);
         }
       }
       else
       {
-        yield return DialogManager.Instance.ShowDialog(dialog);
+        //yield return DialogManager.Instance.ShowDialog(dialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(dialog);
         action?.Invoke();
       }
 
       idleTimer = 0f;
       state = NPCState.Idle;
 
-      //StartCoroutine(WaitForDialogAndDoAction(action, initiator.gameObject));
     }
   }
-
-  // IEnumerator WaitForDialogAndDoAction(MyGameObjectEvent unityEvent, GameObject initiatorObj)
-  // {
-  //   yield return DialogManager.Instance.ShowDialog(dialog, () => {
-  //       idleTimer = 0f;
-  //       state = NPCState.Idle;
-  //     });
-  //   yield return new WaitUntil(() => FindObjectOfType<GameController>().state != GameState.Dialog);
-  //   unityEvent?.Invoke(initiatorObj);
-  // }
 
   private void Update()
   {
@@ -178,6 +209,14 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
     var saveData = new NPCQuestSaveData();
     saveData.activeQuest = activeQuest?.GetSaveData();
     
+    if(flagsToSetOnInteraction.Count > 0)
+    {
+      saveData.flagsToSet = flagsToSetOnInteraction;
+    }
+    else
+    {
+      saveData.flagsToSet = new List<string>();
+    }
     //questToStart is a QuestBase, not a Quest, and therefore cannot be converted into QuestSaveData directly
     if(questToStart != null)
     {
@@ -189,6 +228,12 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
       saveData.questToComplete = (new Quest(questToComplete)).GetSaveData();
     }
 
+    if(conditionalQuestSetter != null)
+    {
+      saveData.startDone = conditionalQuestSetter.StartDone;
+      saveData.completeDone = conditionalQuestSetter.CompleteDone;
+    }
+
     return saveData;
   }
 
@@ -197,11 +242,19 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
     var saveData = state as NPCQuestSaveData;
     if(saveData != null)
     {
+      flagsToSetOnInteraction = saveData.flagsToSet;
+      
       activeQuest = (saveData.activeQuest != null)? new Quest(saveData.activeQuest) : null;
 
       questToStart = (saveData.questToStart != null)? new Quest(saveData.questToStart).Base : null;
       
       questToComplete = (saveData.questToComplete != null)? new Quest(saveData.questToComplete).Base : null;
+
+      if(conditionalQuestSetter != null)
+      {
+        conditionalQuestSetter.StartDone = saveData.startDone;
+        conditionalQuestSetter.CompleteDone = saveData.completeDone;
+      }
     }
   }
 }
@@ -212,6 +265,9 @@ public class NPCQuestSaveData
   public QuestSaveData activeQuest;
   public QuestSaveData questToStart;
   public QuestSaveData questToComplete;
+  public bool startDone;
+  public bool completeDone;
+  public List<string> flagsToSet;
 }
 
 public enum NPCState { Idle, Walking, Dialog }

@@ -12,10 +12,15 @@ public class SceneDetails : MonoBehaviour
 
     private List<SavableEntity> savableEntities;
 
+    [SerializeField] private bool isOutdoors = true;
+    public bool IsOutdoors => isOutdoors;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
+            PlayerController.Instance.IsOutside = IsOutdoors;
+
             LoadScene();
             GameController.Instance.SetCurrentScene(this);
 

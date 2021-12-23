@@ -25,8 +25,10 @@ public class Nicknamer : MonoBehaviour
         };
         Action noAction = () =>
         {
-            StartCoroutine(DialogManager.Instance.ShowDialogText(dialogTextDecline));
+            //StartCoroutine(DialogManager.Instance.ShowDialogText(dialogTextDecline));
+            StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine(dialogTextDecline));
             Action revertToFreeRoam = () => GameController.Instance.state = GameState.FreeRoam;
+            //!
             StartCoroutine(GameController.Instance.WhenDialogClose(revertToFreeRoam));
         };
         GameController.Instance.OpenConfirmationMenu(dialogTextAsk, yesAction, noAction);
@@ -39,7 +41,8 @@ public class Nicknamer : MonoBehaviour
 
     IEnumerator NameMon()
     {
-        yield return DialogManager.Instance.ShowDialogText(dialogTextAsk);
+        //yield return DialogManager.Instance.ShowDialogText(dialogTextAsk);
+        yield return DialogManager.Instance.QueueDialogTextCoroutine(dialogTextAsk);
         GameController.Instance.OpenNicknameMenu(monToName, GameState.FreeRoam);
     }
 }

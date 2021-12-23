@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float runModifier = 2f;
+    [SerializeField] float bikeModifier = 4f;
     [SerializeField] Facing facing = Facing.Down;
     public Facing Facing {
         get { return facing; }
@@ -18,6 +19,7 @@ public class Character : MonoBehaviour
 
     public bool IsMoving { get; set; }
     public bool IsRunning {get; set; }
+    public bool IsBiking {get; set; }
 
     private Animator animator;
 
@@ -70,14 +72,18 @@ public class Character : MonoBehaviour
 
         IsMoving = true;
 
-        float run = 1f;
+        float moveModifier = 1f;
         if(IsRunning)
         {
-            run = runModifier;
+            moveModifier = runModifier;
+        }
+        if(IsBiking)
+        {
+            moveModifier = bikeModifier;
         }
         while((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * run * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * moveModifier * Time.deltaTime);
             yield return null;
         }
         transform.position = targetPos;

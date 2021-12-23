@@ -193,7 +193,8 @@ public class InventoryUI : MonoBehaviour
             // In Battle
             if(!item.CanUseInBattle)
             {
-                yield return DialogManager.Instance.ShowDialogText($"This item cannot be used in battle");
+                //yield return DialogManager.Instance.ShowDialogText($"This item cannot be used in battle");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"This item cannot be used in battle");
                 state = InventoryUIState.ItemSelection;
                 yield break;
             }
@@ -203,10 +204,17 @@ public class InventoryUI : MonoBehaviour
             // outside battle
             if(!item.CanUseOutsideBattle)
             {
-                yield return DialogManager.Instance.ShowDialogText($"This item cannot be used outside battle");
+                //yield return DialogManager.Instance.ShowDialogText($"This item cannot be used outside battle");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"This item cannot be used outside battle");
                 state = InventoryUIState.ItemSelection;
                 yield break;
             }
+        }
+
+        if(selectedCategory == (int)ItemCategory.KeyItems)
+        {
+            yield return HandleKeyItems(item as KeyItem);
+            yield break;
         }
 
         if(selectedCategory == (int)ItemCategory.Capsules)
@@ -252,7 +260,8 @@ public class InventoryUI : MonoBehaviour
             }
             else
             {
-                yield return DialogManager.Instance.ShowDialogText($"It wont have any effect!");
+                //yield return DialogManager.Instance.ShowDialogText($"It wont have any effect!");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"It wont have any effect!");
                 ClosePartyScreen();
                 yield break;
             }
@@ -269,7 +278,8 @@ public class InventoryUI : MonoBehaviour
         {
             if(usedItem is RecoveryItem)
             {
-                yield return DialogManager.Instance.ShowDialogText($"{player.Name} used {usedItem.Name}");
+                //yield return DialogManager.Instance.ShowDialogText($"{player.Name} used {usedItem.Name}");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"{player.Name} used {usedItem.Name}");
             }
             onItemUsed?.Invoke(usedItem);
         }
@@ -277,10 +287,39 @@ public class InventoryUI : MonoBehaviour
         {
             //! I think I want to move this
             if(selectedCategory == (int)ItemCategory.Items)
-                yield return DialogManager.Instance.ShowDialogText($"It wont have any effect!");
+                //yield return DialogManager.Instance.ShowDialogText($"It wont have any effect!");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"It wont have any effect!");
         }
         ClosePartyScreen();
         UpdateItemList();
+    }
+
+    IEnumerator HandleKeyItems(KeyItem item)
+    {
+        if(item.type == KeyItemType.Bike)
+        {
+            PlayerController.Instance.ToggleBike();
+            GameController.Instance.state = GameState.FreeRoam;
+            state = InventoryUIState.ItemSelection;
+            gameObject.SetActive(false);
+        }
+
+        if(item.type == KeyItemType.Badge)
+        {
+            //yield return DialogManager.Instance.ShowDialogText($"This is the {item.Name} that you earned for defeating the leader of the gym.");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"This is the {item.Name} that you earned for defeating the leader of the gym.");
+            yield return state = InventoryUIState.ItemSelection;
+        }
+
+        if(item.type == KeyItemType.Generic)
+        {
+            //yield return DialogManager.Instance.ShowDialogText($"This is {item.Name}.");
+            //yield return DialogManager.Instance.QueueDialogTextCoroutine($"This is {item.Name}.");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{item.Description}");
+            yield return state = InventoryUIState.ItemSelection;
+        }
+
+        //UpdateItemList();
     }
 
     IEnumerator HandleLevelUpItems()
@@ -291,13 +330,15 @@ public class InventoryUI : MonoBehaviour
 
         if(item is LevelUpItem)
         {
-            yield return DialogManager.Instance.ShowDialogText($"{player.Name} used {item.Name}");
+            //yield return DialogManager.Instance.ShowDialogText($"{player.Name} used {item.Name}");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{player.Name} used {item.Name}");
             
-            int exp = mon.Base.GetExpForLevel(mon.Level + 1);
+            int exp = mon.Base.GetExpForLevel(mon.Level + 1) - mon.Exp;
             mon.Exp += exp;
             mon.CheckForLevelUp();
             
-            yield return DialogManager.Instance.ShowDialogText($"{mon.Name} grew to level {mon.Level}!");
+            //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} grew to level {mon.Level}!");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} grew to level {mon.Level}!");
 
             yield return mon.TryToLearnMove();
 
@@ -323,25 +364,30 @@ public class InventoryUI : MonoBehaviour
 
             if(mon.HasMove(tmItem.Move))
             {
-                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} already knows {tmItem.Move.Name}");
+                //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} already knows {tmItem.Move.Name}");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} already knows {tmItem.Move.Name}");
                 yield break;
             }
 
             if(!tmItem.CanBeTaught(mon))
             {
-                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} can't learn {tmItem.Move.Name}");
+                //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} can't learn {tmItem.Move.Name}");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} can't learn {tmItem.Move.Name}");
                 yield break;
             }
 
             if(mon.Moves.Count < MonBase.MaxNumberOfMoves)
             {
                 mon.LearnMove(tmItem.Move);
-                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} learned {tmItem.Move.Name}");
+                //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} learned {tmItem.Move.Name}");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} learned {tmItem.Move.Name}");
             }
             else
             {
-                yield return DialogManager.Instance.ShowDialogText($"{mon.Name} is trying to learn {tmItem.Move.Name}");
-                yield return DialogManager.Instance.ShowDialogText($"But it cannot learn more than {MonBase.MaxNumberOfMoves}");
+                //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} is trying to learn {tmItem.Move.Name}");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} is trying to learn {tmItem.Move.Name}");
+                //yield return DialogManager.Instance.ShowDialogText($"But it cannot learn more than {MonBase.MaxNumberOfMoves}");
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"But it cannot learn more than {MonBase.MaxNumberOfMoves}");
                 yield return ChooseMoveToForget(mon, tmItem.Move);
                 yield return new WaitUntil(() => state != InventoryUIState.MoveToForget);
             }
@@ -351,7 +397,8 @@ public class InventoryUI : MonoBehaviour
     IEnumerator ChooseMoveToForget(Mon mon, MoveBase newMove)
     {
         state = InventoryUIState.Busy;
-        yield return DialogManager.Instance.ShowDialogText($"Choose a move you want to forget", true, false);
+        //yield return DialogManager.Instance.ShowDialogText($"Choose a move you want to forget", true, false);
+        yield return DialogManager.Instance.QueueDialogTextCoroutine($"Choose a move you want to forget", true, false);
         moveSelectionUI.gameObject.SetActive(true);
         moveSelectionUI.SetMoveData(mon.Moves.Select(x => x.Base).ToList(), newMove);
         moveToLearn = newMove;
@@ -449,13 +496,15 @@ public class InventoryUI : MonoBehaviour
         if(moveIndex == MonBase.MaxNumberOfMoves)
         {
             //don't learn the new move
-            yield return DialogManager.Instance.ShowDialogText($"{mon.Name} did not learn {moveToLearn.Name}");
+            //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} did not learn {moveToLearn.Name}");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} did not learn {moveToLearn.Name}");
         }
         else
         {
             //forget the selected move and learn new move
             var selectedMove = mon.Moves[moveIndex].Base;
-            yield return DialogManager.Instance.ShowDialogText($"{mon.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}");
+            //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}");
             
             mon.Moves[moveIndex] = new Move(moveToLearn);
         }

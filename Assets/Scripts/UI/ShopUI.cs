@@ -7,7 +7,7 @@ using System;
 
 public class ShopUI : MonoBehaviour
 {
-    [SerializeField] List<ShopItem> items;
+    //[SerializeField] List<ShopItem> items;
 
     [SerializeField] GameObject shopUI;
     [SerializeField] GameObject listObject;
@@ -228,7 +228,8 @@ public class ShopUI : MonoBehaviour
         }
         
         //show result of transaction
-        StartCoroutine(DialogManager.Instance.ShowDialogText(message));
+        //StartCoroutine(DialogManager.Instance.ShowDialogText(message));
+        StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine(message));
 
         //since shop items are currently infinite, these are unneeded
         //RefreshList();

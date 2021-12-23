@@ -20,6 +20,7 @@ public class MonConsole : MonoBehaviour, Interactable
 
     IEnumerator ShowDialog()
     {
-        yield return DialogManager.Instance.ShowDialogText(dialog);
+        //yield return DialogManager.Instance.ShowDialogText(dialog);
+        yield return DialogManager.Instance.QueueDialogTextCoroutine(dialog);
     }
 }

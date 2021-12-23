@@ -53,7 +53,8 @@ public class EvolutionManager : MonoBehaviour
         var newMonBase = evolution.EvolveInto;
         animImage = monImage.GetComponent<AnimatedImage>();
         
-        yield return DialogManager.Instance.ShowDialogText($"{mon.Name} is evolving!");
+        //yield return DialogManager.Instance.ShowDialogText($"{mon.Name} is evolving!");
+        yield return DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} is evolving!");
         isEvolving = true;
 
         //mon.Evolve(evolution);
@@ -68,7 +69,8 @@ public class EvolutionManager : MonoBehaviour
         if(evolutionSuccess)
         {
             mon.Evolve(evolution);
-            yield return DialogManager.Instance.ShowDialogText($"{oldMonName} evolved into {mon.Base.Name}!");
+            //yield return DialogManager.Instance.ShowDialogText($"{oldMonName} evolved into {mon.Base.Name}!");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{oldMonName} evolved into {mon.Base.Name}!");
             if(rename)
             {
                 mon.Name = mon.Base.Name;
@@ -78,7 +80,8 @@ public class EvolutionManager : MonoBehaviour
         else
         {
             monImage.sprite = mon.Base.FrontSprite;
-            yield return DialogManager.Instance.ShowDialogText($"{oldMonName} stopped evolving!");
+            //yield return DialogManager.Instance.ShowDialogText($"{oldMonName} stopped evolving!");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{oldMonName} stopped evolving!");
         }
         
         //yield return DialogManager.Instance.ShowDialogText($"{oldMonName} evolved into {mon.Base.Name}");
@@ -113,67 +116,4 @@ public class EvolutionManager : MonoBehaviour
         evolutionUI.SetActive(false);
     }
 
-    // IEnumerator CheckForEvolutionMove(Mon mon)
-    // {
-    //     var moves = mon.Base.MovesLearnedUponEvolution;
-    //     foreach(MoveBase move in moves)
-    //     {
-    //         if(move != null)
-    //         {
-    //             if(mon.Moves.Count < MonBase.MaxNumberOfMoves)
-    //             {
-    //                 mon.LearnMove(move);
-    //                 yield return DialogManager.Instance.ShowDialogText($"{mon.Name} learned {move.Name}");
-    //             }
-    //             else
-    //             {
-    //                 yield return DialogManager.Instance.ShowDialogText($"{mon.Name} is trying to learn {move.Name}");
-    //                 yield return DialogManager.Instance.ShowDialogText($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
-    //                 //yield return ChooseMoveToForget(mon, move);
-    //                 //yield return new WaitUntil(() => State != BattleState.MoveToForget);
-    //                 //yield return new WaitForSeconds(2f);
-    //             }
-    //         }
-    //     }
-
-        // IEnumerator ChooseMoveToForget(Mon mon, MoveBase newMove)
-        // {
-        //     state = BattleState.Busy;
-        //     yield return DialogManager.Instance.ShowDialogText($"Choose a move you want to forget");
-        //     moveSelectionUI.gameObject.SetActive(true);
-        //     moveSelectionUI.SetMoveData(mon.Moves.Select(x => x.Base).ToList(), newMove);
-        //     moveToLearn = newMove;
-
-        //     state = BattleState.MoveToForget;
-        // }
-
-        // void CheckState()
-        // {
-        //     if(state == BattleState.MoveToForget)
-        //     {
-        //         Action<int> onMoveSelected = (moveIndex) =>
-        //         {
-        //             moveSelectionUI.gameObject.SetActive(false);
-        //             if(moveIndex == MonBase.MaxNumberOfMoves)
-        //             {
-        //                 //don't learn the new move
-        //                 StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Mon.Name} did not learn {moveToLearn.Name}"));
-        //             }
-        //             else
-        //             {
-        //                 //forget the selected move and learn new move
-        //                 var selectedMove = playerUnit.Mon.Moves[moveIndex].Base;
-        //                 StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Mon.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}"));
-                        
-        //                 playerUnit.Mon.Moves[moveIndex] = new Move(moveToLearn);
-        //             }
-        //             moveToLearn = null;
-        //             state = BattleState.RunningTurn;
-        //         };
-
-        //         moveSelectionUI.HandleMoveSelection(onMoveSelected);
-        //     }
-        // }
-
-    //}
 }

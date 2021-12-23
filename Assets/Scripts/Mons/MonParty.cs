@@ -29,7 +29,10 @@ public class MonParty : MonoBehaviour
     {
         foreach(var mon in mons)
         {
-            mon.Init();
+            if(!mon.Initialized)
+            {
+                mon.Init();
+            }
         }
     }
 
@@ -61,7 +64,8 @@ public class MonParty : MonoBehaviour
         if(mons.Count < 2)
         {
             string message = "You probably shouldn't get rid of your last mon...";
-            StartCoroutine(DialogManager.Instance.ShowDialogText(message));
+            //StartCoroutine(DialogManager.Instance.ShowDialogText(message));
+            StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine(message));
             return true;
         }
         else
@@ -102,7 +106,8 @@ public class MonParty : MonoBehaviour
     {
         MonStorage.Instance.AddMon(mon);
         RemoveMon(mon);
-        StartCoroutine(DialogManager.Instance.ShowDialogText($"{mon.Name} has been sent to the digital storage system."));
+        //StartCoroutine(DialogManager.Instance.ShowDialogText($"{mon.Name} has been sent to the digital storage system."));
+        StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine($"{mon.Name} has been sent to the digital storage system."));
     }
 
     public void AddMon(Mon newMon, int index)

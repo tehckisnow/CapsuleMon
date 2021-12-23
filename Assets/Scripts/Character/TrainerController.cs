@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TrainerController : MonoBehaviour, Interactable, ISavable
 {
@@ -12,11 +13,16 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
     [SerializeField] int battleReward;
     [SerializeField] GameObject exclamation;
     [SerializeField] GameObject fovPivot;
+    [SerializeField] bool isGymLeader = false;
+    public bool IsGymLeader => isGymLeader;
     
+    public Action afterBattleAction;
+
     // State
     private bool battleLost = false;
 
     Character character;
+
 
     private void Awake()
     {
@@ -33,19 +39,16 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
         character.LookTowards(initiator.position);
         if(!battleLost)
         {
-            yield return DialogManager.Instance.ShowDialog(dialog);
+            //yield return DialogManager.Instance.ShowDialog(dialog);
+            yield return DialogManager.Instance.QueueDialogCoroutine(dialog);
             GameController.Instance.StartTrainerBattle(this);
         }
         else
         {
-            yield return DialogManager.Instance.ShowDialog(dialogAfterBattle);
+            //yield return DialogManager.Instance.ShowDialog(dialogAfterBattle);
+            yield return DialogManager.Instance.QueueDialogCoroutine(dialogAfterBattle);
         }
     }
-
-    // private void Update()
-    // {
-    //     character.HandleUpdate();
-    // }
 
     public IEnumerator TriggerTrainerBattle(PlayerController player)
     {
@@ -62,7 +65,8 @@ public class TrainerController : MonoBehaviour, Interactable, ISavable
         yield return character.Move(moveVec);
 
         //show dialog
-        yield return DialogManager.Instance.ShowDialog(dialog);
+        //yield return DialogManager.Instance.ShowDialog(dialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(dialog);
         GameController.Instance.StartTrainerBattle(this);
     }
 

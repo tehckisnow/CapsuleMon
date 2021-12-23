@@ -588,16 +588,19 @@ public class BattleSystem : MonoBehaviour
         yield return TrainerWantsToBattle();
         yield return new WaitUntil(() => !animPlaying);
         
-        yield return DialogManager.Instance.ShowDialogText($"{player.Name} defeated {trainer.Name}!");
+        //yield return DialogManager.Instance.ShowDialogText($"{player.Name} defeated {trainer.Name}!");
+        yield return DialogManager.Instance.QueueDialogTextCoroutine($"{player.Name} defeated {trainer.Name}!");
         
         //! automatically include trainer name here in line below;
-        yield return DialogManager.Instance.ShowDialog(trainer.LoseDialog);
+        //yield return DialogManager.Instance.ShowDialog(trainer.LoseDialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(trainer.LoseDialog);
         
         if(trainer.BattleReward > 0)
         {
             player.Money += trainer.BattleReward;
             GameController.Instance.UpdateMoneyDisplay();
-            yield return DialogManager.Instance.ShowDialogText($"{player.Name} received ${trainer.BattleReward}!");
+            //yield return DialogManager.Instance.ShowDialogText($"{player.Name} received ${trainer.BattleReward}!");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{player.Name} received ${trainer.BattleReward}!");
         }
 
         BattleOver(true);

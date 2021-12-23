@@ -17,7 +17,14 @@ public class TempPersistentNameSetter : MonoBehaviour
     private void Finish(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= Finish;
+        GameController.Instance.nameSetterMenu.OnNameSetEnd += StartTutorial;
         GameController.Instance.StartNameSetterMenu();
         Destroy(gameObject);
+    }
+
+    private void StartTutorial()
+    {
+        GameController.Instance.OpenControlsTut();
+        GameController.Instance.nameSetterMenu.OnNameSetEnd -= StartTutorial;
     }
 }

@@ -33,10 +33,12 @@ public class RecoveryItem : ItemBase
             else if(revive)
             {
                 mon.IncreaseHP(mon.MaxHp / 2);
+                mon.isFainted = false;
             }
             else if(maxRevive)
             {
                 mon.IncreaseHP(mon.MaxHp);
+                mon.isFainted = false;
             }
 
             mon.CureStatus();

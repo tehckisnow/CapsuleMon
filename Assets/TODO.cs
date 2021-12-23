@@ -159,15 +159,77 @@ public class TODO : MonoBehaviour
 
     //paint outside of monmart or something
 
+    // Scripts modified to use new DialogQueue:
+    //     Pickup
+    //     GymLeaderReward
+    //     PlayerController
+    //     GameController
+    //     EvolutionManager
+    //     MonConsole
+    //     ItemGiver
+    //     InventoryUI
+    //     Mon
+    //     MonGiver
+    //     MonParty
+    //     MonStorage
+    //     Quest
+    //     NicknameMenu
+    //     Nicknamer
+    //     ShopUI
+    //     BattleSystem
+    //     Sign
+    //     NPCController
+    //     StoryItem
+    //     TrainerController
+
+
     TODO:
 
-    re-enable storyevent blocking route1
+    //re-enable storyevent blocking route1
 
-    lower pidge's xp yield
+    //disable cheats by default
 
-    place computer storage
+    //lower pidge's xp yield
 
-    place nicknamer
+    //place computer storage
+
+    //place nicknamer
+
+    //ending in menu state when using Normal badge
+
+    //using a rare candy leaves the mon with a full XP bar
+
+    //finish quest confirmation prompt is coming up when finishing a quest on the same interaction as starting it
+
+    //cheat to heal mon/party
+
+    //saveGame isn't restoring lost hp
+
+    //items in cheat menu are clustered and overlapping
+
+    //poison hurts mons outside of battle.  if all mon faint, tp to last warppoint
+
+    //ensure that lastWarppoint is being saved
+
+    //ensure that every place a mon can be healed or cured of poison, mon.isFainted is set to false
+        //use revive in itemMenu and in battle
+    
+    //fix front door collision
+
+    //Ensure everything works from titleScreen
+
+    //tutorial controls
+
+    //nurse in Town2 didn't heal my mon
+
+    //more money
+
+    //ensure confirmation message on completing quests is optional (toggle bool)
+
+    //where do you get the bike from?
+    //customActionObject to get bike quest
+
+    //Dialog system Queue
 
     //lv 100 is 2 lines on monInfo screen
 
@@ -188,13 +250,18 @@ public class TODO : MonoBehaviour
 
     //nickname menu: previous name should not use Base
     
-    Optional:
+    //Optional:
 
         //Store Interacton/UI to purchase items
 
-        bike
+        //bike
+            //add to inventory
+            //use in inventory
+            //only use outside
+            //message from prof if use inside
+            //block doors when on bike
     
-    content
+    //content
         //starter mon
             //starter mons' moves
             //starter mon evolutions
@@ -205,14 +272,14 @@ public class TODO : MonoBehaviour
                 //other mons' evolutions' moves
         //items
             //gym badge (open access to new area?)
-        trainers
-            trainers' teams
-        gym
+        //trainers
+            //trainers' teams
+        //gym
             //building layout/theme/type/puzzle
             //gym leader
-                leader's team
-                reward (a new TM?)
-            initiate congratulatory dialog (cutscene) right after battle has ended (if won)
+                //leader's team
+                //reward (a new TM?)
+            //initiate congratulatory dialog (cutscene) right after battle has ended (if won)
 
     //Opening
 
@@ -228,16 +295,26 @@ public class TODO : MonoBehaviour
     
     be able to reorder mons in mon storage
 
+    automatically include trainer(/npc) name in certain dialogs
+
+    HM moves can be used outside of battle
+        CUT can temporarily remove certain small trees
+
+    Opponent Scaler: attach to a trainer and it adjusts level of their mons based on level of player's mons (or base it on player's performance instead of level)
+
+    support using console and cheats in battle
+
     --------------------------------------
 
     mon friendship levels
 
     interaction that gives money?
 
+    //item that gives money?
+
     one-time purchases from mart? make them savable? limited quantity of stock?
 
     items
-        item that gives money?
         escape items
             pokedoll
         valuable/exchangable items
@@ -275,7 +352,7 @@ public class TODO : MonoBehaviour
             energy powder (heals 60hp)
             energy root (heals 120hp)
             revival herb (revives mon with full hp)
-        Key items
+        //Key items
 
         item storage
 

@@ -60,7 +60,8 @@ public class NicknameMenu : MonoBehaviour
         {
             var oldName = mon.Name;
             mon.Name = input.text;
-            yield return DialogManager.Instance.ShowDialogText($"{oldName} is now known as {mon.Name}!");
+            //yield return DialogManager.Instance.ShowDialogText($"{oldName} is now known as {mon.Name}!");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{oldName} is now known as {mon.Name}!");
             MonParty.GetPlayerParty().UpdateParty();
             
             //Wait until dialog is closed to prevent overlapping text with next process?
@@ -69,7 +70,8 @@ public class NicknameMenu : MonoBehaviour
         }
         else
         {
-            yield return DialogManager.Instance.ShowDialogText($"{name} is not a valid name");
+            //yield return DialogManager.Instance.ShowDialogText($"{name} is not a valid name");
+            yield return DialogManager.Instance.QueueDialogTextCoroutine($"{name} is not a valid name");
             input.text = "";
             input.Select();
             input.ActivateInputField();

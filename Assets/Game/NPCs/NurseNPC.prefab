@@ -137,6 +137,7 @@ MonoBehaviour:
     - Just a moment.
     - ...
     - All done!  Have a wonderful day!
+  flagsToSetOnInteraction: []
   questToStart: {fileID: 0}
   questToComplete: {fileID: 0}
   movementPattern: []
@@ -145,7 +146,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1893540962865628529}
-        m_MethodName: HealParty
+        m_MethodName: HealPlayerMonParty
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -169,6 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   runModifier: 2
+  bikeModifier: 4
   facing: 1
   originTransform: {fileID: 1893540962670516419}
 --- !u!212 &1893540962865628536

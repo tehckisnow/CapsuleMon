@@ -423,6 +423,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trainer (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[1]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: 62ed98a3c02902646aa45150d4c8ef48,
+        type: 2}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[1].level
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[0]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: 043a4be6e5ae0bb4691c349e142866cb,
+        type: 2}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[0].level
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
       propertyPath: loseDialog.lines.Array.size
@@ -471,7 +498,7 @@ PrefabInstance:
     - target: {fileID: 6827964330995525719, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525719, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
@@ -527,6 +554,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3399900916954251569, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: uniqueId
+      value: a4c39159-d8a8-4f23-9e9d-ef743889dd14
+      objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525708, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
       propertyPath: m_Name
@@ -646,6 +678,38 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Trainer (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[1]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: f4f689713e8b3f5459a2764ce91f9409,
+        type: 2}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[1].level
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[2]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: 1cf94f13068a2a84aa0a5b6b71e00057,
+        type: 2}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[2].level
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[0].level
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
@@ -1365,6 +1429,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trainer (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[1]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: 2c2e139f9e7444648bc59c168b9bf43b,
+        type: 2}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[1].level
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[0]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: 20e879a36efa166418fb044161ee7f0e,
+        type: 2}
+    - target: {fileID: 6827964330995525716, guid: 639ab25be9c5d6648a27810e40d02078,
+        type: 3}
+      propertyPath: mons.Array.data[0].level
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525718, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
       propertyPath: loseDialog.lines.Array.size
@@ -1408,7 +1499,7 @@ PrefabInstance:
     - target: {fileID: 6827964330995525719, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -58.5
+      value: -57.5
       objectReference: {fileID: 0}
     - target: {fileID: 6827964330995525719, guid: 639ab25be9c5d6648a27810e40d02078,
         type: 3}
@@ -1803,6 +1894,55 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[1]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: 1cf94f13068a2a84aa0a5b6b71e00057,
+        type: 2}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[1].level
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[2]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: 62ed98a3c02902646aa45150d4c8ef48,
+        type: 2}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[2].level
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[3]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: c0e33bdeeb091e948be2d91bc7f0ee83,
+        type: 2}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[3].level
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[0]._base
+      value: 
+      objectReference: {fileID: 11400000, guid: fb356d7eba58fb04c94a75bfd18c8b50,
+        type: 2}
+    - target: {fileID: 7732630952677863109, guid: 3d9826e99828cda44bd89cdd29133528,
+        type: 3}
+      propertyPath: mons.Array.data[0].level
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 7732630952677863110, guid: 3d9826e99828cda44bd89cdd29133528,
         type: 3}
       propertyPath: m_LocalPosition.x

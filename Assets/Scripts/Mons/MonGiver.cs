@@ -25,7 +25,8 @@ public class MonGiver : MonoBehaviour, ISavable
 
         string dialogText = $"{player.Name} recieved {monToGive.Base.Name}!";
 
-        yield return DialogManager.Instance.ShowDialogText(dialogText);
+        //yield return DialogManager.Instance.ShowDialogText(dialogText);
+        yield return DialogManager.Instance.QueueDialogTextCoroutine(dialogText);
 
         GameController.Instance.OpenNicknameMenu(monToGive, GameState.FreeRoam);
     }

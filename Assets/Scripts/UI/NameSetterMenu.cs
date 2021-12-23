@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class NameSetterMenu : MonoBehaviour
 {
     [SerializeField] TMP_InputField nameInputField;
     [SerializeField] int maxLength = 15;
+
+    public Action OnNameSetEnd;
 
     private PlayerController player;
 
@@ -71,8 +74,9 @@ public class NameSetterMenu : MonoBehaviour
 
     public void CloseMenu()
     {
-        gameObject.SetActive(false);
         GameController.Instance.state = GameState.FreeRoam;
+        OnNameSetEnd?.Invoke();
+        gameObject.SetActive(false);
     }
 
     public void HandleUpdate()

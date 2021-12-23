@@ -13,7 +13,7 @@ public class Sign : MonoBehaviour, Interactable
 
     IEnumerator ShowDialog()
     {
-        yield return DialogManager.Instance.ShowDialog(dialog);
-        //yield return new WaitUntil(() => FindObjectOfType<GameController>().state != GameState.Dialog);
+        //yield return DialogManager.Instance.ShowDialog(dialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(dialog);
     }
 }

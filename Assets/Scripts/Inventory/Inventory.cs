@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemCategory { Items, Capsules, Tms }
+public enum ItemCategory { Items, Capsules, Tms, KeyItems}
 
 public class Inventory : MonoBehaviour, ISavable
 {
@@ -14,6 +14,8 @@ public class Inventory : MonoBehaviour, ISavable
     [SerializeField] List<ItemSlot> capsuleSlots;
     [Header("TMs and HMs")]
     [SerializeField] List<ItemSlot> tmSlots;
+    [Header("Key Items")]
+    [SerializeField] List<ItemSlot> keyItemSlots;
 
     List<List<ItemSlot>> allSlots;
 
@@ -23,13 +25,13 @@ public class Inventory : MonoBehaviour, ISavable
     {
         allSlots = new List<List<ItemSlot>>() 
         { 
-            slots, capsuleSlots, tmSlots 
+            slots, capsuleSlots, tmSlots, keyItemSlots
         };
     }
 
     public static List<string> ItemCategories { get; set; } = new List<string>()
     {
-        "ITEMS", "CAPSULES", "TMs & HMs"
+        "ITEMS", "CAPSULES", "TMs & HMs", "Key Items"
     };
 
     public List<ItemSlot> GetSlotsByCategory(int categoryIndex)
@@ -128,6 +130,10 @@ public class Inventory : MonoBehaviour, ISavable
         {
             return ItemCategory.Capsules;
         }
+        else if(item is KeyItem)
+        {
+            return ItemCategory.KeyItems;
+        }
         else
         {
             return ItemCategory.Tms;
@@ -141,7 +147,8 @@ public class Inventory : MonoBehaviour, ISavable
         {
             items = slots.Select(i => i.GetSaveData()).ToList(),
             capsules = capsuleSlots.Select(i => i.GetSaveData()).ToList(),
-            tms = tmSlots.Select(i => i.GetSaveData()).ToList()
+            tms = tmSlots.Select(i => i.GetSaveData()).ToList(),
+            keyItems = keyItemSlots.Select(i => i.GetSaveData()).ToList()
         };
         return saveData;
     }
@@ -153,9 +160,10 @@ public class Inventory : MonoBehaviour, ISavable
         slots = saveData.items.Select(i => new ItemSlot(i)).ToList();
         capsuleSlots = saveData.capsules.Select(i => new ItemSlot(i)).ToList();
         tmSlots = saveData.tms.Select(i => new ItemSlot(i)).ToList();
+        keyItemSlots = saveData.keyItems.Select(i => new ItemSlot(i)).ToList();
 
         //! this is set manually in two places and thus should be refactored into a separate function
-        allSlots = new List<List<ItemSlot>>() { slots, capsuleSlots, tmSlots };
+        allSlots = new List<List<ItemSlot>>() { slots, capsuleSlots, tmSlots, keyItemSlots };
 
         OnUpdated?.Invoke();
     }
@@ -210,4 +218,5 @@ public class InventorySaveData
     public List<ItemSaveData> items;
     public List<ItemSaveData> capsules;
     public List<ItemSaveData> tms;
+    public List<ItemSaveData> keyItems;
 }

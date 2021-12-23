@@ -12,7 +12,8 @@ public class ItemGiver : MonoBehaviour, ISavable
 
     public IEnumerator GiveItem(PlayerController player)
     {
-        yield return DialogManager.Instance.ShowDialog(dialog);
+        //yield return DialogManager.Instance.ShowDialog(dialog);
+        yield return DialogManager.Instance.QueueDialogCoroutine(dialog);
 
         player.GetComponent<Inventory>().AddItem(item, count);
         
@@ -24,7 +25,8 @@ public class ItemGiver : MonoBehaviour, ISavable
             dialogText = $"{player.Name} recieved {count} {item.Name}s";
         }
 
-        yield return DialogManager.Instance.ShowDialogText(dialogText);
+        //yield return DialogManager.Instance.ShowDialogText(dialogText);
+        yield return DialogManager.Instance.QueueDialogTextCoroutine(dialogText);
     }
 
     public bool CanBeGiven()

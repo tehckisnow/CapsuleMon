@@ -27,7 +27,10 @@ public class MonStorage : MonoBehaviour
         {
             foreach(var mon in mons)
             {
-                mon.Init();
+                if(!mon.Initialized)
+                {
+                    mon.Init();
+                }
             }
         }
     }
@@ -79,11 +82,13 @@ public class MonStorage : MonoBehaviour
             {
                 var taken = RemoveMon(mon);
                 playerParty.AddMon(taken);
-                StartCoroutine(DialogManager.Instance.ShowDialogText($"{taken.Name} has been added to your party"));
+                //StartCoroutine(DialogManager.Instance.ShowDialogText($"{taken.Name} has been added to your party"));
+                StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine($"{taken.Name} has been added to your party"));
             }
             else
             {
-                StartCoroutine(DialogManager.Instance.ShowDialogText($"There is no room in your party!"));
+                //StartCoroutine(DialogManager.Instance.ShowDialogText($"There is no room in your party!"));
+                StartCoroutine(DialogManager.Instance.QueueDialogTextCoroutine($"There is no room in your party!"));
             }
         }
         else

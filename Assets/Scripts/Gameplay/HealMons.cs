@@ -4,9 +4,34 @@ using UnityEngine;
 
 public class HealMons : MonoBehaviour
 {
-    public void HealParty()
+    public static HealMons Instance;
+
+    private void Awake()
     {
-        HealParty(FindPlayerParty());
+        Instance = this;
+    }
+
+    //the static function HealPlayerParty can't be linked to nurses in Inspector, so this was created
+    public void HealPlayerMonParty()
+    {
+        HealPlayerParty();
+    }
+
+    public static void HealPlayerParty()
+    {
+        Debug.Log("Healing player party");
+        MonParty party = MonParty.GetPlayerParty();
+        foreach(Mon mon in party.Mons)
+        {
+            Debug.Log(mon.Name);
+            mon.CureStatus();
+            mon.IncreaseHP(mon.MaxHp);
+            mon.isFainted = false;
+            foreach(Move move in mon.Moves)
+            {
+                move.PP = move.Base.PP;
+            }
+        }
     }
 
     public void HealParty(MonParty party)
@@ -15,6 +40,7 @@ public class HealMons : MonoBehaviour
         {
             mon.CureStatus();
             mon.IncreaseHP(mon.MaxHp);
+            mon.isFainted = false;
             foreach(Move move in mon.Moves)
             {
                 move.PP = move.Base.PP;

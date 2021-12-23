@@ -12,17 +12,24 @@ public class Pickup : MonoBehaviour, Interactable, ISavable
     {
         if(!Used)
         {
-            initiator.GetComponent<Inventory>().AddItem(item);
+            PlayerController player = initiator.GetComponent<PlayerController>();
+
+            if(item is MoneyItem)
+            {
+                MoneyItem moneyItem = item as MoneyItem;
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"{player.Name} found {moneyItem.GetName()}!");
+                player.Money += moneyItem.Amount;
+            }
+            else
+            {
+                player.GetComponent<Inventory>().AddItem(item);
+                yield return DialogManager.Instance.QueueDialogTextCoroutine($"{player.Name} found {item.Name}!");
+            }
+
             Used = true;
-            
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
-
-            string playerName = initiator.GetComponent<PlayerController>().Name;
-
-            yield return DialogManager.Instance.ShowDialogText($"{playerName} found {item.Name}!");
         }
-
     }
 
     // ISavable

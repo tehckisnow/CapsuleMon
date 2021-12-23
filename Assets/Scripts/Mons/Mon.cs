@@ -52,6 +52,9 @@ public class Mon
     private bool initialized = false;
     public bool Initialized => initialized;
 
+    //currently just used for poison outside of battle; expand for other uses
+    public bool isFainted = false;
+
     public void Init()
     {
         //generate moves
@@ -79,6 +82,7 @@ public class Mon
         ResetStatBoost();
         Status = null;
         VolatileStatus = null;
+        isFainted = false;
 
         initialized = true;
     }
@@ -123,6 +127,7 @@ public class Mon
         Name = saveData.nickname;
         HP = saveData.hp;
         Exp = saveData.exp;
+        isFainted = saveData.fainted;
 
         if(saveData.statusId != null)
         {
@@ -153,12 +158,14 @@ public class Mon
             hp = HP,
             exp = Exp,
             statusId = Status?.Id,
-            moves = Moves.Select(m => m.GetSaveData()).ToList()
+            moves = Moves.Select(m => m.GetSaveData()).ToList(),
+            fainted = isFainted
         };
+
         return saveData;
     }
 
-    private void CalculateStats()
+    private void RecalculateStats()
     {
         Stats = new Dictionary<Stat, int>();
         Stats.Add(Stat.Attack, Mathf.FloorToInt((Base.Attack * Level) / 100f) + 5);
@@ -172,6 +179,19 @@ public class Mon
 
         HP += MaxHp - oldMaxHP;
         
+        HP = Mathf.Clamp(HP, 0, MaxHp);
+    }
+
+    private void CalculateStats()
+    {
+        Stats = new Dictionary<Stat, int>();
+        Stats.Add(Stat.Attack, Mathf.FloorToInt((Base.Attack * Level) / 100f) + 5);
+        Stats.Add(Stat.Defense, Mathf.FloorToInt((Base.Defense * Level) / 100f) + 5);
+        Stats.Add(Stat.SpAttack, Mathf.FloorToInt((Base.SpAttack * Level) / 100f) + 5);
+        Stats.Add(Stat.SpDefense, Mathf.FloorToInt((Base.SpDefense * Level) / 100f) + 5);
+        Stats.Add(Stat.Speed, Mathf.FloorToInt((Base.Speed * Level) / 100f) + 5);
+
+        MaxHp = Mathf.FloorToInt((Base.MaxHp * Level) / 100f) + 10 + Level;
         HP = Mathf.Clamp(HP, 0, MaxHp);
     }
 
@@ -200,7 +220,7 @@ public class Mon
         if(Exp >= Base.GetExpForLevel(level + 1))
         {
             ++level;
-            CalculateStats();
+            RecalculateStats();
             return true;
         }
         else
@@ -259,7 +279,7 @@ public class Mon
     public void Evolve(Evolution evolution)
     {
         _base = evolution.EvolveInto;
-        CalculateStats();
+        RecalculateStats();
     }
 
     public int Attack
@@ -458,14 +478,18 @@ public class Mon
                 if(Moves.Count < MonBase.MaxNumberOfMoves)
                 {
                     LearnMove(move.Base);
-                    yield return DialogManager.Instance.ShowDialogText($"{Name} learned {move.Base.Name}");
+                    //yield return DialogManager.Instance.ShowDialogText($"{Name} learned {move.Base.Name}");
+                    yield return DialogManager.Instance.QueueDialogTextCoroutine($"{Name} learned {move.Base.Name}");
                     readyForMove = true;
                 }
                 else
                 {
-                    yield return DialogManager.Instance.ShowDialogText($"{Name} is trying to learn {move.Base.Name}");
-                    yield return DialogManager.Instance.ShowDialogText($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
-                    yield return DialogManager.Instance.ShowDialogText($"Choose a move to forget");
+                    //yield return DialogManager.Instance.ShowDialogText($"{Name} is trying to learn {move.Base.Name}");
+                    yield return DialogManager.Instance.QueueDialogTextCoroutine($"{Name} is trying to learn {move.Base.Name}");
+                    //yield return DialogManager.Instance.ShowDialogText($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
+                    yield return DialogManager.Instance.QueueDialogTextCoroutine($"But it can't learn more than {MonBase.MaxNumberOfMoves} moves");
+                    //yield return DialogManager.Instance.ShowDialogText($"Choose a move to forget");
+                    yield return DialogManager.Instance.QueueDialogTextCoroutine($"Choose a move to forget");
                     GameController.Instance.OpenMoveSelectionUI(this, move.Base);
                 }
             }
@@ -492,4 +516,5 @@ public class MonSaveData
     public int exp;
     public ConditionID? statusId;
     public List<MoveSaveData> moves;
+    public bool fainted;
 }

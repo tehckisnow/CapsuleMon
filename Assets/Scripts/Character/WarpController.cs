@@ -23,7 +23,7 @@ public class WarpController : MonoBehaviour
     {
         yield return Fader.Instance.FadeIn(2f);
         character.SetPositionAndSnapToTile(lastWarpPoint);
-        FindObjectOfType<HealMons>().HealParty(MonParty.GetPlayerParty());
+        HealMons.HealPlayerParty();
         yield return Fader.Instance.FadeOut(2f);
     }
 
@@ -35,5 +35,10 @@ public class WarpController : MonoBehaviour
     public void SetWarpPoint(Transform transform)
     {
         lastWarpPoint = transform.position;
+    }
+
+    public Vector2 GetWarpPoint()
+    {
+        return lastWarpPoint;
     }
 }

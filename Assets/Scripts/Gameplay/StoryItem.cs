@@ -8,9 +8,10 @@ public class StoryItem : MonoBehaviour, IPlayerTriggerable
 
     public void OnPlayerTriggered(PlayerController player)
     {
-        player.Character.IsMoving = false; //! this is from the tut to fix an error that I didn't have
-        StartCoroutine(DialogManager.Instance.ShowDialog(dialog));
+            player.Character.IsMoving = false; //! this is from the tut to fix an error that I didn't have
+            //StartCoroutine(DialogManager.Instance.ShowDialog(dialog));
+            StartCoroutine(DialogManager.Instance.QueueDialogCoroutine(dialog));
     }
-    
+   
     public bool TriggerRepeatedly => false;
 }
