@@ -3908,6 +3908,11 @@ PrefabInstance:
       propertyPath: m_textInfo.spaceCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3781022465712916855, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: image
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3812463801620342060, guid: 0862d17dbd7a917408a3c7e8e045dd73,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -4723,6 +4728,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6047220844565781511, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -98.71
+      objectReference: {fileID: 0}
     - target: {fileID: 6047220844571390365, guid: 0862d17dbd7a917408a3c7e8e045dd73,
         type: 3}
       propertyPath: m_Sprite
@@ -4980,6 +4990,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 67a88da00c0912a45b7d1e15da59867a,
         type: 2}
+    - target: {fileID: 6047220846203384965, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6047220846264022200, guid: 0862d17dbd7a917408a3c7e8e045dd73,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -6336,6 +6351,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7168763053487864990, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7264161357672184082, guid: 0862d17dbd7a917408a3c7e8e045dd73,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -7369,6 +7389,11 @@ PrefabInstance:
     - target: {fileID: 8157101745827430543, guid: 0862d17dbd7a917408a3c7e8e045dd73,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8296407297510862659, guid: 0862d17dbd7a917408a3c7e8e045dd73,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8437875533526288054, guid: 0862d17dbd7a917408a3c7e8e045dd73,

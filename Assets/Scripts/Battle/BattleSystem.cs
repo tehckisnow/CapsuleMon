@@ -19,6 +19,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] GameObject capsuleSprite;
     [SerializeField] MoveSelectionUI moveSelectionUI;
     [SerializeField] InventoryUI inventoryUI;
+    
+    [SerializeField] Camera battleCamera;
+    public Camera BattleCamera => battleCamera;
 
     public event Action<bool> OnBattleOver;
 
@@ -91,21 +94,24 @@ public class BattleSystem : MonoBehaviour
             playerUnit.gameObject.SetActive(false);
             enemyUnit.gameObject.SetActive(false);
 
-            playerImage.gameObject.SetActive(true);
-            trainerImage.gameObject.SetActive(true);
+            // playerImage.gameObject.SetActive(true);
+            // trainerImage.gameObject.SetActive(true);
             
-            playerImage.sprite = player.Sprite;
-            trainerImage.sprite = trainer.Sprite;
+            // playerImage.sprite = player.Sprite;
+            // trainerImage.sprite = trainer.Sprite;
 
             playerAnimatedImage = playerImage.gameObject.GetComponent<AnimatedImage>();
             trainerAnimatedImage = trainerImage.gameObject.GetComponent<AnimatedImage>();
+            playerAnimatedImage.Enable();
+            trainerAnimatedImage.Enable();
+            playerAnimatedImage.SetSprite(player.Sprite);
+            trainerAnimatedImage.SetSprite(trainer.Sprite);
+
             
             dialogBox.SetDialog("");
 
             yield return WantsToBattleAnim();
-            
             yield return new WaitUntil(() => !animPlaying);
-
             yield return dialogBox.TypeDialog($"{trainer.Name} wants to battle");
 
             yield return ReadyBattleAnim();
@@ -133,20 +139,31 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator WantsToBattleAnim()
     {
-        Action finishAction = () => { animPlaying = false; };
+        Action finishAction = () => 
+        { 
+            animPlaying = false; 
+            Debug.Log("finished!");
+        };
         animPlaying = true;
-        trainerAnimatedImage.transform.position = new Vector3(400, 0);
-        playerAnimatedImage.ReturnToOriginalPos(-400, 0, 1.5f);
-        yield return trainerAnimatedImage.ReturnToOriginalPosCoroutine(400, 0, 1.5f, finishAction);
+        
+        Vector3 offscreen = playerAnimatedImage.ScreenToWorld(new Vector2(400, 0));
+        playerAnimatedImage.MoveRelative(offscreen.x, 0, 0f);
+        trainerAnimatedImage.MoveRelative(-offscreen.x, 0, 0f);
+        
+        playerAnimatedImage.MoveRelative(-offscreen.x, 0, 2f);
+        yield return trainerAnimatedImage.MoveRelativeCoroutine(offscreen.x, 0, 2f, finishAction);
+
     }
 
     IEnumerator ReadyBattleAnim()
     {
         yield return new WaitForSeconds(0.5f);
-        playerAnimatedImage.MoveRelativeLocal(-400, 0, 1.5f);
-        trainerAnimatedImage.MoveRelativeLocal(400, 0, 1.5f);
         
-        yield return new WaitForSeconds(1f);
+        Vector3 offscreen = playerAnimatedImage.ScreenToWorld(new Vector2(400, 0));
+        playerAnimatedImage.MoveRelative(offscreen.x, 0, 2f);
+        trainerAnimatedImage.MoveRelative(-offscreen.x, 0, 2f);
+        
+        yield return new WaitForSeconds(2f);
         playerAnimatedImage.Disable();
         trainerAnimatedImage.Disable();
     }
@@ -574,18 +591,18 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator DefeatTrainer()
     {
-        trainerImage.gameObject.SetActive(true);
         trainerAnimatedImage = trainerImage.gameObject.GetComponent<AnimatedImage>();
+        trainerAnimatedImage.Enable();
         
-        IEnumerator TrainerWantsToBattle()
+        IEnumerator TrainerWantsToBattleOver()
         {
             animPlaying = true;
-            Action finishAction = () => { animPlaying = false; };
-            trainerAnimatedImage.transform.position = new Vector3(400, 0);
-            yield return trainerAnimatedImage.ReturnToOriginalPosCoroutine(400, 0, 1.5f, finishAction);
+            Action newFinishAction = () => { animPlaying = false; };
+            trainerAnimatedImage.MoveRelative(400, 0, 0);
+            yield return trainerAnimatedImage.MoveRelativeCoroutine(-400, 0, 1.5f, newFinishAction);
         }
         state = BattleState.Busy;
-        yield return TrainerWantsToBattle();
+        yield return TrainerWantsToBattleOver();
         yield return new WaitUntil(() => !animPlaying);
         
         //yield return DialogManager.Instance.ShowDialogText($"{player.Name} defeated {trainer.Name}!");

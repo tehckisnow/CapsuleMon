@@ -64,7 +64,6 @@ public class NPCController : MonoBehaviour, Interactable, ISavable
 
   public void SetFlags()
   {
-    Debug.Log("Setting Flags in NPCController");
     foreach(string flag in flagsToSetOnInteraction)
     {
       QuestFlags.Instance.SetFlag(flag, true);

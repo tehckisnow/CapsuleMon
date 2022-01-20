@@ -63,7 +63,6 @@ public class DialogManager : MonoBehaviour
     // This can be called with yield return in order to stall a coroutine until the message has displayed
     public IEnumerator QueueDialogTextCoroutine(string dialog, bool waitForInput=true, bool autoClose=true)
     {
-        Debug.Log(dialog);
         Message message = new Message(dialog, waitForInput, autoClose);
         messageQueue.Enqueue(message);
         yield return new WaitUntil(() => message.Processed);
@@ -219,7 +218,7 @@ public class Message
         isDialog = true;
         text = "";
 
-        LogMessage();
+        //LogMessage();
     }
 
     public Message(string _text, bool _waitForInput=true, bool _autoClose=true)
@@ -230,7 +229,7 @@ public class Message
         waitForInput = _waitForInput;
         autoClose = _autoClose;
 
-        LogMessage();
+        //LogMessage();
     }
 
     public void Process()

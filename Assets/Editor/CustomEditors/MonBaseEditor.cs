@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine.UI;
 
-[CustomEditor(typeof(MonBase))]
+//[CustomEditor(typeof(MonBase))]
 [CanEditMultipleObjects]
 public class MonBaseEditor : Editor
 {

@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Catapod
   m_EditorClassIdentifier: 
   name: Catapod
-  description: A catapillie that has constructed a cocoon around itself so that it
-    can continue it's gross lifecycle into a butterflap.
+  description: It has constructed a cocoon around itself to continue it's gross lifecycle.
   frontSprite: {fileID: 21300000, guid: a73e028637ed06f41bf66d17d9a4105b, type: 3}
   backSprite: {fileID: 21300000, guid: ac6582a659a173a408cd722d5ebc0b7b, type: 3}
   type1: 12

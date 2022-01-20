@@ -22,7 +22,6 @@ public class QuestFlags : MonoBehaviour
         if(!flags.ContainsKey(name))
         {
             flags.Add(name, state);
-            Debug.Log($"New Flag: {name}, {state}");
             PopulateFlagsList();
         }
         else
@@ -36,7 +35,6 @@ public class QuestFlags : MonoBehaviour
         if(flags.ContainsKey(name))
         {
             flags[name] = state;
-            Debug.Log($"Set Flag: {name} to {state}");
             PopulateFlagsList();
         }
         else
@@ -50,7 +48,6 @@ public class QuestFlags : MonoBehaviour
     {
         if(flags.ContainsKey(name))
         {
-            Debug.Log($"Checking Flag: {name} ; Exists");
             return flags[name];
         }
         {

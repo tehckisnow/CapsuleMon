@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Waspest
   m_EditorClassIdentifier: 
   name: Waspest
-  description: This annoying monster is the evolved form of cacoonus, and it is made
-    largerly out of stingers and poison.
+  description: This annoying monster is made largerly out of stingers and poison.
   frontSprite: {fileID: 21300000, guid: 3abb5cdf296302047aedb498f0eadb49, type: 3}
   backSprite: {fileID: 21300000, guid: 1d7c1a26f9ac3a44fb8631f48a72be0a, type: 3}
   type1: 12

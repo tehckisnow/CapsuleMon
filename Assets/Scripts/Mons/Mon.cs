@@ -206,11 +206,11 @@ public class Mon
 
             if(boost > 0)
             {
-                StatusChanges.Enqueue($"{Base.Name}'s {stat} rose!");
+                StatusChanges.Enqueue($"{Name}'s {stat} rose!");
             }
             else if(boost < 0)
             {
-                StatusChanges.Enqueue($"{Base.Name}'s {stat} fell!");
+                StatusChanges.Enqueue($"{Name}'s {stat} fell!");
             }
         }
     }
@@ -364,7 +364,7 @@ public class Mon
 
         Status = ConditionsDB.Conditions[conditionId];
         Status?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.Name} {Status.StartMessage}");
+        StatusChanges.Enqueue($"{Name} {Status.StartMessage}");
         OnStatusChanged?.Invoke();
     }
 
@@ -383,7 +383,7 @@ public class Mon
 
         VolatileStatus = ConditionsDB.Conditions[conditionId];
         VolatileStatus?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.Name} {VolatileStatus.StartMessage}");
+        StatusChanges.Enqueue($"{Name} {VolatileStatus.StartMessage}");
     }
 
     public void CureVolatileStatus()

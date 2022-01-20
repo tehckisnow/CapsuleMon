@@ -24,6 +24,8 @@ public class Opening : MonoBehaviour
 
     private void Init()
     {
+        DOTween.Init();
+
         whiteBG.enabled = false;
         nottendo.enabled = false;
         star.enabled = false;
@@ -59,6 +61,9 @@ public class Opening : MonoBehaviour
 
     IEnumerator OpeningAnimation()
     {
+        var rearAnimatedImage = rearSprite.GetComponent<AnimatedImage>();
+        var frontAnimatedImage = frontSprite.GetComponent<AnimatedImage>();
+        
         yield return new WaitForSeconds(2f);
         whiteBG.enabled = true;
         yield return new WaitForSeconds(2f);
@@ -77,11 +82,11 @@ public class Opening : MonoBehaviour
 
         frontSprite.enabled = true;
         rearSprite.enabled = true;
-        //frontSprite.GetComponent<AnimatedImage>().PlayEnterAnim(-500f, 2f);
-        frontSprite.GetComponent<AnimatedImage>().ReturnToOriginalPos(-500f, 0f, 2f);
-        //rearSprite.GetComponent<AnimatedImage>().PlayEnterAnim(500f, 2f);
-        rearSprite.GetComponent<AnimatedImage>().ReturnToOriginalPos(500f, 0f, 2f);
-        yield return new WaitForSeconds(2f);
+
+        frontAnimatedImage.MoveRelative(-500f, 0f, 0f);
+        rearAnimatedImage.MoveRelative(500f, 0f, 0f);
+        frontAnimatedImage.MoveRelative(500f, 0f, 2f);
+        yield return rearAnimatedImage.MoveRelativeCoroutine(-500f, 0f, 2f);
 
         ground.enabled = true;
         letterbox.SetActive(false);

@@ -1,10 +1,103 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class TODO : MonoBehaviour
-{
+﻿
     /*
+
+
+TODO:
+
+Glitches:
+
+    sometimes when nicknaming a mon, text gets messed up ???
+        multiple dialog coroutines being called at once
+            GameController.Instance.WhenDialogClose()
+
+    stepping into trainerFOV adjacent to trainer, trainer may rotate to face wrong direction
+        this seems to be a result of the Character.Move() algorithm determining the shortest distance to an adjacent tile
+
+    multiple evolution moves will leave the game in the wrong state
+
+Features:
+
+    sound effects/music
+
+    flesh out all animations
+
+    a way to see move descriptions would be nice
+
+    reorder moves would be nice, too
+
+    select or customize character?
+    
+    be able to reorder mons in mon storage
+
+    automatically include trainer(/npc) name in certain dialogs
+
+    HM moves can be used outside of battle
+        CUT can temporarily remove certain small trees
+
+    Opponent Scaler: attach to a trainer and it adjusts level of their mons based on level of player's mons (or base it on player's performance instead of level)
+
+    support using console and cheats in battle
+
+    --------------------------------------
+
+    mon friendship levels
+
+    interaction that gives money?
+
+    one-time purchases from mart? make them savable? limited quantity of stock?
+
+    items
+        escape items
+            pokedoll
+        valuable/exchangable items
+            gold nugget
+                value
+        flute
+            gain an affect without consuming the item
+                some flutes can be used in battle to remove an effect like sleep (pokeflute)
+                some flutes can be used out of battle to perform an action (like adjusting encounter rate)
+        fossils
+            can be "revived" (traded at certain events) for special prehistoric mons
+        repel
+            repel (wild mons with a level lower than 1st member of player's party will not appear for next 100 steps)
+            super repel (200 steps)
+            max repel (250 steps)
+        held items
+            (many types)
+        Battle Items
+            X attack
+            X defense
+            ...
+            Dire Hit
+            Guard Spec
+        vitamins
+            hp up
+            protein (attack)
+            iron (defense)
+            calcium (spatt)
+            zinc (spdef)
+            carbos (speed)
+            pp up
+            pp max
+        herbal medicine( healing effect at cost of mon's friendship value)
+            heal powder (heals all status problems)
+            energy powder (heals 60hp)
+            energy root (heals 120hp)
+            revival herb (revives mon with full hp)
+
+        item storage
+
+        breeding
+
+        daycare
+
+Completed:
+
+    //item that gives money?
+        
+    //Key items
+
+    //tut should mention "cancel" opens menu
 
     //when enemy uses a status move on self, the playerHit animation is still played
         //(same when player uses status move on self, enemyHit animation is played)
@@ -60,8 +153,6 @@ public class TODO : MonoBehaviour
     //load should be disabled if there is no load data
 
     //facing is not being properly restored from startmenu load
-
-    ---Features---
 
     //being able to skip dialog typing would be nice
     //also skip in battle dialog
@@ -139,17 +230,6 @@ public class TODO : MonoBehaviour
     //Only show battle reward notification if battlereward is > 0
 
     //prevent action selection after mon faints
-
-    Glitches:
-
-    sometimes when nicknaming a mon, text gets messed up ???
-        multiple dialog coroutines being called at once
-            GameController.Instance.WhenDialogClose()
-
-    stepping into trainerFOV adjacent to trainer, trainer may rotate to face wrong direction
-        this seems to be a result of the Character.Move() algorithm determining the shortest distance to an adjacent tile
-
-    multiple evolution moves will leave the game in the wrong state
     
     // check; 
     //     mon evolves in battle
@@ -181,9 +261,6 @@ public class TODO : MonoBehaviour
     //     NPCController
     //     StoryItem
     //     TrainerController
-
-
-    TODO:
 
     //re-enable storyevent blocking route1
 
@@ -249,6 +326,18 @@ public class TODO : MonoBehaviour
     //Name rater (to set new nick)
 
     //nickname menu: previous name should not use Base
+
+    //see status from partymenu
+
+    //(maybe not)  show XP bar in partyMenu would be nice
+
+    //selecting a mon from partyscreen to see infoscreen showing frontImage, moves, xp, Base.name and nickname, etc. would be nice
+
+    //error on monInfoScreen
+
+    //show PP of each move on infoscreen?
+
+    //when losing a battle, fade to black and teleport to last pokemon center
     
     //Optional:
 
@@ -282,96 +371,4 @@ public class TODO : MonoBehaviour
             //initiate congratulatory dialog (cutscene) right after battle has ended (if won)
 
     //Opening
-
-    sound effects/music
-
-    flesh out all animations
-
-    a way to see move descriptions would be nice
-
-    reorder moves would be nice, too
-
-    select or customize character?
-    
-    be able to reorder mons in mon storage
-
-    automatically include trainer(/npc) name in certain dialogs
-
-    HM moves can be used outside of battle
-        CUT can temporarily remove certain small trees
-
-    Opponent Scaler: attach to a trainer and it adjusts level of their mons based on level of player's mons (or base it on player's performance instead of level)
-
-    support using console and cheats in battle
-
-    --------------------------------------
-
-    mon friendship levels
-
-    interaction that gives money?
-
-    //item that gives money?
-
-    one-time purchases from mart? make them savable? limited quantity of stock?
-
-    items
-        escape items
-            pokedoll
-        valuable/exchangable items
-            gold nugget
-                value
-        flute
-            gain an affect without consuming the item
-                some flutes can be used in battle to remove an effect like sleep (pokeflute)
-                some flutes can be used out of battle to perform an action (like adjusting encounter rate)
-        fossils
-            can be "revived" (traded at certain events) for special prehistoric mons
-        repel
-            repel (wild mons with a level lower than 1st member of player's party will not appear for next 100 steps)
-            super repel (200 steps)
-            max repel (250 steps)
-        held items
-            (many types)
-        Battle Items
-            X attack
-            X defense
-            ...
-            Dire Hit
-            Guard Spec
-        vitamins
-            hp up
-            protein (attack)
-            iron (defense)
-            calcium (spatt)
-            zinc (spdef)
-            carbos (speed)
-            pp up
-            pp max
-        herbal medicine( healing effect at cost of mon's friendship value)
-            heal powder (heals all status problems)
-            energy powder (heals 60hp)
-            energy root (heals 120hp)
-            revival herb (revives mon with full hp)
-        //Key items
-
-        item storage
-
-        breeding
-
-        daycare
-
-
-    //see status from partymenu
-
-    //(maybe not)  show XP bar in partyMenu would be nice
-
-    //selecting a mon from partyscreen to see infoscreen showing frontImage, moves, xp, Base.name and nickname, etc. would be nice
-
-    //error on monInfoScreen
-
-    //show PP of each move on infoscreen?
-
-    //when losing a battle, fade to black and teleport to last pokemon center
-
     */
-}
